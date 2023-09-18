@@ -1,9 +1,13 @@
 package com.example.goniometro
 
-import android.annotation.SuppressLint
+import  android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Toast
@@ -14,16 +18,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,8 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
@@ -54,10 +55,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.example.goniometro.ui.theme.GoniometroTheme
-
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -68,16 +72,114 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            GoniometroTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Rodape()
-                    Background()
-                    CameraPhoto()
-                    Goniometro()
-                }
+            val navController = rememberNavController()
+
+            NavHost(navController = navController, startDestination = "inicio") {
+                composable("inicio") { Inicio(navController) }
+                composable("login") { Login(navController) }
+                composable("register") { Register(navController) }
+                composable("home") { Home(navController) }
+            }
+        }
+    }
+}
+
+@Composable
+fun Home(navController: NavController) {
+    GoniometroTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Background()
+            PhotoImport()
+            CameraPhoto()
+            Goniometro()
+            Voltar(navController)
+        }
+    }
+}
+
+
+@Composable
+fun Background() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFFB2FFED),
+                        Color(0xFFCEB3FF)
+                    )
+                )
+            )
+    )
+}
+
+@Composable
+fun Voltar(navController: NavController) {
+    Box(
+        contentAlignment = Alignment.TopStart,
+    ) {
+        IconButton(
+            onClick = { navController.popBackStack() },
+            Modifier.padding(9.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.arrowback),
+                contentDescription = "Voltar Tela",
+                modifier = Modifier
+                    .size(50.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun PhotoImport() {
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val context = LocalContext.current
+    val bitmap =  remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+
+    val launcher = rememberLauncherForActivityResult(contract =
+    ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+    }
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomStart,
+    ) {
+        IconButton(onClick = {
+            launcher.launch("image/*")
+        }, Modifier.padding(9.dp))
+        {
+            Icon(painter = painterResource(id = R.drawable.photo_library), contentDescription = "Importar Foto",
+                modifier = Modifier
+                    .size(44.dp)
+                    .padding(1.dp))
+        }
+
+        imageUri?.let {
+            bitmap.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(context.contentResolver, it)
+                ImageDecoder.decodeBitmap(source)
+            } else {
+                val inputStream = context.contentResolver.openInputStream(it)
+                BitmapFactory.decodeStream(inputStream)
+            }
+
+            bitmap.value?.let {  btm ->
+                Image(bitmap = btm.asImageBitmap(),
+                    contentDescription =null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(1.dp)
+                        .align(alignment = Alignment.Center))
             }
         }
     }
@@ -115,9 +217,8 @@ fun CameraPhoto() {
     }
 
     Box(
-        Modifier
-            .fillMaxSize()
-            .padding(5.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomEnd,
     ) {
         IconButton(
             onClick = {
@@ -128,7 +229,7 @@ fun CameraPhoto() {
                 } else {
                     permissionLauncher.launch(android.Manifest.permission.CAMERA)
                 }
-            },
+            }, Modifier.padding(9.dp)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.addphoto),
@@ -138,7 +239,6 @@ fun CameraPhoto() {
     }
 
     Box{
-        Background()
     if (capturedImageUri?.path?.isNotEmpty() == true) {
         Image(
             modifier = Modifier
@@ -162,7 +262,6 @@ fun Context.createImageFile(): File {
         externalCacheDir
     )
 }
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Goniometro() {
@@ -170,6 +269,7 @@ fun Goniometro() {
     var lineEnd by remember { mutableStateOf(Offset.Zero) }
     var lines by remember { mutableStateOf(listOf<Pair<Offset, Offset>>()) }
     var isLineSet by remember { mutableStateOf(false) }
+
     fun calculateAngle(start1: Offset, end1: Offset, start2: Offset, end2: Offset): Double {
         val dx1 = end1.x - start1.x
         val dy1 = end1.y - start1.y
@@ -184,25 +284,9 @@ fun Goniometro() {
         return angle
     }
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-        BotaoGoniometro(
-            onClick = {
-                if (isLineSet) {
-                    lineStart = Offset.Zero
-                    lineEnd = Offset.Zero
-                    lines = emptyList()
-                }
-                isLineSet = !isLineSet
-            },
-            isLineSet = isLineSet)
-        }
-    }
         if (isLineSet) {
             Canvas(
                 modifier = Modifier
@@ -241,9 +325,14 @@ fun Goniometro() {
                     )
                 }
                 if (lines.size == 2) {
-                    val angle = calculateAngle(lines[0].first, lines[0].second, lines[1].first, lines[1].second)
-                    val formattedAngle = String.format("%.1f", angle)
-                    val text = "    Ângulo: $formattedAngle°"
+                    val angle = calculateAngle(
+                        lines[0].first,
+                        lines[0].second,
+                        lines[1].first,
+                        lines[1].second
+                    )
+                    val formattedAngle = String.format("%.2f", angle)
+                    val text = "    $formattedAngle°"
                     val textOffset = Offset(
                         (lines[1].first.x + lines[1].second.x) / 2,
                         (lines[1].first.y + lines[1].second.y) / 2
@@ -272,44 +361,26 @@ fun Goniometro() {
                 }
             }
         }
-    }
-
-@Composable
-fun BotaoGoniometro(onClick: () -> Unit, isLineSet: Boolean) {
-    Button(
-        onClick = onClick,
-        Modifier.padding(72.dp),
-        colors = ButtonDefaults.buttonColors()
-    ) {
-        Text(if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight(400),
-                color = Color(0xFFFFFFFF),
-                textAlign = TextAlign.Center,
+            Button(
+                onClick = {
+                    if (isLineSet) {
+                        lineStart = Offset.Zero
+                        lineEnd = Offset.Zero
+                        lines = emptyList()
+                    }
+                    isLineSet = !isLineSet
+                },
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Text(
+                    text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
+                )
             )
-        )
+        }
     }
-}
-
-@Composable
-fun Background(modifier: Modifier = Modifier) {
-    Image(
-        painter = painterResource(id = R.drawable.gradient),
-        contentDescription = "Gradient",
-        modifier = modifier
-            .fillMaxSize()
-            .size(400.dp, 121.dp)
-    )
-}
-
-@Composable
-fun Rodape(modifier: Modifier = Modifier) {
-    Image(
-        painter = painterResource(id = R.drawable.rectangle7),
-        contentDescription = "Rectangle",
-        modifier = modifier
-            .width(width = 400.dp)
-            .height(height = 61.dp)
-            .background(color = Color(0xff33bfb7)))
 }
