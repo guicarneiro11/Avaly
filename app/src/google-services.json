@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "231270607144",
+    "project_id": "anglepro-29a88",
+    "storage_bucket": "anglepro-29a88.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231270607144:android:ceba64927cead365c6881d",
+        "android_client_info": {
+          "package_name": "com.example.goniometro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkr2CwFiBbcdZXj9rFfngqDJeUu8C0L44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
