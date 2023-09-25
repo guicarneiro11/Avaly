@@ -11,6 +11,17 @@ plugins {
 
 android {
 
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
 
     namespace 'com.example.goniometro'
     compileSdk 34
@@ -57,6 +68,9 @@ android {
 }
 
 dependencies {
+
+    //Play Integrity API
+    implementation 'com.google.android.play:integrity:1.2.0'
 
     // JETPACK COMPOSE //
     implementation 'androidx.core:core-ktx:1.12.0'
