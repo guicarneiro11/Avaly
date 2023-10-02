@@ -1,4 +1,4 @@
-package com.example.goniometro.ui.theme
+package com.guicarneirodev.goniometro.ui.theme
 
 import android.app.Activity
 import android.os.Build

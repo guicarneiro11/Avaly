@@ -1,11 +1,12 @@
-package com.example.goniometro
+package com.guicarneirodev.goniometro
 
-import  android.annotation.SuppressLint
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.RectF
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,11 +19,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,23 +46,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
@@ -61,7 +74,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.example.goniometro.ui.theme.GoniometroTheme
+import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
+import com.google.firebase.FirebaseApp
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -71,6 +85,8 @@ import kotlin.math.atan2
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
+
         setContent {
             val navController = rememberNavController()
 
@@ -86,6 +102,62 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Home(navController: NavController) {
+
+    var showTutorial by remember { mutableStateOf(true) }
+    var isCheckboxChecked by remember { mutableStateOf(true) }
+
+    if (showTutorial) {
+        Dialog(
+            onDismissRequest = {
+                showTutorial = false
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(modifier = Modifier
+                    .align(alignment = Alignment.Center)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(Color.White, shape = RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+                    .height(IntrinsicSize.Min),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Recomendações.")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "1. Saiba os principios básicos da goniometria.")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "2. Selecione uma foto da galeria (canto inferior esquerdo) ou tire uma foto da articulação que será avaliada (canto inferior direito).")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "3. Clique em 'Realizar Goniometria' assim que tiver a foto posicionada no meio da tela")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "4. Arraste do Eixo até a posição correta do Braço Fixo com o dedo, então de um toque onde deverá ser posicionado o Braço Móvel.")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "5. Caso não tenha realizado corretamente a goniometria, clique em 'Reiniciar Goniometria' para tentar novamente.")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Checkbox(
+                            checked = showTutorial,
+                            onCheckedChange = { isCheckboxChecked = it }
+                        )
+                        Text("Não mostrar novamente")
+                    }
+
+                    Button(onClick = { showTutorial = false }) {
+                        Text("Fechar")
+                    }
+                }
+            }
+        }
+    }
+
     GoniometroTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -100,7 +172,6 @@ fun Home(navController: NavController) {
     }
 }
 
-
 @Composable
 fun Background() {
     Box(
@@ -109,8 +180,8 @@ fun Background() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFFB2FFED),
-                        Color(0xFFCEB3FF)
+                        Color(0xFF50BFA9),
+                        Color(0xFF50BFA9)
                     )
                 )
             )
@@ -145,7 +216,6 @@ fun PhotoImport() {
     val bitmap =  remember {
         mutableStateOf<Bitmap?>(null)
     }
-
     val launcher = rememberLauncherForActivityResult(contract =
     ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
@@ -163,7 +233,6 @@ fun PhotoImport() {
                     .size(44.dp)
                     .padding(1.dp))
         }
-
         imageUri?.let {
             bitmap.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val source = ImageDecoder.createSource(context.contentResolver, it)
@@ -239,16 +308,16 @@ fun CameraPhoto() {
     }
 
     Box{
-    if (capturedImageUri?.path?.isNotEmpty() == true) {
-        Image(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(1.dp)
-                .align(alignment = Alignment.Center),
-            painter = rememberImagePainter(capturedImageUri),
-            contentDescription = null
-        )
-    }
+        if (capturedImageUri?.path?.isNotEmpty() == true) {
+            Image(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(1.dp)
+                    .align(alignment = Alignment.Center),
+                painter = rememberImagePainter(capturedImageUri),
+                contentDescription = null
+            )
+        }
     }
 }
 
@@ -262,6 +331,7 @@ fun Context.createImageFile(): File {
         externalCacheDir
     )
 }
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Goniometro() {
@@ -332,53 +402,75 @@ fun Goniometro() {
                         lines[1].second
                     )
                     val formattedAngle = String.format("%.2f", angle)
-                    val text = "    $formattedAngle°"
+                    val text = " $formattedAngle° "
                     val textOffset = Offset(
                         (lines[1].first.x + lines[1].second.x) / 2,
                         (lines[1].first.y + lines[1].second.y) / 2
                     )
 
-                    LocalDensity
-                    val textSize = 30.dp.toPx()
-
                     drawCircle(
-                        color = Color.Blue,
-                        radius = 30f,
+                        color = Color.Black,
+                        radius = 20f,
                         center = textOffset
                     )
-                    drawIntoCanvas { canvas ->
-                        val paint = Paint().asFrameworkPaint()
-                        paint.textSize = textSize
-                        paint.color = Color.Black.toArgb()
 
+                    val paint = Paint().asFrameworkPaint()
+                    val textSize = 40.dp.toPx()
+                    paint.textSize = textSize
+                    val textWidth = paint.measureText(text)
+                    val textHeight = -paint.ascent() + paint.descent()
+                    val textBounds = RectF(
+                        textOffset.x - textWidth / 2,
+                        textOffset.y - textHeight / 2,
+                        textOffset.x + textWidth / 2,
+                        textOffset.y + textHeight / 2
+                    )
+
+                    drawRoundRect(
+                        color = Color.White,
+                        topLeft = Offset(textBounds.left, textBounds.top),
+                        size = Size(textBounds.width(), textBounds.height()),
+                        cornerRadius = CornerRadius(4f, 4f)
+                    )
+
+                    drawRoundRect(
+                        color = Color.Black,
+                        topLeft = Offset(textBounds.left, textBounds.top),
+                        size = Size(textBounds.width(), textBounds.height()),
+                        cornerRadius = CornerRadius(4f, 4f),
+                        style = Stroke(10f)
+                    )
+
+                    drawIntoCanvas { canvas ->
+                        paint.color = Color.Black.toArgb()
                         canvas.nativeCanvas.drawText(
                             text,
-                            textOffset.x,
-                            textOffset.y + paint.textSize / 2,
+                            textOffset.x - textWidth / 2,
+                            textOffset.y + textHeight / 2 - paint.descent(),
                             paint
                         )
                     }
                 }
             }
         }
-            Button(
-                onClick = {
-                    if (isLineSet) {
-                        lineStart = Offset.Zero
-                        lineEnd = Offset.Zero
-                        lines = emptyList()
-                    }
-                    isLineSet = !isLineSet
-                },
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Text(
-                    text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFFFFFFF),
-                        textAlign = TextAlign.Center,
+        Button(
+            onClick = {
+                if (isLineSet) {
+                    lineStart = Offset.Zero
+                    lineEnd = Offset.Zero
+                    lines = emptyList()
+                }
+                isLineSet = !isLineSet
+            },
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(
+                text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFFFFFFFF),
+                    textAlign = TextAlign.Center,
                 )
             )
         }

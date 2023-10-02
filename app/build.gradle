@@ -1,13 +1,13 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
+    id("com.google.gms.google-services")
 }
 
-    def camerax_version = "1.4.0-alpha01"
-    def accompanist_version = "0.31.2-alpha"
-    def lifecycle_version = "2.5.0-alpha02"
-    def nav_version = "2.7.3"
+def camerax_version = "1.4.0-alpha01"
+def accompanist_version = "0.31.2-alpha"
+def lifecycle_version = "2.5.0-alpha02"
+def nav_version = "2.7.3"
 
 android {
 
@@ -23,11 +23,11 @@ android {
         }
     }
 
-    namespace 'com.example.goniometro'
+    namespace 'com.guicarneirodev.goniometro'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.goniometro"
+        applicationId "com.guicarneirodev.goniometro"
         minSdk 21
         targetSdk 34
         versionCode 1
@@ -91,8 +91,8 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 
     //FIREBASE//
-    implementation (platform('com.google.firebase:firebase-bom:32.3.1'))
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
     implementation ('com.google.firebase:firebase-auth-ktx')
 
     //CAMERA STUFF//

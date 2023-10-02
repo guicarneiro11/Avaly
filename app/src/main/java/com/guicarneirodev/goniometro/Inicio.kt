@@ -1,13 +1,23 @@
-package com.example.goniometro
+package com.guicarneirodev.goniometro
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,8 +39,8 @@ fun Inicio(navController: NavController, modifier: Modifier = Modifier) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFFB2FFED),
-                        Color(0xFFCEB3FF)
+                        Color(0xFF50BFA9),
+                        Color(0xFF50BFA9)
                     )
                 )
             )
@@ -47,31 +57,26 @@ fun Inicio(navController: NavController, modifier: Modifier = Modifier) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(32.dp))
+                    .clip(RoundedCornerShape(16.dp))
             )
             Column(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .background(Color.White, shape = RoundedCornerShape(12.dp))
                     .padding(16.dp)
                     .height(IntrinsicSize.Min),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "BEM-VINDO",
-                    style = MaterialTheme.typography.headlineLarge.copy(color = Color(0xFF6100FF)),
-                    modifier = Modifier.padding(12.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .clip(RoundedCornerShape(25.dp)),
+                        .clip(RoundedCornerShape(16.dp)),
                 ) {
+                    Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         onClick = {
                             navController.navigate("login")
@@ -95,7 +100,7 @@ fun Inicio(navController: NavController, modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .clip(RoundedCornerShape(24.dp)),
+                        .clip(RoundedCornerShape(16.dp)),
                 ) {
                     Button(
                         onClick = {

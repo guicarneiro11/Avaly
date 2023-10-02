@@ -1,4 +1,4 @@
-package com.example.goniometro.ui.theme
+package com.guicarneirodev.goniometro.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

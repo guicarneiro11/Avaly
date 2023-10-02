@@ -1,4 +1,4 @@
-package com.example.goniometro
+package com.guicarneirodev.goniometro
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,30 +31,28 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Register(navController: NavController) {
-    var phone by remember { mutableStateOf("") }
-    var isPhoneErrorVisible by remember { mutableStateOf(true) }
-    val phoneFocusRequester = remember { FocusRequester() }
-    val isPhoneValid = { phoneNumber: String -> phoneNumber.matches(Regex("\\d{11}")) }
-
-    var username by remember { mutableStateOf("") }
-    var usernameErrorVisible by remember { mutableStateOf(true) }
-    val usernameFocusRequester = remember {FocusRequester () }
-    val isUsernameValid = { inputUsername: String -> inputUsername.isNotEmpty() && inputUsername.length >= 4 }
+    var email by remember { mutableStateOf("") }
+    var isEmailErrorVisible by remember { mutableStateOf(true) }
+    val emailFocusRequester = remember { FocusRequester() }
+    val isEmailValid = { input: String -> android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches() }
 
     var password by remember { mutableStateOf("") }
     var passwordErrorVisible by remember { mutableStateOf(true) }
-    val passwordFocusRequester = remember {FocusRequester () }
-    val isPasswordValid = { inputPassword: String ->
-        inputPassword.length >= 8 && inputPassword.contains(Regex("[A-Z]")) &&
-                inputPassword.contains(Regex("[a-z]")) && inputPassword.contains(Regex("\\d"))
+    val passwordFocusRequester = remember { FocusRequester() }
+    val isPasswordValid = { input: String ->
+        input.length >= 8 && input.contains(Regex("[A-Z]")) &&
+                input.contains(Regex("[a-z]")) && input.contains(Regex("\\d"))
     }
 
     var showErrorText by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+
+    val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     Box(
         modifier = Modifier
@@ -63,8 +60,8 @@ fun Register(navController: NavController) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFFB2FFED),
-                        Color(0xFFCEB3FF)
+                        Color(0xFF50BFA9),
+                        Color(0xFF50BFA9)
                     )
                 )
             )
@@ -78,7 +75,7 @@ fun Register(navController: NavController) {
             Column(
                 modifier = Modifier
                     .align(alignment = Alignment.Center)
-                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .background(Color.White, shape = RoundedCornerShape(12.dp))
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -87,61 +84,29 @@ fun Register(navController: NavController) {
                 Voltar(navController)
 
                 TextField(
-                        value = phone,
-                        onValueChange = { phone = it
-                                        isPhoneErrorVisible = false
-                                        },
-                        label = { Text("Celular") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .focusRequester(phoneFocusRequester),
-                    isError = isPhoneErrorVisible,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            isPhoneErrorVisible = !isPhoneValid(phone)
-                        }
-                    ),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
-                    )
-                    )
-                if (!isPhoneValid(phone)) {
-                    Text(
-                        text = "Número de telefone inválido",
-                        color = Color.Red
-                    )
-                }
-                DisposableEffect(Unit){
-                    phoneFocusRequester.requestFocus()
-                    onDispose{}
-                }
-
-
-                TextField(
-                    value = username,
+                    value = email,
                     onValueChange = {
-                        username = it
-                        usernameErrorVisible = false
+                        email = it
+                        isEmailErrorVisible = false
                     },
-                    label = { Text("Nome de usuário") },
+                    label = { Text("Email") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .focusRequester(usernameFocusRequester),
-                    isError = usernameErrorVisible,
+                        .focusRequester(emailFocusRequester),
+                    isError = isEmailErrorVisible,
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            usernameErrorVisible = !isUsernameValid(username)
+                            isEmailErrorVisible = !isEmailValid(email)
                         }
                     ),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
                     )
                 )
-                if (!isUsernameValid(username)) {
+                if (!isEmailValid(email)) {
                     Text(
-                        text = "Nome de usuário inválido",
+                        text = "Email inválido",
                         color = Color.Red
                     )
                 }
@@ -168,19 +133,30 @@ fun Register(navController: NavController) {
                         imeAction = ImeAction.Done
                     )
                 )
+
                 if (!isPasswordValid(password)) {
                     Text(
                         text = "Senha inválida",
                         color = Color.Red
                     )
                 }
-                    Spacer(modifier = Modifier.height(16.dp))
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = {
-                        if (!isPhoneErrorVisible && !usernameErrorVisible && !passwordErrorVisible) {
-                            println("Celular: $phone, Nome de usuário: $username, Senha: $password")
-                            navController.navigate("inicio")
+                        if (!isEmailErrorVisible && !passwordErrorVisible) {
+                            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val firebaseUser = firebaseAuth.currentUser!!
+                                        println("Usuário autenticado: ${firebaseUser.email}")
+                                        navController.navigate("inicio")
+                                    } else {
+                                        showErrorText = true
+                                        errorMessage = "Falha no registro: ${task.exception?.message}"
+                                    }
+                                }
                         } else {
                             showErrorText = true
                             errorMessage = "Há campos inválidos"
@@ -191,6 +167,13 @@ fun Register(navController: NavController) {
                         .height(50.dp)
                 ) {
                     Text(text = "Registrar-se")
+                }
+
+                if (showErrorText) {
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red
+                    )
                 }
             }
         }

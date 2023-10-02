@@ -1,4 +1,4 @@
-package com.example.goniometro
+package com.guicarneirodev.goniometro
 
 import org.junit.Test
 
