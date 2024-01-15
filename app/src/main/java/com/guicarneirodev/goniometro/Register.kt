@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -27,8 +30,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
@@ -45,8 +50,16 @@ fun Register(navController: NavController) {
     var passwordErrorVisible by remember { mutableStateOf(true) }
     val passwordFocusRequester = remember { FocusRequester() }
     val isPasswordValid = { input: String ->
-        input.length >= 8 && input.contains(Regex("[A-Z]")) &&
-                input.contains(Regex("[a-z]")) && input.contains(Regex("\\d"))
+        val isValid =
+                input.length >= 6 &&
+                input.contains(Regex("[A-Z]")) &&
+                input.contains(Regex("[a-z]")) &&
+                input.contains(Regex("\\d")) &&
+                input.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
+
+        println("Senha: $input, Válida: $isValid")
+
+        isValid
     }
 
     var showErrorText by remember { mutableStateOf(false) }
@@ -60,8 +73,8 @@ fun Register(navController: NavController) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF50BFA9),
-                        Color(0xFF50BFA9)
+                        Color(0xFF006F6A),
+                        Color(0xFF006F6A)
                     )
                 )
             )
@@ -94,7 +107,7 @@ fun Register(navController: NavController) {
                         .fillMaxWidth()
                         .padding(8.dp)
                         .focusRequester(emailFocusRequester),
-                    isError = isEmailErrorVisible,
+                    isError = email.isNotEmpty() && !isEmailValid(email),
                     keyboardActions = KeyboardActions(
                         onDone = {
                             isEmailErrorVisible = !isEmailValid(email)
@@ -104,17 +117,12 @@ fun Register(navController: NavController) {
                         imeAction = ImeAction.Done
                     )
                 )
-                if (!isEmailValid(email)) {
-                    Text(
-                        text = "Email inválido",
-                        color = Color.Red
-                    )
-                }
 
                 TextField(
                     value = password,
                     onValueChange = {
                         password = it
+                        println("Senha: $password")
                         passwordErrorVisible = false
                     },
                     label = { Text("Senha") },
@@ -123,7 +131,7 @@ fun Register(navController: NavController) {
                         .padding(8.dp)
                         .focusRequester(passwordFocusRequester),
                     visualTransformation = PasswordVisualTransformation(),
-                    isError = passwordErrorVisible,
+                    isError = password.isNotEmpty() && !isPasswordValid(password),
                     keyboardActions = KeyboardActions(
                         onDone = {
                             passwordErrorVisible = !isPasswordValid(password)
@@ -134,18 +142,11 @@ fun Register(navController: NavController) {
                     )
                 )
 
-                if (!isPasswordValid(password)) {
-                    Text(
-                        text = "Senha inválida",
-                        color = Color.Red
-                    )
-                }
-
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = {
-                        if (!isEmailErrorVisible && !passwordErrorVisible) {
+                        if (isEmailValid(email) && isPasswordValid(password)) {
                             firebaseAuth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
@@ -154,7 +155,7 @@ fun Register(navController: NavController) {
                                         navController.navigate("inicio")
                                     } else {
                                         showErrorText = true
-                                        errorMessage = "Falha no registro: ${task.exception?.message}"
+                                        errorMessage = "Falha no registro"
                                     }
                                 }
                         } else {
@@ -166,7 +167,11 @@ fun Register(navController: NavController) {
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(text = "Registrar-se")
+                    Text(
+                        text = "Criar conta",
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default))
                 }
 
                 if (showErrorText) {
