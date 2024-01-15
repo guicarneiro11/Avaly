@@ -25,8 +25,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
@@ -39,8 +41,8 @@ fun Inicio(navController: NavController, modifier: Modifier = Modifier) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF50BFA9),
-                        Color(0xFF50BFA9)
+                        Color(0xFF006F6A),
+                        Color(0xFF006F6A)
                     )
                 )
             )
@@ -85,13 +87,13 @@ fun Inicio(navController: NavController, modifier: Modifier = Modifier) {
                             .fillMaxSize(),
                     ) {
                         Text(
-                            text = "LOGIN",
+                            text = "Login",
                             color = Color(0xFFFFFFFF),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = MaterialTheme.typography.headlineMedium.copy(fontFamily = FontFamily.Default),
                             modifier = modifier
                                 .requiredWidth(width = 150.dp)
-                                .requiredHeight(height = 40.dp)
+                                .requiredHeight(height = 42.dp)
                         )
                     }
                 }
@@ -110,13 +112,13 @@ fun Inicio(navController: NavController, modifier: Modifier = Modifier) {
                             .fillMaxSize(),
                     ) {
                         Text(
-                            text = "REGISTRO",
-                            color = Color(0xffffffff),
+                            text = "Registro",
+                            color = Color(0xFFFFFFFF),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineMedium,
+                            style = MaterialTheme.typography.headlineMedium.copy(fontFamily = FontFamily.Default),
                             modifier = modifier
-                                .requiredWidth(width = 300.dp)
-                                .requiredHeight(height = 40.dp)
+                                .requiredWidth(width = 150.dp)
+                                .requiredHeight(height = 42.dp)
                         )
                     }
                 }

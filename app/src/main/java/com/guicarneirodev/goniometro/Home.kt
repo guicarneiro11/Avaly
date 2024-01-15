@@ -19,20 +19,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,8 +36,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -94,17 +92,31 @@ class MainActivity : ComponentActivity() {
                 composable("inicio") { Inicio(navController) }
                 composable("login") { Login(navController) }
                 composable("register") { Register(navController) }
-                composable("home") { Home(navController) }
+                composable("home") { Home() }
             }
         }
     }
 }
 
 @Composable
-fun Home(navController: NavController) {
+fun Home() {
+    GoniometroTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Tutorial()
+            Background()
+            PhotoImport()
+            CameraPhoto()
+            Goniometro()
+        }
+    }
+}
 
-    var showTutorial by remember { mutableStateOf(true) }
-    var isCheckboxChecked by remember { mutableStateOf(true) }
+@Composable
+fun Tutorial() {
+    var showTutorial by rememberSaveable { mutableStateOf(true) }
 
     if (showTutorial) {
         Dialog(
@@ -112,62 +124,44 @@ fun Home(navController: NavController) {
                 showTutorial = false
             }
         ) {
-            Box(
+            LazyColumn(
                 modifier = Modifier
+                    .padding(16.dp)
                     .fillMaxSize()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center,
             ) {
-                Column(modifier = Modifier
-                    .align(alignment = Alignment.Center)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(Color.White, shape = RoundedCornerShape(12.dp))
-                    .padding(16.dp)
-                    .height(IntrinsicSize.Min),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("Recomendações.")
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "1. Saiba os principios básicos da goniometria.")
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "2. Selecione uma foto da galeria (canto inferior esquerdo) ou tire uma foto da articulação que será avaliada (canto inferior direito).")
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "3. Clique em 'Realizar Goniometria' assim que tiver a foto posicionada no meio da tela")
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "4. Arraste do Eixo até a posição correta do Braço Fixo com o dedo, então de um toque onde deverá ser posicionado o Braço Móvel.")
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "5. Caso não tenha realizado corretamente a goniometria, clique em 'Reiniciar Goniometria' para tentar novamente.")
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                item {
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Checkbox(
-                            checked = showTutorial,
-                            onCheckedChange = { isCheckboxChecked = it }
-                        )
-                        Text("Não mostrar novamente")
-                    }
-
-                    Button(onClick = { showTutorial = false }) {
-                        Text("Fechar")
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .background(Color.White, shape = RoundedCornerShape(12.dp))
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Recomendações.")
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(text = "1. Saiba os principios básicos da goniometria.")
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(text = "2. Selecione uma foto da galeria (canto inferior esquerdo) ou tire uma foto da articulação que será avaliada (canto inferior direito).")
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(text = "3. Clique em 'Realizar Goniometria' assim que tiver a foto posicionada no meio da tela")
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(text = "4. Arraste do Eixo até a posição correta do Braço Fixo com o dedo, então de um toque onde deverá ser posicionado o Braço Móvel.")
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(text = "5. Caso não tenha realizado corretamente a goniometria, clique em 'Reiniciar Goniometria' para tentar novamente.")
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Button(onClick = { showTutorial = false }) {
+                                Text("Fechar")
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
-
-    GoniometroTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Background()
-            PhotoImport()
-            CameraPhoto()
-            Goniometro()
-            Voltar(navController)
         }
     }
 }
@@ -180,8 +174,8 @@ fun Background() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF50BFA9),
-                        Color(0xFF50BFA9)
+                        Color(0xFF006F6A),
+                        Color(0xFF006F6A)
                     )
                 )
             )
@@ -190,11 +184,19 @@ fun Background() {
 
 @Composable
 fun Voltar(navController: NavController) {
+    val lastClick = remember { mutableLongStateOf(0L) }
+
     Box(
         contentAlignment = Alignment.TopStart,
     ) {
         IconButton(
-            onClick = { navController.popBackStack() },
+            onClick = {
+                val now = System.currentTimeMillis()
+                if (now - lastClick.longValue > 3000) {
+                    navController.popBackStack()
+                    lastClick.longValue = now
+                }
+            },
             Modifier.padding(9.dp)
         ) {
             Icon(
@@ -209,11 +211,11 @@ fun Voltar(navController: NavController) {
 
 @Composable
 fun PhotoImport() {
-    var imageUri by remember {
+    var imageUri by rememberSaveable {
         mutableStateOf<Uri?>(null)
     }
     val context = LocalContext.current
-    val bitmap =  remember {
+    val bitmap =  rememberSaveable {
         mutableStateOf<Bitmap?>(null)
     }
     val launcher = rememberLauncherForActivityResult(contract =
@@ -265,7 +267,7 @@ fun CameraPhoto() {
         BuildConfig.APPLICATION_ID + ".provider", file
     )
 
-    var capturedImageUri by remember {
+    var capturedImageUri by rememberSaveable {
         mutableStateOf<Uri?>(null)
     }
 
@@ -284,7 +286,6 @@ fun CameraPhoto() {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
-
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd,

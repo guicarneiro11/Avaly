@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -28,7 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
@@ -40,15 +43,15 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 fun Login(navController: NavController) {
     val sharedPreferences = LocalContext.current.getSharedPreferences("MinhasPreferencias", Context.MODE_PRIVATE)
     var email by remember { mutableStateOf(sharedPreferences.getString("email", "") ?: "") }
-    var password by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf(sharedPreferences.getString("senha", "") ?: "") }
     var lembrarEmail by remember { mutableStateOf(sharedPreferences.getBoolean("lembrarEmail", false)) }
+    var lembrarSenha by remember { mutableStateOf(sharedPreferences.getBoolean("lembrarSenha", false)) }
     var loginError by remember { mutableStateOf(false) }
 
     val firebaseAuth = FirebaseAuth.getInstance()
-
     val context = LocalContext.current
 
-    fun salvarEmailNoSharedPreferences(context: Context, email: String) {
+    fun saveEmailNoSharedPreferences(context: Context, email: String) {
         val prefs = context.getSharedPreferences("MinhasPreferencias", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putString("email", email)
@@ -62,6 +65,20 @@ fun Login(navController: NavController) {
         editor.apply()
     }
 
+    fun saveSenhaNoSharedPreferences(context: Context, senha: String) {
+        val prefs = context.getSharedPreferences("MinhasPreferencias", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putString("senha", senha)
+        editor.apply()
+    }
+
+    fun removerSenhaDoSharedPreferences(context: Context) {
+        val prefs = context.getSharedPreferences("MinhasPreferencias", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.remove("senha")
+        editor.apply()
+    }
+
 
     Box(
         modifier = Modifier
@@ -69,123 +86,163 @@ fun Login(navController: NavController) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF50BFA9),
-                        Color(0xFF50BFA9)
+                        Color(0xFF006F6A),
+                        Color(0xFF006F6A)
                     )
                 )
             )
     ) {
-        Box(
+        LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .align(Alignment.Center)
                 .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .align(alignment = Alignment.Center)
-                    .background(Color.White, shape = RoundedCornerShape(12.dp))
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Voltar(navController)
-
-                    Spacer(modifier = Modifier.weight(0.7f))
-
-                    Text(
-                        text = "Faça o login",
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(16.dp),
-                    )
-                    Spacer(modifier = Modifier.weight(2f))
-                }
-                TextField(
-                    value = email,
-                    onValueChange = { email = it
-                                    val editor = sharedPreferences.edit()
-                                    editor.putString("email", it)
-                                    editor.apply()},
-                    label = { Text("Email") },
+            item {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                        .padding(16.dp)
                 ) {
-                    Checkbox(checked = lembrarEmail, onCheckedChange = {
-                        lembrarEmail = it
-                        val editor = sharedPreferences.edit()
-                        editor.putBoolean("lembrarEmail", it)
-                        editor.apply()
-                    })
-                    Text(text = "Lembrar Email",
-                        modifier = Modifier.padding(8.dp))
-                }
-                    TextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = { Text("Senha") },
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        visualTransformation = PasswordVisualTransformation()
-                    )
+                            .align(alignment = Alignment.Center)
+                            .background(Color.White, shape = RoundedCornerShape(12.dp))
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Voltar(navController)
 
+                            Spacer(modifier = Modifier.weight(0.7f))
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-
-                    onClick = {
-
-                        if (email.isNotEmpty() && password.isNotEmpty()) {
-                            if (lembrarEmail) {
-                                salvarEmailNoSharedPreferences(context, email)
-                            } else {
-                                removerEmailDoSharedPreferences(context)
-                            }
-
-                            firebaseAuth.signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        println("Login bem-sucedido: $email")
-                                        navController.navigate("home")
-                                    } else {
-                                        val exception = task.exception
-                                        if (exception is FirebaseAuthInvalidUserException ||
-                                            exception is FirebaseAuthInvalidCredentialsException) {
-                                            println("Falha no login: Email ou senha incorretos")
-                                            loginError = true
-                                        } else {
-                                            println("Falha no login: ${exception?.message}")
-                                        }
-                                    }
-                                }
-                        } else {
-                            loginError = true
+                            Text(
+                                text = "Faça o login",
+                                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
+                                modifier = Modifier.padding(16.dp),
+                            )
+                            Spacer(modifier = Modifier.weight(2f))
                         }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                ) {
-                    Text(text = "Entrar")
-                }
-                if (loginError) {
-                    Text(
-                        text = "Email ou senha incorretos. Por favor, tente novamente.",
-                        color = Color.Red
-                    )
+                        TextField(
+                            value = email,
+                            onValueChange = {
+                                email = it
+                                val editor = sharedPreferences.edit()
+                                editor.putString("email", it)
+                                editor.apply()
+                            },
+                            label = { Text("Email") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(checked = lembrarEmail, onCheckedChange = {
+                                lembrarEmail = it
+                                val editor = sharedPreferences.edit()
+                                editor.putBoolean("lembrarEmail", it)
+                                editor.apply()
+                            })
+                            Text(
+                                text = "Lembrar Email",
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
+                        TextField(
+                            value = password,
+                            onValueChange = { password = it },
+                            label = { Text("Senha") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            visualTransformation = PasswordVisualTransformation()
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(checked = lembrarSenha, onCheckedChange = {
+                                lembrarSenha = it
+                                val editor = sharedPreferences.edit()
+                                editor.putBoolean("lembrarSenha", it)
+                                editor.apply()
+                            })
+                            Text(
+                                text = "Lembrar Senha",
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = {
+                                if (email.isNotEmpty() && password.isNotEmpty()) {
+                                    if (lembrarEmail) {
+                                        saveEmailNoSharedPreferences(context, email)
+                                    } else {
+                                        removerEmailDoSharedPreferences(context)
+                                    }
+                                    if (lembrarSenha) {
+                                        saveSenhaNoSharedPreferences(context, password)
+                                    } else {
+                                        removerSenhaDoSharedPreferences(context)
+                                    }
+
+                                    firebaseAuth.signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                println("Login bem-sucedido: $email")
+                                                navController.navigate("home")
+                                            } else {
+                                                val exception = task.exception
+                                                if (exception is FirebaseAuthInvalidUserException ||
+                                                    exception is FirebaseAuthInvalidCredentialsException
+                                                ) {
+                                                    println("Falha no login: Email ou senha incorretos")
+                                                    loginError = true
+                                                } else {
+                                                    println("Falha no login: ${exception?.message}")
+                                                }
+                                            }
+                                        }
+                                } else {
+                                    loginError = true
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)
+                        ) {
+                            Text(
+                                text = "Entrar",
+                                color = Color(0xFFFFFFFF),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default),
+                            )
+                        }
+
+                        if (loginError) {
+                            Text(
+                                text = "Email ou senha incorretos. Por favor, tente novamente.",
+                                color = Color.Red
+                            )
+                        }
+                    }
                 }
             }
         }
