@@ -92,14 +92,14 @@ class MainActivity : ComponentActivity() {
                 composable("inicio") { Inicio(navController) }
                 composable("login") { Login(navController) }
                 composable("register") { Register(navController) }
-                composable("home") { Home() }
+                composable("home") { Home(navController) }
             }
         }
     }
 }
 
 @Composable
-fun Home() {
+fun Home(navController: NavController) {
     GoniometroTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -110,6 +110,7 @@ fun Home() {
             PhotoImport()
             CameraPhoto()
             Goniometro()
+            Voltar(navController)
         }
     }
 }
