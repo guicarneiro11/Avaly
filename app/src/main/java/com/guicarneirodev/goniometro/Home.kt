@@ -36,7 +36,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -66,7 +65,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -180,33 +178,6 @@ fun Background() {
                 )
             )
     )
-}
-
-@Composable
-fun Voltar(navController: NavController) {
-    val lastClick = remember { mutableLongStateOf(0L) }
-
-    Box(
-        contentAlignment = Alignment.TopStart,
-    ) {
-        IconButton(
-            onClick = {
-                val now = System.currentTimeMillis()
-                if (now - lastClick.longValue > 3000) {
-                    navController.popBackStack()
-                    lastClick.longValue = now
-                }
-            },
-            Modifier.padding(9.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.arrowback),
-                contentDescription = "Voltar Tela",
-                modifier = Modifier
-                    .size(50.dp)
-            )
-        }
-    }
 }
 
 @Composable
@@ -351,7 +322,7 @@ fun Goniometro() {
         val angle2 = atan2(dy2.toDouble(), dx2.toDouble())
 
         var angle = Math.toDegrees(angle2 - angle1)
-        if (angle < 0) angle += 180.0
+        if (angle < 0) angle += 360
         return angle
     }
     Box(
@@ -362,6 +333,7 @@ fun Goniometro() {
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(40.dp)
                     .pointerInteropFilter { motionEvent ->
                         when (motionEvent.action) {
                             MotionEvent.ACTION_DOWN -> {
@@ -402,8 +374,8 @@ fun Goniometro() {
                         lines[1].first,
                         lines[1].second
                     )
-                    val formattedAngle = String.format("%.2f", angle)
-                    val text = " $formattedAngle° "
+                    val formattedAngle = String.format("%.1f", angle)
+                    val text = "  $formattedAngle° "
                     val textOffset = Offset(
                         (lines[1].first.x + lines[1].second.x) / 2,
                         (lines[1].first.y + lines[1].second.y) / 2
@@ -418,6 +390,7 @@ fun Goniometro() {
                     val paint = Paint().asFrameworkPaint()
                     val textSize = 40.dp.toPx()
                     paint.textSize = textSize
+                    size.width * 0.8f
                     val textWidth = paint.measureText(text)
                     val textHeight = -paint.ascent() + paint.descent()
                     val textBounds = RectF(

@@ -13,11 +13,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -122,6 +127,33 @@ fun Inicio(navController: NavController, modifier: Modifier = Modifier) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun Voltar(navController: NavController) {
+    val lastClick = remember { mutableLongStateOf(0L) }
+
+    Box(
+        contentAlignment = Alignment.TopStart,
+    ) {
+        IconButton(
+            onClick = {
+                val now = System.currentTimeMillis()
+                if (now - lastClick.longValue > 3000) {
+                    navController.popBackStack()
+                    lastClick.longValue = now
+                }
+            },
+            Modifier.padding(9.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.arrowback),
+                contentDescription = "Voltar Tela",
+                modifier = Modifier
+                    .size(50.dp)
+            )
         }
     }
 }
