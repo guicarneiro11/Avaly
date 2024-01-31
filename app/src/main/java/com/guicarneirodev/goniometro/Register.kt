@@ -34,12 +34,26 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+class ValidViewModel : ViewModel() {
+    fun isEmailValid(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    fun isPasswordValid(password: String): Boolean {
+        return password.length >= 6 &&
+                password.contains(Regex("[A-Z]")) &&
+                password.contains(Regex("[a-z]")) &&
+                password.contains(Regex("\\d")) &&
+                password.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Register(navController: NavController) {
+fun Register(navController: NavController, viewModel: ValidViewModel) {
     var email by remember { mutableStateOf("") }
     var isEmailErrorVisible by remember { mutableStateOf(true) }
     val emailFocusRequester = remember { FocusRequester() }
@@ -153,7 +167,7 @@ fun Register(navController: NavController) {
 
                         Button(
                             onClick = {
-                                if (isEmailValid(email) && isPasswordValid(password)) {
+                                if (viewModel.isEmailValid(email) && viewModel.isPasswordValid(password)) {
                                     firebaseAuth.createUserWithEmailAndPassword(email, password)
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful) {

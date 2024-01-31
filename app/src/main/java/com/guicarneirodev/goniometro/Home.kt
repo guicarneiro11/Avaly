@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -72,6 +73,9 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.FirebaseApp
+import com.guicarneirodev.goniometro.ui.theme.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -81,15 +85,22 @@ import kotlin.math.atan2
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startKoin{
+            androidContext(this@MainActivity)
+            modules(viewModelModule)
+        }
+
         FirebaseApp.initializeApp(this)
 
         setContent {
             val navController = rememberNavController()
+            val validViewModel: ValidViewModel = viewModel()
 
             NavHost(navController = navController, startDestination = "inicio") {
                 composable("inicio") { Inicio(navController) }
                 composable("login") { Login(navController) }
-                composable("register") { Register(navController) }
+                composable("register") { Register(navController, validViewModel) }
                 composable("home") { Home() }
             }
         }
