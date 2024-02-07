@@ -73,7 +73,6 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.FirebaseApp
-import com.guicarneirodev.goniometro.ui.theme.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.io.File

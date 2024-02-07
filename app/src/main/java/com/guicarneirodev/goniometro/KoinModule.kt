@@ -1,6 +1,5 @@
-package com.guicarneirodev.goniometro.ui.theme
+package com.guicarneirodev.goniometro
 
-import com.guicarneirodev.goniometro.ValidViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

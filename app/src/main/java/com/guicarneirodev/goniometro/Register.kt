@@ -37,9 +37,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import java.util.regex.Pattern
+
 class ValidViewModel : ViewModel() {
+
+    private val emailPattern: Pattern = Pattern.compile(
+        "[a-zA-Z0-9+._%\\-]{1,256}" + "@" +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                "(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
+    )
+
     fun isEmailValid(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return emailPattern.matcher(email).matches()
     }
 
     fun isPasswordValid(password: String): Boolean {
