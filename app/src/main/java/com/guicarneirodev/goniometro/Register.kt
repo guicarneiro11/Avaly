@@ -14,8 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -29,191 +27,220 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import java.util.regex.Pattern
 
-class ValidViewModel : ViewModel() {
-
-    private val emailPattern: Pattern = Pattern.compile(
-        "[a-zA-Z0-9+._%\\-]{1,256}" + "@" +
-                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                "(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
-    )
-
-    fun isEmailValid(email: String): Boolean {
-        return emailPattern.matcher(email).matches()
-    }
-
-    fun isPasswordValid(password: String): Boolean {
-        return password.length >= 6 &&
-                password.contains(Regex("[A-Z]")) &&
-                password.contains(Regex("[a-z]")) &&
-                password.contains(Regex("\\d")) &&
-                password.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Register(navController: NavController, viewModel: ValidViewModel) {
-    var email by remember { mutableStateOf("") }
-    var isEmailErrorVisible by remember { mutableStateOf(true) }
-    val emailFocusRequester = remember { FocusRequester() }
-    val isEmailValid = { input: String -> android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches() }
-
-    var password by remember { mutableStateOf("") }
-    var passwordErrorVisible by remember { mutableStateOf(true) }
-    val passwordFocusRequester = remember { FocusRequester() }
-    val isPasswordValid = { input: String ->
-        val isValid =
-                input.length >= 6 &&
-                input.contains(Regex("[A-Z]")) &&
-                input.contains(Regex("[a-z]")) &&
-                input.contains(Regex("\\d")) &&
-                input.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
-
-        println("Senha: $input, Válida: $isValid")
-
-        isValid
-    }
-
-    var showErrorText by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
-
-    val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF006F6A),
-                        Color(0xFF006F6A)
-                    )
+            class ValidViewModel : ViewModel() {
+                private val emailPattern: Pattern = Pattern.compile(
+                    "[a-zA-Z0-9+._%\\-]{1,256}" + "@" +
+                            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                            "(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
                 )
-            )
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            item {
+
+                fun passwordsMatch(password: String, confirmPassword: String): Boolean {
+                    return password == confirmPassword
+                }
+
+                fun isEmailValid(email: String): Boolean {
+                    return emailPattern.matcher(email).matches()
+                }
+                fun isPasswordValid(password: String): Boolean {
+                    return password.length >= 6 &&
+                            password.contains(Regex("[A-Z]")) &&
+                            password.contains(Regex("[a-z]")) &&
+                            password.contains(Regex("\\d")) &&
+                            password.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
+                }
+            }
+
+            @Composable
+            fun Register(navController: NavController, viewModel: ValidViewModel) {
+                var email by remember { mutableStateOf("") }
+                var isEmailErrorVisible by remember { mutableStateOf(true) }
+                val emailFocusRequester = remember { FocusRequester() }
+                val isEmailValid =
+                    { input: String ->
+                        android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
+                    }
+
+                var password by remember { mutableStateOf("") }
+                var passwordErrorVisible by remember { mutableStateOf(true) }
+                val passwordFocusRequester = remember { FocusRequester() }
+                val isPasswordValid = { input: String ->
+                    val isValid =
+                        input.length >= 6 &&
+                                input.contains(Regex("[A-Z]")) &&
+                                input.contains(Regex("[a-z]")) &&
+                                input.contains(Regex("\\d")) &&
+                                input.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
+
+                    println("Senha: $input, Válida: $isValid")
+
+                    isValid
+                }
+
+                var confirmPassword by remember { mutableStateOf("") }
+                var showErrorText by remember { mutableStateOf(false) }
+                var errorMessage by remember { mutableStateOf("") }
+
+                val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .align(Alignment.Center)
-                        .padding(16.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFF006F6A),
+                                    Color(0xFF006F6A)
+                                )
+                            )
+                        )
                 ) {
-                    Column(
+                    LazyColumn(
                         modifier = Modifier
-                            .align(alignment = Alignment.Center)
-                            .background(Color.White, shape = RoundedCornerShape(12.dp))
-                            .padding(16.dp),
+                            .padding(16.dp)
+                            .fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .align(Alignment.Center)
+                                    .padding(16.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .align(alignment = Alignment.Center)
+                                        .background(Color.White, shape = RoundedCornerShape(12.dp))
+                                        .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
 
-                        Voltar(navController)
+                                    Voltar(navController)
 
-                        TextField(
-                            value = email,
-                            onValueChange = {
-                                email = it
-                                isEmailErrorVisible = false
-                            },
-                            label = { Text("Email") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                                .focusRequester(emailFocusRequester),
-                            isError = email.isNotEmpty() && !isEmailValid(email),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    isEmailErrorVisible = !isEmailValid(email)
-                                }
-                            ),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done
-                            )
-                        )
+                                    TextField(
+                                        value = email,
+                                        onValueChange = {
+                                            email = it
+                                            isEmailErrorVisible = false
+                                        },
+                                        label = { Text("Email") },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp)
+                                            .focusRequester(emailFocusRequester),
+                                        isError = email.isNotEmpty() && !isEmailValid(email),
+                                        keyboardActions = KeyboardActions(
+                                            onDone = {
+                                                isEmailErrorVisible = !isEmailValid(email)
+                                            }
+                                        ),
+                                        keyboardOptions = KeyboardOptions.Default.copy(
+                                            imeAction = ImeAction.Done
+                                        )
+                                    )
 
-                        TextField(
-                            value = password,
-                            onValueChange = {
-                                password = it
-                                println("Senha: $password")
-                                passwordErrorVisible = false
-                            },
-                            label = { Text("Senha") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                                .focusRequester(passwordFocusRequester),
-                            visualTransformation = PasswordVisualTransformation(),
-                            isError = password.isNotEmpty() && !isPasswordValid(password),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    passwordErrorVisible = !isPasswordValid(password)
-                                }
-                            ),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done
-                            )
-                        )
+                                    TextField(
+                                        value = password,
+                                        onValueChange = {
+                                            password = it
+                                            println("Senha: $password")
+                                            passwordErrorVisible = false
+                                        },
+                                        label = { Text("Senha") },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp)
+                                            .focusRequester(passwordFocusRequester),
+                                        visualTransformation = PasswordVisualTransformation(),
+                                        isError = password.isNotEmpty() && !isPasswordValid(password),
+                                        keyboardActions = KeyboardActions(
+                                            onDone = {
+                                                passwordErrorVisible = !isPasswordValid(password)
+                                            }
+                                        ),
+                                        keyboardOptions = KeyboardOptions.Default.copy(
+                                            imeAction = ImeAction.Done
+                                        )
+                                    )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                                    TextField(
+                                        value = confirmPassword,
+                                        onValueChange = {
+                                            confirmPassword = it
+                                            println("Confirmar senha: $confirmPassword")
+                                        },
+                                        label = { Text("Confirmar senha") },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp)
+                                            .focusRequester(passwordFocusRequester),
+                                        visualTransformation = PasswordVisualTransformation(),
+                                        isError = password.isNotEmpty() && !isPasswordValid(password),
+                                        keyboardActions = KeyboardActions(
+                                            onDone = {
+                                                passwordErrorVisible = !isPasswordValid(password)
+                                            }
+                                        ),
+                                        keyboardOptions = KeyboardOptions.Default.copy(
+                                            imeAction = ImeAction.Done
+                                        )
+                                    )
 
-                        Button(
-                            onClick = {
-                                if (viewModel.isEmailValid(email) && viewModel.isPasswordValid(password)) {
-                                    firebaseAuth.createUserWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener { task ->
-                                            if (task.isSuccessful) {
-                                                val firebaseUser = firebaseAuth.currentUser!!
-                                                println("Usuário autenticado: ${firebaseUser.email}")
-                                                navController.navigate("inicio")
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    Button(
+                                        onClick = {
+                                            if (viewModel.isEmailValid(email) &&
+                                                viewModel.isPasswordValid(password) &&
+                                                viewModel.passwordsMatch(password, confirmPassword)
+                                            ) {
+                                                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener { authResult ->
+                                                        if (authResult.isSuccessful) {
+                                                            val firebaseUser =
+                                                                firebaseAuth.currentUser!!
+                                                            println("Usuário autenticado: ${firebaseUser.email}")
+
+                                                            navController.navigate("inicio")
+                                                        } else {
+                                                            showErrorText = true
+                                                            errorMessage = "Falha no registro"
+                                                        }
+                                                    }
                                             } else {
                                                 showErrorText = true
-                                                errorMessage = "Falha no registro"
+                                                errorMessage = "Há campos inválidos"
                                             }
-                                        }
-                                } else {
-                                    showErrorText = true
-                                    errorMessage = "Há campos inválidos"
-                                }
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                        ) {
-                            Text(
-                                text = "Criar conta",
-                                color = Color(0xFFFFFFFF),
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default)
-                            )
-                        }
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(50.dp),
+                                        enabled = viewModel.isEmailValid(email) &&
+                                                  viewModel.isPasswordValid(password) &&
+                                                  viewModel.passwordsMatch(password, confirmPassword)
+                                    ) {
+                                        Text(text = "Criar conta")
+                                    }
 
-                        if (showErrorText) {
-                            Text(
-                                text = errorMessage,
-                                color = Color.Red
-                            )
+                                    if (showErrorText) {
+                                        Text(
+                                            text = errorMessage,
+                                            color = Color.Red
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
-    }
-}

@@ -240,7 +240,6 @@ fun PhotoImport() {
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun CameraPhoto() {
-
     val context = LocalContext.current
     val file = context.createImageFile()
     val uri = FileProvider.getUriForFile(

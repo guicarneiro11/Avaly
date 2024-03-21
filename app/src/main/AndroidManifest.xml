@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/angle_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Goniometro"
-        tools:targetApi="31">
+        tools:targetApi="tiramisu">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -24,6 +24,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
 

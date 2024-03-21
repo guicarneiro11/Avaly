@@ -1,8 +1,7 @@
 package com.guicarneirodev.goniometro
 
-import junit.framework.TestCase.assertFalse
-import junit.framework.TestCase.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
 class ValidViewModelTest {
 
@@ -10,23 +9,23 @@ class ValidViewModelTest {
 
     @Test
     fun testisEmailValid() {
-        assertTrue(validViewModel.isEmailValid("test@example.com"))
+        Assertions.assertTrue(validViewModel.isEmailValid("test@example.com"))
 
-        assertFalse(validViewModel.isEmailValid("invalid_email.com"))
+        Assertions.assertFalse(validViewModel.isEmailValid("invalid_email.com"))
     }
 
     @Test
     fun testisPasswordValid() {
-        assertTrue(validViewModel.isPasswordValid("Password123!"))
+        Assertions.assertTrue(validViewModel.isPasswordValid("Password123!"))
 
-        assertFalse(validViewModel.isPasswordValid("Pass!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("Pass!"))
 
-        assertFalse(validViewModel.isPasswordValid("PASSWORD123!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("PASSWORD123!"))
 
-        assertFalse(validViewModel.isPasswordValid("password123!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("password123!"))
 
-        assertFalse(validViewModel.isPasswordValid("Password!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("Password!"))
 
-        assertFalse(validViewModel.isPasswordValid("Password123"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("Password123"))
     }
 }
