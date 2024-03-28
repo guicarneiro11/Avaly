@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -44,13 +44,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 class FirebaseAuthManager {
 
     fun resetPassword(email: String, newPassword: String): String {
+        val firebaseUser = FirebaseAuth.getInstance().currentUser ?: return "Usuário não encontrado"
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return "Endereço de e-mail inválido"
         }
-
-        val firebaseUser = FirebaseAuth.getInstance().currentUser ?: return "Usuário não encontrado"
-
         firebaseUser.updatePassword(newPassword)
             .addOnCompleteListener { resetPassword ->
                 if (resetPassword.isSuccessful) {
@@ -68,27 +66,27 @@ class FirebaseAuthManager {
     }
 
     private val firebaseAuth = FirebaseAuth.getInstance()
-        fun signInEmail(email: String, password: String, callback: (Result<Unit>) -> Unit) {
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        println("Login bem-sucedido: $email")
-                        callback(Result.success(Unit))
-                    } else {
-                        val exception = task.exception
-                        if (exception is FirebaseAuthInvalidUserException ||
-                            exception is FirebaseAuthInvalidCredentialsException
-                        ) {
-                            println("Falha no login: Email ou senha incorretos")
-                            callback(Result.failure(Exception("Email ou senha incorretos")))
-                        } else {
-                            println("Falha no login: ${exception?.message}")
-                            callback(Result.failure(exception ?: Exception("Erro desconhecido")))
-                        }
-                    }
+    fun signInEmail(email: String, password: String, callback: (Result<Unit>) -> Unit) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    println("Login bem-sucedido: $email")
+                    callback(Result.success(Unit))
+                } else {
+                    val exception = task.exception
+                    if (exception is FirebaseAuthInvalidUserException ||
+                        exception is FirebaseAuthInvalidCredentialsException
+                ) {
+                    println("Falha no login: Email ou senha incorretos")
+                    callback(Result.failure(Exception("Email ou senha incorretos")))
+                } else {
+                    println("Falha no login: ${exception?.message}")
+                    callback(Result.failure(Exception(exception?.message)))
                 }
+            }
         }
     }
+}
 
 @Composable
 fun Login(navController: NavController) {
@@ -99,8 +97,8 @@ fun Login(navController: NavController) {
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordsMatch by remember { mutableStateOf(false) }
-    var lembrarEmail by remember { mutableStateOf(sharedPreferences.getBoolean("", false)) }
-    var lembrarSenha by remember { mutableStateOf(sharedPreferences.getBoolean("", false)) }
+    var lembrarEmail by remember { mutableStateOf(sharedPreferences.getBoolean("lembrarEmail", false)) }
+    var lembrarSenha by remember { mutableStateOf(sharedPreferences.getBoolean("lembrarSenha", false)) }
 
     var loginError by remember { mutableStateOf(false) }
     var showResetPassword by remember { mutableStateOf(false) }
@@ -251,7 +249,7 @@ fun Login(navController: NavController) {
                                     style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
                                     modifier = Modifier.padding(16.dp),
                                 )
-                                Spacer(modifier = Modifier.weight(2f))
+                                Spacer(modifier = Modifier.weight(1.5f))
                             }
                             TextField(
                                 value = email,
@@ -267,12 +265,15 @@ fun Login(navController: NavController) {
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Checkbox(checked = lembrarEmail, onCheckedChange = {
+
+                                Switch(checked = lembrarEmail, onCheckedChange = {
                                     lembrarEmail = it
                                     val editor = sharedPreferences.edit()
                                     editor.putBoolean("lembrarEmail", it)
                                     editor.apply()
-                                })
+                                }
+                                ,modifier = Modifier.padding(start = 16.dp)
+                                )
                                 Text(
                                     text = "Lembrar email",
                                     modifier = Modifier.padding(8.dp)
@@ -293,12 +294,14 @@ fun Login(navController: NavController) {
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Checkbox(checked = lembrarSenha, onCheckedChange = {
+                                Switch(checked = lembrarSenha, onCheckedChange = {
                                     lembrarSenha = it
                                     val editor = sharedPreferences.edit()
                                     editor.putBoolean("lembrarSenha", it)
                                     editor.apply()
-                                })
+                                }
+                                ,modifier = Modifier.padding(start = 16.dp)
+                                    )
                                 Text(
                                     text = "Lembrar senha",
                                     modifier = Modifier.padding(8.dp)
@@ -323,7 +326,7 @@ fun Login(navController: NavController) {
                                         firebaseAuthManager.signInEmail(email, password) { result ->
                                             result.fold(
                                                 onSuccess = {
-                                                    navController.navigate("home")
+                                                    navController.navigate("main")
                                                 },
                                                 onFailure = { loginError = true }
                                             )

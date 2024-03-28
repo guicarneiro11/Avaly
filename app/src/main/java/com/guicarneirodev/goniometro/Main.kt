@@ -98,18 +98,18 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val validViewModel: ValidViewModel = viewModel()
 
-            NavHost(navController = navController, startDestination = "inicio") {
-                composable("inicio") { Inicio(navController) }
+            NavHost(navController = navController, startDestination = "home") {
+                composable("home") { Home(navController) }
                 composable("login") { Login(navController) }
                 composable("register") { Register(navController, validViewModel) }
-                composable("home") { Home() }
+                composable("main") { Main() }
             }
         }
     }
 }
 
 @Composable
-fun Home() {
+fun Main() {
     GoniometroTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -286,6 +286,9 @@ fun CameraPhoto() {
             Icon(
                 painter = painterResource(id = R.drawable.addphoto),
                 contentDescription = null,
+                modifier = Modifier
+                    .size(44.dp)
+                    .padding(1.dp)
             )
         }
     }

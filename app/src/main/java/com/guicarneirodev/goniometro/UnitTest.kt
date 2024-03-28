@@ -13,7 +13,6 @@ class ValidViewModelTest {
 
         Assertions.assertFalse(validViewModel.isEmailValid("invalid_email.com"))
     }
-
     @Test
     fun testisPasswordValid() {
         Assertions.assertTrue(validViewModel.isPasswordValid("Password123!"))

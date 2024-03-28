@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun Inicio(navController: NavController) {
+fun Home(navController: NavController) {
     val background = painterResource(id = R.drawable.goniometria)
 
     Box(
