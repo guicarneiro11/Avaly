@@ -36,7 +36,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -67,7 +66,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -207,7 +205,7 @@ fun PhotoImport() {
     }
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomStart,
+        contentAlignment = Alignment.BottomStart
     ) {
         IconButton(onClick = {
             launcher.launch("image/*")
@@ -460,33 +458,6 @@ fun Goniometro() {
                     color = Color(0xFFFFFFFF),
                     textAlign = TextAlign.Center,
                 )
-            )
-        }
-    }
-}
-
-@Composable
-fun Voltar(navController: NavController) {
-    val lastClick = remember { mutableLongStateOf(0L) }
-
-    Box(
-        contentAlignment = Alignment.TopStart,
-    ) {
-        IconButton(
-            onClick = {
-                val now = System.currentTimeMillis()
-                if (now - lastClick.longValue > 3000) {
-                    navController.popBackStack()
-                    lastClick.longValue = now
-                }
-            },
-            Modifier.padding(8.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.arrowback),
-                contentDescription = "Voltar Tela",
-                modifier = Modifier
-                    .size(50.dp)
             )
         }
     }

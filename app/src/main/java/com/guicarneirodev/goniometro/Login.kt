@@ -183,14 +183,16 @@ fun Login(navController: NavController) {
                                         .size(40.dp)
                                 )
 
-                                Spacer(modifier = Modifier.weight(0.6f))
+                                Spacer(modifier = Modifier.weight(0.9f))
 
                                 Text(
-                                    text = "Alterar senha",
+                                    text = "Alterar Senha",
                                     style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
                                     modifier = Modifier.padding(16.dp),
                                 )
-                                Spacer(modifier = Modifier.weight(2f))
+
+                                Spacer(modifier = Modifier.weight(1.5f))
+
                             }
                             TextField(
                                 value = email,
@@ -240,16 +242,24 @@ fun Login(navController: NavController) {
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Voltar(navController)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrowback),
+                                    contentDescription = "Voltar Tela",
+                                    modifier = Modifier
+                                        .clickable { navController.popBackStack() }
+                                        .size(40.dp)
+                                )
 
-                                Spacer(modifier = Modifier.weight(0.5f))
+                                Spacer(modifier = Modifier.weight(0.9f))
 
                                 Text(
                                     text = "Faça o login",
                                     style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
                                     modifier = Modifier.padding(16.dp),
                                 )
+
                                 Spacer(modifier = Modifier.weight(1.5f))
+
                             }
                             TextField(
                                 value = email,
