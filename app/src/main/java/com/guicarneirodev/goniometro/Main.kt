@@ -23,12 +23,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +38,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -76,6 +79,7 @@ import com.google.firebase.FirebaseApp
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.io.File
+import java.lang.Math.toDegrees
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Objects
@@ -318,147 +322,202 @@ fun Context.createImageFile(): File {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
+fun DropdownMenuItem(onClick: () -> Unit, content: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        onClick()
+                    }
+                }
+                true
+            }
+    ) {
+        content()
+    }
+}
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
 fun Goniometro() {
     var lineStart by remember { mutableStateOf(Offset.Zero) }
     var lineEnd by remember { mutableStateOf(Offset.Zero) }
     var lines by remember { mutableStateOf(listOf<Pair<Offset, Offset>>()) }
     var isLineSet by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedAngleIndex by remember { mutableIntStateOf(0) }
+    val angleOptions = listOf("Ângulo Direto", "Oposto", "Angulo Suplementar", "Suplementar Oposto")
 
-    fun calculateAngle(start1: Offset, end1: Offset, start2: Offset, end2: Offset): Double {
-        val dx1 = end1.x - start1.x
-        val dy1 = end1.y - start1.y
-        val dx2 = end2.x - start2.x
-        val dy2 = end2.y - start2.y
+    fun calculateAngleBetweenLines(
+        start1: Offset,
+        end1: Offset,
+        start2: Offset,
+        end2: Offset
+    ): Double {
+        val directionX1 = end1.x - start1.x
+        val directionY1 = end1.y - start1.y
+        val directionX2 = end2.x - start2.x
+        val directionY2 = end2.y - start2.y
 
-        val angle1 = atan2(dy1.toDouble(), dx1.toDouble())
-        val angle2 = atan2(dy2.toDouble(), dx2.toDouble())
+        val angleRadians1 = atan2(directionY1.toDouble(), directionX1.toDouble())
+        val angleRadians2 = atan2(directionY2.toDouble(), directionX2.toDouble())
 
-        var angle = Math.toDegrees(angle2 - angle1)
-        if (angle < 0) angle += 360
-        return angle
+        val angleDifference = (toDegrees(angleRadians2 - angleRadians1) + 360) % 360
+        val directAngle = if (angleDifference > 180) 360 - angleDifference else angleDifference
+        return 180 - directAngle
+    }
+
+    fun calculateAllAngles(
+        start1: Offset,
+        end1: Offset,
+        start2: Offset,
+        end2: Offset
+    ): List<Double> {
+        val directAngle = calculateAngleBetweenLines(start1, end1, start2, end2)
+        val oppositeAngle = 180 - directAngle
+        val supplementaryAngle = (directAngle + 90) % 180
+        val oppositeSupplementaryAngle = 180 - supplementaryAngle
+
+        return listOf(directAngle, oppositeAngle, supplementaryAngle, oppositeSupplementaryAngle)
     }
     Box(
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier.fillMaxSize()
     ) {
-        if (isLineSet) {
-            Canvas(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(40.dp)
-                    .pointerInteropFilter { motionEvent ->
-                        when (motionEvent.action) {
-                            MotionEvent.ACTION_DOWN -> {
-                                if (lines.isEmpty()) {
-                                    lineStart = Offset(motionEvent.x, motionEvent.y)
-                                    lineEnd = lineStart
-                                } else {
-                                    lineStart = lines[0].first
+            if (isLineSet) {
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(40.dp)
+                        .pointerInteropFilter { motionEvent ->
+                            when (motionEvent.action) {
+                                MotionEvent.ACTION_DOWN -> {
+                                    if (lines.isEmpty()) {
+                                        lineStart = Offset(motionEvent.x, motionEvent.y)
+                                        lineEnd = lineStart
+                                    } else {
+                                        lineStart = lines[0].first
+                                        lineEnd = Offset(motionEvent.x, motionEvent.y)
+                                    }
+                                }
+
+                                MotionEvent.ACTION_MOVE -> {
                                     lineEnd = Offset(motionEvent.x, motionEvent.y)
                                 }
-                            }
 
-                            MotionEvent.ACTION_MOVE -> {
-                                lineEnd = Offset(motionEvent.x, motionEvent.y)
-                            }
-
-                            MotionEvent.ACTION_UP -> {
-                                if (lines.size < 2) {
-                                    lines = lines + (lineStart to lineEnd)
+                                MotionEvent.ACTION_UP -> {
+                                    if (lines.size < 2) {
+                                        lines = lines + (lineStart to lineEnd)
+                                    }
                                 }
                             }
+                            true
                         }
-                        true
-                    }
-            ) {
-                lines.forEach { (start, end) ->
-                    drawLine(
-                        color = Color.Black,
-                        start = start,
-                        end = end,
-                        strokeWidth = 44f
-                    )
-                }
-                if (lines.size == 2) {
-                    val angle = calculateAngle(
-                        lines[0].first,
-                        lines[0].second,
-                        lines[1].first,
-                        lines[1].second
-                    )
-                    val formattedAngle = String.format("%.1f", angle)
-                    val text = "  $formattedAngle° "
-                    val textOffset = Offset(
-                        (lines[1].first.x + lines[1].second.x) / 2,
-                        (lines[1].first.y + lines[1].second.y) / 2
-                    )
-
-                    drawCircle(
-                        color = Color.Black,
-                        radius = 20f,
-                        center = textOffset
-                    )
-
-                    val paint = Paint().asFrameworkPaint()
-                    val textSize = 40.dp.toPx()
-                    paint.textSize = textSize
-                    size.width * 0.8f
-                    val textWidth = paint.measureText(text)
-                    val textHeight = -paint.ascent() + paint.descent()
-                    val textBounds = RectF(
-                        textOffset.x - textWidth / 2,
-                        textOffset.y - textHeight / 2,
-                        textOffset.x + textWidth / 2,
-                        textOffset.y + textHeight / 2
-                    )
-
-                    drawRoundRect(
-                        color = Color.White,
-                        topLeft = Offset(textBounds.left, textBounds.top),
-                        size = Size(textBounds.width(), textBounds.height()),
-                        cornerRadius = CornerRadius(4f, 4f)
-                    )
-
-                    drawRoundRect(
-                        color = Color.Black,
-                        topLeft = Offset(textBounds.left, textBounds.top),
-                        size = Size(textBounds.width(), textBounds.height()),
-                        cornerRadius = CornerRadius(4f, 4f),
-                        style = Stroke(10f)
-                    )
-
-                    drawIntoCanvas { canvas ->
-                        paint.color = Color.Black.toArgb()
-                        canvas.nativeCanvas.drawText(
-                            text,
-                            textOffset.x - textWidth / 2,
-                            textOffset.y + textHeight / 2 - paint.descent(),
-                            paint
+                ) {
+                    lines.forEach { (start, end) ->
+                        drawLine(
+                            color = Color.Black,
+                            start = start,
+                            end = end,
+                            strokeWidth = 44f
                         )
+                    }
+                    if (lines.size == 2) {
+                        val angle = calculateAllAngles(
+                            lines[0].first,
+                            lines[0].second,
+                            lines[1].first,
+                            lines[1].second
+                        )
+                        val selectedAngle = angle[selectedAngleIndex]
+                        val formattedAngle = String.format("%.1f", selectedAngle)
+                        val text = "  $formattedAngle° "
+                        val textOffset = Offset(
+                            (lines[1].first.x + lines[1].second.x) / 2,
+                            (lines[1].first.y + lines[1].second.y) / 2
+                        )
+
+                        val paint = Paint().asFrameworkPaint()
+                        val textSize = 40.dp.toPx()
+                        paint.textSize = textSize
+                        size.width * 0.8f
+                        val textWidth = paint.measureText(text)
+                        val textHeight = -paint.ascent() + paint.descent()
+                        val textBounds = RectF(
+                            textOffset.x - textWidth / 2,
+                            textOffset.y - textHeight / 2,
+                            textOffset.x + textWidth / 2,
+                            textOffset.y + textHeight / 2
+                        )
+
+                        drawRoundRect(
+                            color = Color.White,
+                            topLeft = Offset(textBounds.left, textBounds.top),
+                            size = Size(textBounds.width(), textBounds.height()),
+                            cornerRadius = CornerRadius(4f, 4f)
+                        )
+
+                        drawRoundRect(
+                            color = Color.Black,
+                            topLeft = Offset(textBounds.left, textBounds.top),
+                            size = Size(textBounds.width(), textBounds.height()),
+                            cornerRadius = CornerRadius(4f, 4f),
+                            style = Stroke(10f)
+                        )
+
+                        drawIntoCanvas { canvas ->
+                            paint.color = Color.Black.toArgb()
+                            canvas.nativeCanvas.drawText(
+                                text,
+                                textOffset.x - textWidth / 2,
+                                textOffset.y + textHeight / 2 - paint.descent(),
+                                paint
+                            )
+                        }
                     }
                 }
             }
-        }
-        Button(
-            onClick = {
-                if (isLineSet) {
-                    lineStart = Offset.Zero
-                    lineEnd = Offset.Zero
-                    lines = emptyList()
-                }
-                isLineSet = !isLineSet
-            },
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text(
-                text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFFFFFFF),
-                    textAlign = TextAlign.Center,
+            Button(
+                onClick = {
+                    if (isLineSet) {
+                        lineStart = Offset.Zero
+                        lineEnd = Offset.Zero
+                        lines = emptyList()
+                    }
+                    isLineSet = !isLineSet
+                },
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Text(
+                    text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
+                    )
                 )
-            )
+            }
+        }
+    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
+        Button(onClick = { expanded = true }) {
+            Text("Selecionar Ângulo")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            angleOptions.forEachIndexed { index, title ->
+                DropdownMenuItem(onClick = {
+                    selectedAngleIndex = index
+                    expanded = false
+                }) {
+                    Text(title)
+                }
+            }
         }
     }
 }
