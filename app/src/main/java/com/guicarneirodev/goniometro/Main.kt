@@ -3,12 +3,8 @@ package com.guicarneirodev.goniometro
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.graphics.RectF
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Toast
@@ -52,7 +48,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
@@ -76,23 +71,15 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.FirebaseApp
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 import java.io.File
 import java.lang.Math.toDegrees
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Objects
 import kotlin.math.atan2
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        startKoin{
-            androidContext(this@MainActivity)
-            modules(viewModelModule)
-        }
+    super.onCreate(savedInstanceState)
 
         FirebaseApp.initializeApp(this)
 
@@ -119,8 +106,7 @@ fun Main() {
         ) {
             Tutorial()
             Background()
-            PhotoImport()
-            CameraPhoto()
+            MainPhotoDisplay()
             Goniometro()
         }
     }
@@ -157,7 +143,7 @@ fun Tutorial() {
                         ) {
                             Text("Recomendações.")
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text(text = "1. Saiba os principals básicos da goniometria.")
+                            Text(text = "1. Saiba os princípios básicos da goniometria.")
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(text = "2. Selecione uma foto da galeria (canto inferior esquerdo) ou tire uma foto da articulação que será avaliada (canto inferior direito).")
                             Spacer(modifier = Modifier.height(4.dp))
@@ -194,80 +180,47 @@ fun Background() {
     )
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PhotoImport() {
-    var imageUri by rememberSaveable {
-        mutableStateOf<Uri?>(null)
-    }
+fun MainPhotoDisplay() {
     val context = LocalContext.current
-    val bitmap =  rememberSaveable {
-        mutableStateOf<Bitmap?>(null)
+    var currentImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+
+    val importLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        currentImageUri = uri
     }
-    val launcher = rememberLauncherForActivityResult(contract =
-    ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imageUri = uri
+
+    val file = context.createImageFile()
+    val captureUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+    val captureLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) currentImageUri = captureUri
     }
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomStart
-    ) {
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            captureLauncher.launch(captureUri)
+        } else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomStart) {
         IconButton(onClick = {
-            launcher.launch("image/*")
-        }, Modifier.padding(9.dp))
-        {
-            Icon(painter = painterResource(id = R.drawable.photo_library), contentDescription = "Importar Foto",
+            permissionLauncher.launch(android.Manifest.permission.CAMERA)
+        }, Modifier.padding(9.dp)) {
+            Icon(painter = painterResource(id = R.drawable.photo_library),
+                contentDescription = "Tirar Foto",
                 modifier = Modifier
                     .size(44.dp)
                     .padding(1.dp))
         }
-        imageUri?.let {
-            bitmap.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(context.contentResolver, it)
-                ImageDecoder.decodeBitmap(source)
-            } else {
-                val inputStream = context.contentResolver.openInputStream(it)
-                BitmapFactory.decodeStream(inputStream)
-            }
-
-            bitmap.value?.let {  btm ->
-                Image(bitmap = btm.asImageBitmap(),
-                    contentDescription =null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(1.dp)
-                        .align(alignment = Alignment.Center))
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalCoilApi::class)
-@Composable
-fun CameraPhoto() {
-    val context = LocalContext.current
-    val file = context.createImageFile()
-    val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        BuildConfig.APPLICATION_ID + ".provider", file
-    )
-
-    var capturedImageUri by rememberSaveable {
-        mutableStateOf<Uri?>(null)
-    }
-
-    val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-            capturedImageUri = uri
-        }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
-        if (it) {
-            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            cameraLauncher.launch(uri)
-        } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        IconButton(onClick = {
+            importLauncher.launch("image/*")
+        }, Modifier.padding(9.dp)) {
+            Icon(painter = painterResource(id = R.drawable.photo_library),
+                contentDescription = "Importar Foto",
+                modifier = Modifier
+                    .size(44.dp)
+                    .padding(1.dp))
         }
     }
     Box(
@@ -279,7 +232,7 @@ fun CameraPhoto() {
                 val permissionCheckResult =
                     ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA)
                 if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                    cameraLauncher.launch(uri)
+                    captureLauncher.launch(captureUri)
                 } else {
                     permissionLauncher.launch(android.Manifest.permission.CAMERA)
                 }
@@ -287,7 +240,7 @@ fun CameraPhoto() {
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.addphoto),
-                contentDescription = null,
+                contentDescription = "Tirar Foto",
                 modifier = Modifier
                     .size(44.dp)
                     .padding(1.dp)
@@ -295,15 +248,14 @@ fun CameraPhoto() {
         }
     }
 
-    Box{
-        if (capturedImageUri?.path?.isNotEmpty() == true) {
+
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        currentImageUri?.let {
             Image(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(1.dp)
-                    .align(alignment = Alignment.Center),
-                painter = rememberImagePainter(capturedImageUri),
-                contentDescription = null
+                painter = rememberImagePainter(it),
+                contentDescription = "Foto selecionada",
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
@@ -340,6 +292,8 @@ fun DropdownMenuItem(onClick: () -> Unit, content: @Composable () -> Unit) {
         content()
     }
 }
+
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Goniometro() {
@@ -349,7 +303,7 @@ fun Goniometro() {
     var isLineSet by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     var selectedAngleIndex by remember { mutableIntStateOf(0) }
-    val angleOptions = listOf("Ângulo Direto", "Oposto", "Angulo Suplementar", "Suplementar Oposto")
+    val angleOptions = listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
 
     fun calculateAngleBetweenLines(
         start1: Offset,
@@ -489,7 +443,7 @@ fun Goniometro() {
                     }
                     isLineSet = !isLineSet
                 },
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(6.dp)
             ) {
                 Text(
                     text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
@@ -498,11 +452,14 @@ fun Goniometro() {
                         fontWeight = FontWeight(400),
                         color = Color(0xFFFFFFFF),
                         textAlign = TextAlign.Center,
-                    )
                 )
-            }
+            )
         }
-    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
+    }
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .padding(6.dp), contentAlignment = Alignment.BottomCenter) {
         Button(onClick = { expanded = true }) {
             Text("Selecionar Ângulo")
         }
@@ -514,7 +471,8 @@ fun Goniometro() {
                 DropdownMenuItem(onClick = {
                     selectedAngleIndex = index
                     expanded = false
-                }) {
+                })
+                {
                     Text(title)
                 }
             }
