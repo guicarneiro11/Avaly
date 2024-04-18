@@ -321,6 +321,7 @@ fun Goniometro() {
 
         val angleDifference = (toDegrees(angleRadians2 - angleRadians1) + 360) % 360
         val directAngle = if (angleDifference > 180) 360 - angleDifference else angleDifference
+
         return 180 - directAngle
     }
 

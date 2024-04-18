@@ -220,7 +220,7 @@ import java.util.regex.Pattern
                                                                 firebaseAuth.currentUser!!
                                                             println("Usuário autenticado: ${firebaseUser.email}")
 
-                                                            navController.navigate("inicio")
+                                                            navController.navigate("home")
                                                         } else {
                                                             showErrorText = true
                                                             errorMessage = "Falha no registro"
