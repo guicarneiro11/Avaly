@@ -54,11 +54,7 @@ import java.util.regex.Pattern
                     return emailPattern.matcher(email).matches()
                 }
                 fun isPasswordValid(password: String): Boolean {
-                    return password.length >= 6 &&
-                            password.contains(Regex("[A-Z]")) &&
-                            password.contains(Regex("[a-z]")) &&
-                            password.contains(Regex("\\d")) &&
-                            password.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
+                    return password.length >= 6
                 }
             }
 
@@ -76,17 +72,9 @@ import java.util.regex.Pattern
                 var passwordErrorVisible by remember { mutableStateOf(true) }
                 val passwordFocusRequester = remember { FocusRequester() }
                 val isPasswordValid = { input: String ->
-                    val isValid =
-                        input.length >= 6 &&
-                                input.contains(Regex("[A-Z]")) &&
-                                input.contains(Regex("[a-z]")) &&
-                                input.contains(Regex("\\d")) &&
-                                input.contains(Regex("[!@#$%^&*(),.?\":{}|<>~]"))
-
-                    println("Senha: $input, Válida: $isValid")
-
-                    isValid
+                    input.length >= 6
                 }
+
 
                 var confirmPassword by remember { mutableStateOf("") }
                 var showErrorText by remember { mutableStateOf(false) }
