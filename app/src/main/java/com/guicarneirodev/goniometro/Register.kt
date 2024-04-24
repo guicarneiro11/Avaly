@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.regex.Pattern
 
             class ValidViewModel : ViewModel() {
@@ -204,14 +205,24 @@ import java.util.regex.Pattern
                                                 firebaseAuth.createUserWithEmailAndPassword(email, password)
                                                     .addOnCompleteListener { authResult ->
                                                         if (authResult.isSuccessful) {
-                                                            val firebaseUser =
-                                                                firebaseAuth.currentUser!!
+                                                            val firebaseUser = firebaseAuth.currentUser!!
                                                             println("Usuário autenticado: ${firebaseUser.email}")
 
-                                                            navController.navigate("home")
+                                                            val newUser = hashMapOf("showTutorial" to true)
+                                                            FirebaseFirestore.getInstance().collection("users").document(firebaseUser.uid)
+                                                                .set(newUser)
+                                                                .addOnSuccessListener {
+                                                                    println("Documento criado com sucesso para novo usuário!")
+                                                                    navController.navigate("home")
+                                                                }
+                                                                .addOnFailureListener { e ->
+                                                                    println("Erro ao criar documento para novo usuário: $e")
+                                                                    showErrorText = true
+                                                                    errorMessage = "Erro ao criar configurações iniciais do usuário."
+                                                                }
                                                         } else {
                                                             showErrorText = true
-                                                            errorMessage = "Falha no registro"
+                                                            errorMessage = authResult.exception?.message ?: "Falha no registro"
                                                         }
                                                     }
                                             } else {
@@ -223,8 +234,8 @@ import java.util.regex.Pattern
                                             .fillMaxWidth()
                                             .height(50.dp),
                                         enabled = viewModel.isEmailValid(email) &&
-                                                  viewModel.isPasswordValid(password) &&
-                                                  viewModel.passwordsMatch(password, confirmPassword)
+                                                viewModel.isPasswordValid(password) &&
+                                                viewModel.passwordsMatch(password, confirmPassword)
                                     ) {
                                         Text(text = "Criar conta")
                                     }

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -25,6 +26,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
@@ -33,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -71,6 +75,8 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 import java.lang.Math.toDegrees
 import java.text.SimpleDateFormat
@@ -99,12 +105,16 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Main() {
+    val auth = FirebaseAuth.getInstance()
+    val currentUser = auth.currentUser
+    val userId = currentUser?.uid ?: "defaultUser"
+
     GoniometroTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Tutorial()
+            Tutorial(userId = userId)
             Background()
             MainPhotoDisplay()
             Goniometro()
@@ -113,13 +123,27 @@ fun Main() {
 }
 
 @Composable
-fun Tutorial() {
-    var showTutorial by rememberSaveable { mutableStateOf(true) }
+fun Tutorial(userId: String) {
+    val showTutorial = remember { mutableStateOf(true) }
 
-    if (showTutorial) {
+    LaunchedEffect(key1 = userId) {
+        val docRef = FirebaseFirestore.getInstance().collection("users").document(userId)
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("Tutorial", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+            Log.d("Tutorial", "Snapshot: ${snapshot?.data}")
+            Log.d("Auth", "UID do usuário autenticado: ${FirebaseAuth.getInstance().currentUser?.uid}")
+            showTutorial.value = snapshot?.getBoolean("showTutorial") ?: true
+        }
+
+    }
+
+    if (showTutorial.value) {
         Dialog(
             onDismissRequest = {
-                showTutorial = false
+                showTutorial.value = false
             }
         ) {
             LazyColumn(
@@ -132,15 +156,22 @@ fun Tutorial() {
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxSize(),
-                        contentAlignment = Alignment.Center,
+                        contentAlignment = Alignment.Center
                     ) {
                         Column(
                             modifier = Modifier
-                                .padding(16.dp)
                                 .background(Color.White, shape = RoundedCornerShape(12.dp))
                                 .padding(16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.TopEnd
+                            ) {
+                                IconButton(onClick = { showTutorial.value = false }) {
+                                    Icon(Icons.Default.Close, contentDescription = "Fechar")
+                                }
+                            }
                             Text("Recomendações.")
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(text = "1. Saiba os princípios básicos da goniometria.")
@@ -153,8 +184,12 @@ fun Tutorial() {
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(text = "5. Caso não tenha realizado corretamente a goniometria, clique em 'Reiniciar Goniometria' para tentar novamente.")
                             Spacer(modifier = Modifier.height(4.dp))
-                            Button(onClick = { showTutorial = false }) {
-                                Text("Fechar")
+                            Button(onClick = {
+                                showTutorial.value = false
+                                FirebaseFirestore.getInstance().collection("users").document(userId)
+                                    .update("showTutorial", false)
+                            }) {
+                                Text("Não exibir novamente")
                             }
                         }
                     }

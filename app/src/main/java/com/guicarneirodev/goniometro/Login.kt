@@ -42,7 +42,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 class FirebaseAuthManager {
-
     fun resetPassword(email: String, newPassword: String): String {
         val firebaseUser = FirebaseAuth.getInstance().currentUser ?: return "Usuário não encontrado"
 
@@ -133,7 +132,6 @@ fun Login(navController: NavController) {
         editor.remove("senha")
         editor.apply()
     }
-
 
     Box(
         modifier = Modifier
