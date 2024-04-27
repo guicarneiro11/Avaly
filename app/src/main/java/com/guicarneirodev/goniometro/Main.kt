@@ -221,41 +221,38 @@ fun MainPhotoDisplay() {
     val context = LocalContext.current
     var currentImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
-    val importLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        currentImageUri = uri
-    }
+    val importLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+            currentImageUri = uri
+        }
 
     val file = context.createImageFile()
-    val captureUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
-    val captureLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) currentImageUri = captureUri
-    }
-    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            captureLauncher.launch(captureUri)
-        } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+    val captureUri =
+        FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+    val captureLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) currentImageUri = captureUri
         }
-    }
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+                captureLauncher.launch(captureUri)
+            } else {
+                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomStart) {
-        IconButton(onClick = {
-            permissionLauncher.launch(android.Manifest.permission.CAMERA)
-        }, Modifier.padding(9.dp)) {
-            Icon(painter = painterResource(id = R.drawable.photo_library),
-                contentDescription = "Tirar Foto",
-                modifier = Modifier
-                    .size(44.dp)
-                    .padding(1.dp))
-        }
         IconButton(onClick = {
             importLauncher.launch("image/*")
         }, Modifier.padding(9.dp)) {
-            Icon(painter = painterResource(id = R.drawable.photo_library),
+            Icon(
+                painter = painterResource(id = R.drawable.photo_library),
                 contentDescription = "Importar Foto",
                 modifier = Modifier
                     .size(44.dp)
-                    .padding(1.dp))
+                    .padding(1.dp)
+            )
         }
     }
     Box(
@@ -282,9 +279,6 @@ fun MainPhotoDisplay() {
             )
         }
     }
-
-
-
     Box(modifier = Modifier.fillMaxSize()) {
         currentImageUri?.let {
             Image(
@@ -294,7 +288,7 @@ fun MainPhotoDisplay() {
             )
         }
     }
-}
+    }
 
 @SuppressLint("SimpleDateFormat")
 fun Context.createImageFile(): File {
