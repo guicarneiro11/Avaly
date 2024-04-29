@@ -30,11 +30,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,9 +71,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
@@ -85,7 +91,7 @@ import kotlin.math.atan2
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
         FirebaseApp.initializeApp(this)
 
@@ -97,14 +103,18 @@ class MainActivity : ComponentActivity() {
                 composable("home") { Home(navController) }
                 composable("login") { Login(navController) }
                 composable("register") { Register(navController, validViewModel) }
-                composable("main") { Main() }
+                composable("main") { Main(navController) }
+                composable("results/{userId}", arguments = listOf(navArgument("userId") { type = NavType.StringType })) { backStackEntry ->
+                    val userId = backStackEntry.arguments?.getString("userUid") ?: "defaultUser"
+                    Angles(navController, userId)
+                }
             }
         }
     }
 }
 
 @Composable
-fun Main() {
+fun Main(navController: NavController) {
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
     val userId = currentUser?.uid ?: "defaultUser"
@@ -114,10 +124,33 @@ fun Main() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
+            AnglesScreen(navController, userId)
             Tutorial(userId = userId)
             Background()
             MainPhotoDisplay()
             Goniometro()
+        }
+    }
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AnglesScreen(navController: NavController, userId: String) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Angles Screen") },
+                actions = {
+                    IconButton(onClick = { navController.navigate("results/$userId") }) {
+                        Icon(painter = painterResource(id = R.drawable.clinical_notes), contentDescription = "Go to Angles")
+                    }
+                }
+            )
+        }
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Welcome to the Angles Screen", style = MaterialTheme.typography.headlineMedium)
         }
     }
 }
