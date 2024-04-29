@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -17,29 +16,19 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -67,7 +56,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -82,7 +70,6 @@ import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 import java.lang.Math.toDegrees
 import java.text.SimpleDateFormat
@@ -105,8 +92,9 @@ class MainActivity : ComponentActivity() {
                 composable("register") { Register(navController, validViewModel) }
                 composable("main") { Main(navController) }
                 composable("results/{userId}", arguments = listOf(navArgument("userId") { type = NavType.StringType })) { backStackEntry ->
-                    val userId = backStackEntry.arguments?.getString("userUid") ?: "defaultUser"
-                    Angles(navController, userId)
+                    val userId = backStackEntry.arguments?.getString("userId")
+                        ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
+                    Angles(navController = navController, userId = userId)
                 }
             }
         }
@@ -117,117 +105,16 @@ class MainActivity : ComponentActivity() {
 fun Main(navController: NavController) {
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
-    val userId = currentUser?.uid ?: "defaultUser"
+    val userId = currentUser?.uid ?: throw IllegalStateException("Usuário não está logado.")
 
     GoniometroTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            AnglesScreen(navController, userId)
-            Tutorial(userId = userId)
             Background()
             MainPhotoDisplay()
-            Goniometro()
-        }
-    }
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AnglesScreen(navController: NavController, userId: String) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Angles Screen") },
-                actions = {
-                    IconButton(onClick = { navController.navigate("results/$userId") }) {
-                        Icon(painter = painterResource(id = R.drawable.clinical_notes), contentDescription = "Go to Angles")
-                    }
-                }
-            )
-        }
-    ) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Welcome to the Angles Screen", style = MaterialTheme.typography.headlineMedium)
-        }
-    }
-}
-
-@Composable
-fun Tutorial(userId: String) {
-    val showTutorial = remember { mutableStateOf(true) }
-
-    LaunchedEffect(key1 = userId) {
-        val docRef = FirebaseFirestore.getInstance().collection("users").document(userId)
-        docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.w("Tutorial", "Listen failed.", e)
-                return@addSnapshotListener
-            }
-            Log.d("Tutorial", "Snapshot: ${snapshot?.data}")
-            Log.d("Auth", "UID do usuário autenticado: ${FirebaseAuth.getInstance().currentUser?.uid}")
-            showTutorial.value = snapshot?.getBoolean("showTutorial") ?: true
-        }
-
-    }
-
-    if (showTutorial.value) {
-        Dialog(
-            onDismissRequest = {
-                showTutorial.value = false
-            }
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
-            ) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .background(Color.White, shape = RoundedCornerShape(12.dp))
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.TopEnd
-                            ) {
-                                IconButton(onClick = { showTutorial.value = false }) {
-                                    Icon(Icons.Default.Close, contentDescription = "Fechar")
-                                }
-                            }
-                            Text("Recomendações.")
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(text = "1. Saiba os princípios básicos da goniometria.")
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(text = "2. Selecione uma foto da galeria (canto inferior esquerdo) ou tire uma foto da articulação que será avaliada (canto inferior direito).")
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(text = "3. Clique em 'Realizar Goniometria' assim que tiver a foto posicionada no meio da tela")
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(text = "4. Arraste do Eixo até a posição correta do Braço Fixo com o dedo, então de um toque onde deverá ser posicionado o Braço Móvel.")
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(text = "5. Caso não tenha realizado corretamente a goniometria, clique em 'Reiniciar Goniometria' para tentar novamente.")
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Button(onClick = {
-                                showTutorial.value = false
-                                FirebaseFirestore.getInstance().collection("users").document(userId)
-                                    .update("showTutorial", false)
-                            }) {
-                                Text("Não exibir novamente")
-                            }
-                        }
-                    }
-                }
-            }
+            Goniometro(navController, userId)
         }
     }
 }
@@ -358,7 +245,7 @@ fun DropdownMenuItem(onClick: () -> Unit, content: @Composable () -> Unit) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Goniometro() {
+fun Goniometro(navController: NavController, userId: String) {
     var lineStart by remember { mutableStateOf(Offset.Zero) }
     var lineEnd by remember { mutableStateOf(Offset.Zero) }
     var lines by remember { mutableStateOf(listOf<Pair<Offset, Offset>>()) }
@@ -517,6 +404,19 @@ fun Goniometro() {
                         textAlign = TextAlign.Center,
                 )
             )
+        }
+    }
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .padding(6.dp), contentAlignment = Alignment.TopEnd) {
+        IconButton(onClick = { navController.navigate("results/$userId") }, Modifier.padding(1.dp)) {
+            Icon(painter = painterResource(id = R.drawable.clinical_notes),
+                contentDescription = "Go to Angles",
+                modifier = Modifier
+                    .size(42.dp)
+                    .padding(1.dp)
+                )
         }
     }
     Box(

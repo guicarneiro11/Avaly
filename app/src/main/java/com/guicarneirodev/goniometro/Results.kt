@@ -66,9 +66,8 @@ fun Angles(navController: NavController, userId: String) {
     val db = Firebase.firestore
     val docRef = db.collection("users").document(userId).collection("angles")
 
-    LaunchedEffect(key1 = Unit) {
-        docRef.orderBy("created")
-            .addSnapshotListener { snapshot, e ->
+    LaunchedEffect(key1 = userId) {
+        docRef.addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.w("Firestore", "Listen failed.", e)
                     return@addSnapshotListener
