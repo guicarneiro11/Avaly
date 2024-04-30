@@ -16,10 +16,13 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -113,8 +116,8 @@ fun Main(navController: NavController) {
             color = MaterialTheme.colorScheme.background
         ) {
             Background()
-            MainPhotoDisplay()
-            Goniometro(navController, userId)
+            MenuIcon(navController, userId)
+            Goniometro()
         }
     }
 }
@@ -135,9 +138,11 @@ fun Background() {
     )
 }
 
+
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun MainPhotoDisplay() {
+fun MenuIcon(navController: NavController, userId: String) {
+    var menuDropdownExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
     var currentImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
@@ -151,7 +156,10 @@ fun MainPhotoDisplay() {
         FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
     val captureLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) currentImageUri = captureUri
+            if (success) {
+                currentImageUri = captureUri
+                menuDropdownExpanded = false
+            }
         }
     val permissionLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -162,25 +170,56 @@ fun MainPhotoDisplay() {
                 Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
             }
         }
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomStart) {
-        IconButton(onClick = {
-            importLauncher.launch("image/*")
-        }, Modifier.padding(9.dp)) {
+
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .padding(6.dp),
+        contentAlignment = Alignment.TopEnd
+    ) {
+        IconButton(onClick = { menuDropdownExpanded = true }, Modifier.padding(1.dp)) {
             Icon(
-                painter = painterResource(id = R.drawable.photo_library),
-                contentDescription = "Importar Foto",
-                modifier = Modifier
-                    .size(44.dp)
-                    .padding(1.dp)
+                painter = painterResource(id = R.drawable.menu),
+                contentDescription = "Menu",
+                modifier = Modifier.size(44.dp)
             )
         }
-    }
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd,
-    ) {
-        IconButton(
-            onClick = {
+        DropdownMenu(
+            expanded = menuDropdownExpanded,
+            onDismissRequest = { menuDropdownExpanded = false },
+            modifier = Modifier
+                .padding(1.dp)
+                .background(Color.White, shape = RoundedCornerShape(8.dp))
+        ) {
+            DropdownMenuItem(onClick = {
+                navController.navigate("results/$userId")
+                menuDropdownExpanded = false
+            }) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.clinical_notes),
+                        contentDescription = "Go to Angles",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Goniometrias")
+                }
+            }
+            DropdownMenuItem(onClick = {
+                importLauncher.launch("image/*")
+                menuDropdownExpanded = false
+            }) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.photo_library),
+                        contentDescription = "Importar Foto",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Importar Foto")
+                }
+            }
+            DropdownMenuItem(onClick = {
                 val permissionCheckResult =
                     ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA)
                 if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
@@ -188,15 +227,31 @@ fun MainPhotoDisplay() {
                 } else {
                     permissionLauncher.launch(android.Manifest.permission.CAMERA)
                 }
-            }, Modifier.padding(9.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.addphoto),
-                contentDescription = "Tirar Foto",
-                modifier = Modifier
-                    .size(44.dp)
-                    .padding(1.dp)
-            )
+            }) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.addphoto),
+                        contentDescription = "Tirar Foto",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Tirar Foto")
+                }
+            }
+            DropdownMenuItem(onClick = {
+                navController.popBackStack()
+                menuDropdownExpanded = false
+            }) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout),
+                        contentDescription = "Logout",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Logout")
+                }
+            }
         }
     }
     Box(modifier = Modifier.fillMaxSize()) {
@@ -208,7 +263,7 @@ fun MainPhotoDisplay() {
             )
         }
     }
-    }
+}
 
 @SuppressLint("SimpleDateFormat")
 fun Context.createImageFile(): File {
@@ -223,12 +278,15 @@ fun Context.createImageFile(): File {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun DropdownMenuItem(onClick: () -> Unit, content: @Composable () -> Unit) {
+fun DropdownMenuItem(
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
+) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(8.dp)
-            .background(Color.White, shape = RoundedCornerShape(8.dp))
+            .background(Color.White, shape = RoundedCornerShape(2.dp))
             .pointerInteropFilter {
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -238,21 +296,28 @@ fun DropdownMenuItem(onClick: () -> Unit, content: @Composable () -> Unit) {
                 true
             }
     ) {
-        content()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            content()
+        }
     }
 }
 
 
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Goniometro(navController: NavController, userId: String) {
+fun Goniometro() {
     var lineStart by remember { mutableStateOf(Offset.Zero) }
     var lineEnd by remember { mutableStateOf(Offset.Zero) }
     var lines by remember { mutableStateOf(listOf<Pair<Offset, Offset>>()) }
     var isLineSet by remember { mutableStateOf(false) }
-    var expanded by remember { mutableStateOf(false) }
     var selectedAngleIndex by remember { mutableIntStateOf(0) }
     val angleOptions = listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
+    var angleDropdownExpanded by remember { mutableStateOf(false) }
 
     fun calculateAngleBetweenLines(
         start1: Offset,
@@ -409,31 +474,18 @@ fun Goniometro(navController: NavController, userId: String) {
     Box(
         Modifier
             .fillMaxWidth()
-            .padding(6.dp), contentAlignment = Alignment.TopEnd) {
-        IconButton(onClick = { navController.navigate("results/$userId") }, Modifier.padding(1.dp)) {
-            Icon(painter = painterResource(id = R.drawable.clinical_notes),
-                contentDescription = "Go to Angles",
-                modifier = Modifier
-                    .size(42.dp)
-                    .padding(1.dp)
-                )
-        }
-    }
-    Box(
-        Modifier
-            .fillMaxWidth()
             .padding(6.dp), contentAlignment = Alignment.BottomCenter) {
-        Button(onClick = { expanded = true }) {
-            Text("Selecionar Ângulo")
+        Button(onClick = { angleDropdownExpanded = true }) {
+            Text("Alterar Ângulo")
         }
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+            expanded = angleDropdownExpanded,
+            onDismissRequest = { angleDropdownExpanded = false }
         ) {
             angleOptions.forEachIndexed { index, title ->
                 DropdownMenuItem(onClick = {
                     selectedAngleIndex = index
-                    expanded = false
+                    angleDropdownExpanded = false
                 })
                 {
                     Text(title)
