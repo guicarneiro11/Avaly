@@ -16,7 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -31,9 +33,12 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
@@ -54,33 +59,24 @@ import java.util.regex.Pattern
                 fun isEmailValid(email: String): Boolean {
                     return emailPattern.matcher(email).matches()
                 }
+
                 fun isPasswordValid(password: String): Boolean {
                     return password.length >= 6
                 }
             }
-
             @Composable
             fun Register(navController: NavController, viewModel: ValidViewModel) {
                 var email by remember { mutableStateOf("") }
                 var isEmailErrorVisible by remember { mutableStateOf(true) }
                 val emailFocusRequester = remember { FocusRequester() }
-                val isEmailValid =
-                    { input: String ->
-                        android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
-                    }
-
+                val isEmailValid = { input: String -> android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches() }
                 var password by remember { mutableStateOf("") }
                 var passwordErrorVisible by remember { mutableStateOf(true) }
                 val passwordFocusRequester = remember { FocusRequester() }
-                val isPasswordValid = { input: String ->
-                    input.length >= 6
-                }
-
-
+                val isPasswordValid = { input: String -> input.length >= 6 }
                 var confirmPassword by remember { mutableStateOf("") }
                 var showErrorText by remember { mutableStateOf(false) }
                 var errorMessage by remember { mutableStateOf("") }
-
                 val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
                 Box(
@@ -89,8 +85,8 @@ import java.util.regex.Pattern
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
-                                    Color(0xFF006F6A),
-                                    Color(0xFF006F6A)
+                                    Color(0xFF2C73B1),
+                                    Color(0xFF2C73B1)
                                 )
                             )
                         )
@@ -118,13 +114,12 @@ import java.util.regex.Pattern
                                     verticalArrangement = Arrangement.Center
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.arrowback),
+                                        painter = painterResource(id = R.drawable.voltar),
                                         contentDescription = "Voltar Tela",
                                         modifier = Modifier
                                             .clickable { navController.popBackStack() }
                                             .size(40.dp)
                                     )
-
                                     TextField(
                                         value = email,
                                         onValueChange = {
@@ -146,7 +141,6 @@ import java.util.regex.Pattern
                                             imeAction = ImeAction.Done
                                         )
                                     )
-
                                     TextField(
                                         value = password,
                                         onValueChange = {
@@ -170,7 +164,6 @@ import java.util.regex.Pattern
                                             imeAction = ImeAction.Done
                                         )
                                     )
-
                                     TextField(
                                         value = confirmPassword,
                                         onValueChange = {
@@ -193,9 +186,7 @@ import java.util.regex.Pattern
                                             imeAction = ImeAction.Done
                                         )
                                     )
-
                                     Spacer(modifier = Modifier.height(16.dp))
-
                                     Button(
                                         onClick = {
                                             if (viewModel.isEmailValid(email) &&
@@ -233,11 +224,17 @@ import java.util.regex.Pattern
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .height(50.dp),
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3280C4), disabledContainerColor = Color(0xFFA1A1A1)),
                                         enabled = viewModel.isEmailValid(email) &&
                                                 viewModel.isPasswordValid(password) &&
                                                 viewModel.passwordsMatch(password, confirmPassword)
                                     ) {
-                                        Text(text = "Criar conta")
+                                        Text(text = "Criar conta",
+                                            color = Color(0xFFFFFFFF),
+                                            textAlign = TextAlign.Center,
+                                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
+                                            fontSize = 24.sp)
+
                                     }
 
                                     if (showErrorText) {

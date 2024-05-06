@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
+
 @Composable
 fun Home(navController: NavController) {
     val background = painterResource(id = R.drawable.goniometria)
@@ -38,8 +40,8 @@ fun Home(navController: NavController) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF006F6A),
-                        Color(0xFF006F6A)
+                        Color(0xFF2B6EA8),
+                        Color(0xFF2B6EA8)
                     )
                 )
             )
@@ -56,7 +58,7 @@ fun Home(navController: NavController) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(24.dp))
             )
             Column(
                 modifier = Modifier
@@ -73,24 +75,27 @@ fun Home(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .clip(RoundedCornerShape(16.dp)),
+                        .clip(RoundedCornerShape(24.dp)),
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         onClick = {
                             navController.navigate("login")
                         },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF266399)),
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxWidth()
+                            .height(50.dp)
                     ) {
                         Text(
-                            text = "Login",
+                            text = "Entrar",
                             color = Color(0xFFFFFFFF),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default)
+                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
@@ -102,14 +107,16 @@ fun Home(navController: NavController) {
                         onClick = {
                             navController.navigate("register")
                         },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF266399)),
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxWidth()
+                            .height(50.dp)
                     ) {
                         Text(
                             text = "Registro",
                             color = Color(0xFFFFFFFF),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default)
+                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
                         )
                     }
                 }

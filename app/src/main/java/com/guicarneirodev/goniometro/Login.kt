@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,9 +35,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -63,7 +67,6 @@ class FirebaseAuthManager {
             }
         return "Senha alterada com sucesso"
     }
-
     private val firebaseAuth = FirebaseAuth.getInstance()
     fun signInEmail(email: String, password: String, callback: (Result<Unit>) -> Unit) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -92,16 +95,13 @@ fun Login(navController: NavController) {
     val sharedPreferences = LocalContext.current.getSharedPreferences("", Context.MODE_PRIVATE)
     var email by remember { mutableStateOf(sharedPreferences.getString("email", "") ?: "") }
     var password by remember { mutableStateOf(sharedPreferences.getString("senha", "") ?: "") }
-    var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordsMatch by remember { mutableStateOf(false) }
     var lembrarEmail by remember { mutableStateOf(sharedPreferences.getBoolean("lembrarEmail", false)) }
     var lembrarSenha by remember { mutableStateOf(sharedPreferences.getBoolean("lembrarSenha", false)) }
-
     var loginError by remember { mutableStateOf(false) }
     var showResetPassword by remember { mutableStateOf(false) }
-
     val firebaseAuthManager = FirebaseAuthManager()
     val context = LocalContext.current
 
@@ -111,36 +111,32 @@ fun Login(navController: NavController) {
         editor.putString("email", email)
         editor.apply()
     }
-
     fun removerEmailDoSharedPreferences(context: Context) {
         val prefs = context.getSharedPreferences("", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.remove("email")
         editor.apply()
     }
-
     fun saveSenhaNoSharedPreferences(context: Context, senha: String) {
         val prefs = context.getSharedPreferences("", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.putString("senha", senha)
         editor.apply()
     }
-
     fun removerSenhaDoSharedPreferences(context: Context) {
         val prefs = context.getSharedPreferences("", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.remove("senha")
         editor.apply()
     }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF006F6A),
-                        Color(0xFF006F6A)
+                        Color(0xFF2C73B1),
+                        Color(0xFF2C73B1)
                     )
                 )
             )
@@ -174,7 +170,7 @@ fun Login(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.arrowback),
+                                    painter = painterResource(id = R.drawable.voltar),
                                     contentDescription = "Voltar Tela",
                                     modifier = Modifier
                                         .clickable { showResetPassword = false }
@@ -190,7 +186,6 @@ fun Login(navController: NavController) {
                                 )
 
                                 Spacer(modifier = Modifier.weight(1.5f))
-
                             }
                             TextField(
                                 value = email,
@@ -199,14 +194,6 @@ fun Login(navController: NavController) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp)
-                            )
-                            TextField(value = currentPassword, onValueChange = {
-                                currentPassword = it },
-                                label = { Text("Senha atual") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                                visualTransformation = PasswordVisualTransformation()
                             )
                             TextField(
                                 value = newPassword,
@@ -228,12 +215,15 @@ fun Login(navController: NavController) {
                                     .padding(8.dp),
                                 visualTransformation = PasswordVisualTransformation()
                             )
-
                             Button(onClick = { firebaseAuthManager.resetPassword(email, newPassword); navController.popBackStack()},
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3280C4), disabledContainerColor = Color(0xFFA1A1A1)),
                                 enabled = passwordsMatch) {
-                                Text("Redefinir senha")
+                                Text(text = "Redefinir Senha",
+                                    color = Color(0xFFFFFFFF),
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
+                                    fontSize = 16.sp)
                             }
-
                         } else {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -241,23 +231,19 @@ fun Login(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.arrowback),
+                                    painter = painterResource(id = R.drawable.voltar),
                                     contentDescription = "Voltar Tela",
                                     modifier = Modifier
                                         .clickable { navController.popBackStack() }
                                         .size(40.dp)
                                 )
-
                                 Spacer(modifier = Modifier.weight(0.9f))
-
                                 Text(
-                                    text = "Faça o login",
+                                    text = "Faça o Login",
                                     style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
                                     modifier = Modifier.padding(16.dp),
                                 )
-
                                 Spacer(modifier = Modifier.weight(1.5f))
-
                             }
                             TextField(
                                 value = email,
@@ -274,8 +260,9 @@ fun Login(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
 
-                                Switch(checked = lembrarEmail, onCheckedChange = {
-                                    lembrarEmail = it
+                                Switch(checked = lembrarEmail,
+                                    colors = SwitchDefaults.colors(checkedTrackColor = Color(0xFF3280C4)),
+                                    onCheckedChange = { lembrarEmail = it
                                     val editor = sharedPreferences.edit()
                                     editor.putBoolean("lembrarEmail", it)
                                     editor.apply()
@@ -283,7 +270,7 @@ fun Login(navController: NavController) {
                                 ,modifier = Modifier.padding(start = 16.dp)
                                 )
                                 Text(
-                                    text = "Lembrar email",
+                                    text = "Lembrar Email",
                                     modifier = Modifier.padding(8.dp)
                                 )
                             }
@@ -302,8 +289,9 @@ fun Login(navController: NavController) {
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Switch(checked = lembrarSenha, onCheckedChange = {
-                                    lembrarSenha = it
+                                Switch(checked = lembrarSenha,
+                                    colors = SwitchDefaults.colors(checkedTrackColor = Color(0xFF3280C4)),
+                                    onCheckedChange = { lembrarSenha = it
                                     val editor = sharedPreferences.edit()
                                     editor.putBoolean("lembrarSenha", it)
                                     editor.apply()
@@ -311,7 +299,7 @@ fun Login(navController: NavController) {
                                 ,modifier = Modifier.padding(start = 16.dp)
                                     )
                                 Text(
-                                    text = "Lembrar senha",
+                                    text = "Lembrar Senha",
                                     modifier = Modifier.padding(8.dp)
                                 )
                             }
@@ -343,32 +331,32 @@ fun Login(navController: NavController) {
                                         loginError = true
                                     }
                                 },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF266399)),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp)
                             ) {
-                                Text(
-                                    text = "Entrar",
+                                Text(text = "Entrar",
                                     color = Color(0xFFFFFFFF),
                                     textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default),
-                                )
+                                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
+                                    fontSize = 24.sp)
                             }
-
                             if (loginError) {
                                 Text(
                                     text = "Email ou senha incorretos. Por favor, tente novamente.",
                                     color = Color.Red
                                 )
                             }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
+                            Spacer(modifier = Modifier.height(20.dp))
                             Text(
                                 text = "Esqueceu sua senha?",
-                                color = Color.Blue,
+                                color = Color(0xFF463CDB),
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.clickable { showResetPassword = true }
+                                modifier = Modifier.clickable { showResetPassword = true },
+                                style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Default),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }

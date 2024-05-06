@@ -45,7 +45,7 @@ fun MyTopAppBar(navController: NavController, angles: SnapshotStateList<Pair<Str
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.arrowback),
+                    painter = painterResource(id = R.drawable.voltar),
                     contentDescription = "Voltar Tela"
                 )
             }

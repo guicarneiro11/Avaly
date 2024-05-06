@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,8 +55,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,7 +71,6 @@ import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 import java.lang.Math.toDegrees
@@ -82,8 +81,6 @@ import kotlin.math.atan2
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        FirebaseApp.initializeApp(this)
 
         setContent {
             val navController = rememberNavController()
@@ -130,8 +127,8 @@ fun Background() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF006F6A),
-                        Color(0xFF006F6A)
+                        Color(0xFF2B6EA8),
+                        Color(0xFF2B6EA8)
                     )
                 )
             )
@@ -308,6 +305,7 @@ fun DropdownMenuItem(
 
 
 
+@SuppressLint("DefaultLocale")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Goniometro() {
@@ -458,16 +456,15 @@ fun Goniometro() {
                     }
                     isLineSet = !isLineSet
                 },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF144769)),
                 modifier = Modifier.padding(6.dp)
             ) {
                 Text(
                     text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFFFFFFF),
-                        textAlign = TextAlign.Center,
-                )
+                    color = Color(0xFFFFFFFF),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default),
+                    fontSize = 16.sp,
             )
         }
     }
@@ -475,8 +472,13 @@ fun Goniometro() {
         Modifier
             .fillMaxWidth()
             .padding(6.dp), contentAlignment = Alignment.BottomCenter) {
-        Button(onClick = { angleDropdownExpanded = true }) {
-            Text("Alterar Ângulo")
+        Button(onClick = { angleDropdownExpanded = true },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF144769))) {
+            Text("Alterar Quadrante",
+                color = Color(0xFFFFFFFF),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default),
+                fontSize = 16.sp)
         }
         DropdownMenu(
             expanded = angleDropdownExpanded,

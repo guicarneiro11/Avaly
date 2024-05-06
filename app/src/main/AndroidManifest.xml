@@ -10,24 +10,21 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/angle_logo"
+        android:icon="@mipmap/angleprologo"
         android:label="Angle Pro"
-        android:roundIcon="@mipmap/angle_logo"
+        android:roundIcon="@mipmap/angleprologo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Goniometro"
+        android:theme="@style/SplashTheme"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Goniometro">
+            android:name=".MainActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -37,8 +34,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/path_provider" />
         </provider>
-
     </application>
-
-
 </manifest>
