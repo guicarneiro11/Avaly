@@ -15,16 +15,16 @@ class ValidViewModelTest {
     }
     @Test
     fun testisPasswordValid() {
-        Assertions.assertTrue(validViewModel.isPasswordValid("Password123!"))
+        Assertions.assertTrue(validViewModel.isPasswordValid("123456"))
 
-        Assertions.assertFalse(validViewModel.isPasswordValid("Pass!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("1"))
 
-        Assertions.assertFalse(validViewModel.isPasswordValid("PASSWORD123!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("12"))
 
-        Assertions.assertFalse(validViewModel.isPasswordValid("password123!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("123"))
 
-        Assertions.assertFalse(validViewModel.isPasswordValid("Password!"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("1234"))
 
-        Assertions.assertFalse(validViewModel.isPasswordValid("Password123"))
+        Assertions.assertFalse(validViewModel.isPasswordValid("12345"))
     }
 }
