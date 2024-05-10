@@ -13,9 +13,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
@@ -39,7 +38,7 @@ import com.google.firebase.firestore.firestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(navController: NavController, angles: SnapshotStateList<Pair<String, String>>, addAngle: (String) -> Unit) {
+fun MyTopAppBar(navController: NavController, addAngle: (String, String) -> Unit) {
     TopAppBar(
         title = { Text("Goniometrias") },
         navigationIcon = {
@@ -51,7 +50,9 @@ fun MyTopAppBar(navController: NavController, angles: SnapshotStateList<Pair<Str
             }
         },
         actions = {
-            IconButton(onClick = { addAngle("Ângulo ${angles.size + 1}") }) {
+            IconButton(onClick = {
+                addAngle("Articulação", "0°")
+            }) {
                 Icon(painter = painterResource(id = R.drawable.add), contentDescription = "Add")
             }
         }
@@ -60,44 +61,48 @@ fun MyTopAppBar(navController: NavController, angles: SnapshotStateList<Pair<Str
 
 @Composable
 fun Angles(navController: NavController, userId: String) {
-    val angles = remember { mutableStateListOf<Pair<String, String>>() }
+    val angles = remember { mutableStateListOf<Triple<String, String, String>>() }
     var currentlyEditing by remember { mutableIntStateOf(-1) }
-    var editText by remember { mutableStateOf("") }
+    var editName by remember { mutableStateOf("") }
+    var editValue by remember { mutableStateOf("") }
+
     val db = Firebase.firestore
     val docRef = db.collection("users").document(userId).collection("angles")
 
     LaunchedEffect(key1 = userId) {
         docRef.addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.w("Firestore", "Listen failed.", e)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null && !snapshot.isEmpty) {
-                    val items = snapshot.documents.map { it.id to (it.getString("angle") ?: "") }
-                    angles.clear()
-                    angles.addAll(items)
-                } else {
-                    Log.d("Firestore", "Current data: null")
-                }
+            if (e != null) {
+                Log.w("Firestore", "Listen failed.", e)
+                return@addSnapshotListener
             }
-    }
-
-    fun addAngle(angle: String) {
-        val newAngle = hashMapOf("angle" to angle, "created" to FieldValue.serverTimestamp())
-        docRef.add(newAngle).addOnCompleteListener {
-            if (!it.isSuccessful) {
-                Log.e("Firestore", "Error adding document", it.exception)
-            } else {
-                it.result?.let { docRef ->
-                    angles.add(docRef.id to angle)
+            if (snapshot != null && !snapshot.isEmpty) {
+                val items = snapshot.documents.map {
+                    Triple(it.id, it["name"] as String, it["value"] as String)
                 }
+                angles.clear()
+                angles.addAll(items)
+            } else {
+                Log.d("Firestore", "Current data: null")
             }
         }
     }
 
-    fun updateAngle(docId: String, newAngle: String) {
-        docRef.document(docId).update("angle", newAngle).addOnCompleteListener {
+    fun addAngle(name: String, value: String) {
+                val newAngle = hashMapOf("name" to name, "value" to value, "created" to FieldValue.serverTimestamp())
+                docRef.add(newAngle).addOnCompleteListener {
+                    if (!it.isSuccessful) {
+                        Log.e("Firestore", "Error adding document", it.exception)
+                    } else {
+                        it.result?.let { docRef ->
+                            angles.add(Triple(docRef.id, name, value))
+                        }
+                    }
+                }
+            }
+
+
+    fun updateAngle(docId: String, newName: String, newValue: String) {
+        docRef.document(docId).update( mapOf("name" to newName, "value" to newValue)).addOnCompleteListener {
             if (!it.isSuccessful) {
                 Log.e("Firestore", "Error updating document", it.exception)
             }
@@ -113,7 +118,7 @@ fun Angles(navController: NavController, userId: String) {
     }
 
     Scaffold(
-        topBar = { MyTopAppBar(navController, angles, ::addAngle) }
+        topBar = { MyTopAppBar(navController, ::addAngle) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -122,25 +127,35 @@ fun Angles(navController: NavController, userId: String) {
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFFFFFFFF),
-                            Color(0xFFFFFFFF)
+                            Color(0xFFCBE3FF),
+                            Color(0xFFCBE3FF)
                         )
                     )
                 )
         ) {
             Column {
                 LazyColumn {
-                    itemsIndexed(angles) { index, pair ->
-                        val (docId, angleText) = pair
+                    itemsIndexed(angles) { index, triple ->
+                        val (docId, angleName, angleValue) = triple
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(24.dp), verticalAlignment = Alignment.CenterVertically
                         ) {
                             if (index == currentlyEditing) {
-                                TextField(
-                                    value = editText,
-                                    onValueChange = { editText = it },
+                                OutlinedTextField(
+                                    value = editName,
+                                    onValueChange = { editName = it },
+                                    modifier = Modifier.weight(1f),
+                                    singleLine = true,
+                                    textStyle = TextStyle(
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                                OutlinedTextField(
+                                    value = editValue,
+                                    onValueChange = { editValue = it },
                                     modifier = Modifier.weight(1f),
                                     singleLine = true,
                                     textStyle = TextStyle(
@@ -149,7 +164,7 @@ fun Angles(navController: NavController, userId: String) {
                                     )
                                 )
                                 IconButton(onClick = {
-                                    updateAngle(docId, editText)
+                                    updateAngle(docId, editName, editValue)
                                     currentlyEditing = -1
                                 }) {
                                     Icon(
@@ -165,7 +180,7 @@ fun Angles(navController: NavController, userId: String) {
                                 }
                             } else {
                                 Text(
-                                    text = angleText,
+                                    text = "$angleName: $angleValue",
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center,
@@ -173,7 +188,8 @@ fun Angles(navController: NavController, userId: String) {
                                 )
                                 IconButton(onClick = {
                                     currentlyEditing = index
-                                    editText = angleText
+                                    editName = angleName
+                                    editValue = angleValue
                                 }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.edit),
