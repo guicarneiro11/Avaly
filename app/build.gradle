@@ -69,6 +69,8 @@ android {
 }
 
 dependencies {
+    // Espresso //
+    implementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     // Unit Test //
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'

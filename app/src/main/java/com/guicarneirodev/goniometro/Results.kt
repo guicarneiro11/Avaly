@@ -17,6 +17,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import com.google.firebase.firestore.firestore
 fun MyTopAppBar(navController: NavController, addAngle: (String, String) -> Unit) {
     TopAppBar(
         title = { Text("Goniometrias") },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE6E6E6)),
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(

@@ -40,6 +40,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -396,6 +397,7 @@ fun Goniometro(navController: NavController, userId: String) {
         }
         TopAppBar(
             title = { Text("") },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE6E6E6)),
             actions = {
                 Box(
                     Modifier
@@ -420,7 +422,7 @@ fun Goniometro(navController: NavController, userId: String) {
                         DropdownMenuItem(onClick = { angleDropdownExpanded = true }) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.quadrant),
+                                    painter = painterResource(id = R.drawable.tibia),
                                     contentDescription = "Alterar Quadrante",
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -552,7 +554,7 @@ fun Goniometro(navController: NavController, userId: String) {
                                             },
                                             colors = ButtonDefaults.buttonColors(
                                                 containerColor =
-                                                Color(0xFF144769)
+                                                Color(0xFF266399)
                                             )
                                         ) {
                                             Text(text = "Fechar")
@@ -593,7 +595,7 @@ fun Goniometro(navController: NavController, userId: String) {
                     }
                     isLineSet = !isLineSet
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF144769)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF266399)),
                 modifier = Modifier.padding(2.dp)
             ) {
                 Text(
