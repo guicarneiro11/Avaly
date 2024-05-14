@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,13 +37,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import java.util.regex.Pattern
 
             class ValidViewModel : ViewModel() {
@@ -52,8 +53,19 @@ import java.util.regex.Pattern
                             "(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+"
                 )
 
+                private val passwordPattern: Pattern = Pattern.compile(
+                    "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+_(){}|~/<>.?,€£¥=])(?=\\S+$).{6,}$"
+                )
+
                 fun passwordsMatch(password: String, confirmPassword: String): Boolean {
                     return password == confirmPassword
+                }
+
+                fun passwordMatchError(password: String, confirmPassword: String): String {
+                    if (password != confirmPassword) {
+                        return "As senhas não coincidem."
+                    }
+                    return ""
                 }
 
                 fun isEmailValid(email: String): Boolean {
@@ -61,23 +73,47 @@ import java.util.regex.Pattern
                 }
 
                 fun isPasswordValid(password: String): Boolean {
-                    return password.length >= 6
+                    return passwordPattern.matcher(password).matches()
+                }
+
+                fun getPasswordError(password: String): String {
+                    if (password.length < 6) {
+                        return "A senha deve ter pelo menos 6 caracteres."
+                    }
+                    if (!password.any { it.isLowerCase() }) {
+                        return "A senha deve conter pelo menos uma letra minúscula."
+                    }
+                    if (!password.any { it.isUpperCase() }) {
+                        return "A senha deve conter pelo menos uma letra maiúscula."
+                    }
+                    if (!password.any { it.isDigit() }) {
+                        return "A senha deve conter pelo menos um número."
+                    }
+                    if (!password.contains(Regex("[!@#$%^&+_(){}|~/<>.?,€£¥=]"))) {
+                        return "A senha deve conter pelo menos um caractere especial."
+                    }
+                    return ""
                 }
             }
             @Composable
             fun Register(navController: NavController, viewModel: ValidViewModel) {
+                val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
                 var email by remember { mutableStateOf("") }
                 var isEmailErrorVisible by remember { mutableStateOf(true) }
                 val emailFocusRequester = remember { FocusRequester() }
                 val isEmailValid = { input: String -> android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches() }
+
                 var password by remember { mutableStateOf("") }
                 var passwordErrorVisible by remember { mutableStateOf(true) }
                 val passwordFocusRequester = remember { FocusRequester() }
-                val isPasswordValid = { input: String -> input.length >= 6 }
+                val isPasswordValid = { input: String -> viewModel.isPasswordValid(input) }
                 var confirmPassword by remember { mutableStateOf("") }
-                var showErrorText by remember { mutableStateOf(false) }
+                var passwordVisibility by remember { mutableStateOf(false) }
+                var passwordErrorMessage by remember { mutableStateOf("") }
+                var passwordMatchError by remember { mutableStateOf("") }
+
                 var errorMessage by remember { mutableStateOf("") }
-                val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
                 Box(
                     modifier = Modifier
@@ -147,45 +183,77 @@ import java.util.regex.Pattern
                                             password = it
                                             println("Senha: $password")
                                             passwordErrorVisible = false
+                                            passwordErrorMessage = viewModel.getPasswordError(password)
                                         },
                                         label = { Text("Senha") },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(8.dp)
                                             .focusRequester(passwordFocusRequester),
-                                        visualTransformation = PasswordVisualTransformation(),
-                                        isError = password.isNotEmpty() && !isPasswordValid(password),
+                                        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                                        isError = passwordErrorMessage.isNotEmpty(),
                                         keyboardActions = KeyboardActions(
                                             onDone = {
                                                 passwordErrorVisible = !isPasswordValid(password)
+                                                passwordErrorMessage = viewModel.getPasswordError(password)
                                             }
                                         ),
                                         keyboardOptions = KeyboardOptions.Default.copy(
                                             imeAction = ImeAction.Done
-                                        )
+                                        ),
+                                        trailingIcon = {
+                                            IconButton(onClick = { passwordVisibility = !passwordVisibility}) {
+                                                Icon (
+                                                    painter  = if (passwordVisibility) painterResource(id = R.drawable.pass_off) else painterResource(id = R.drawable.pass_on),
+                                                    contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha"
+                                                )
+                                            }
+                                        }
                                     )
+                                    if (passwordErrorMessage.isNotEmpty()) {
+                                        Text(
+                                            text = passwordErrorMessage,
+                                            color = Color.Red
+                                        )
+                                    }
                                     TextField(
                                         value = confirmPassword,
                                         onValueChange = {
                                             confirmPassword = it
                                             println("Confirmar senha: $confirmPassword")
+                                            passwordMatchError = viewModel.passwordMatchError(password, confirmPassword)
                                         },
                                         label = { Text("Confirmar senha") },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(8.dp)
                                             .focusRequester(passwordFocusRequester),
-                                        visualTransformation = PasswordVisualTransformation(),
+                                        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                                         isError = password.isNotEmpty() && !isPasswordValid(password),
                                         keyboardActions = KeyboardActions(
                                             onDone = {
                                                 passwordErrorVisible = !isPasswordValid(password)
+                                                passwordMatchError = viewModel.passwordMatchError(password, confirmPassword)
                                             }
                                         ),
                                         keyboardOptions = KeyboardOptions.Default.copy(
                                             imeAction = ImeAction.Done
-                                        )
+                                        ),
+                                        trailingIcon = {
+                                            IconButton(onClick = { passwordVisibility = !passwordVisibility}) {
+                                                Icon (
+                                                    painter  = if (passwordVisibility) painterResource(id = R.drawable.pass_off) else painterResource(id = R.drawable.pass_on),
+                                                    contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha"
+                                                )
+                                            }
+                                        }
                                     )
+                                    if (passwordMatchError.isNotEmpty()) {
+                                        Text(
+                                            text = passwordMatchError,
+                                            color = Color.Red
+                                        )
+                                    }
                                     Spacer(modifier = Modifier.height(16.dp))
                                     Button(
                                         onClick = {
@@ -198,26 +266,12 @@ import java.util.regex.Pattern
                                                         if (authResult.isSuccessful) {
                                                             val firebaseUser = firebaseAuth.currentUser!!
                                                             println("Usuário autenticado: ${firebaseUser.email}")
-
-                                                            val newUser = hashMapOf("showTutorial" to true)
-                                                            FirebaseFirestore.getInstance().collection("users").document(firebaseUser.uid)
-                                                                .set(newUser)
-                                                                .addOnSuccessListener {
-                                                                    println("Documento criado com sucesso para novo usuário!")
-                                                                    navController.navigate("home")
-                                                                }
-                                                                .addOnFailureListener { e ->
-                                                                    println("Erro ao criar documento para novo usuário: $e")
-                                                                    showErrorText = true
-                                                                    errorMessage = "Erro ao criar configurações iniciais do usuário."
-                                                                }
+                                                            navController.navigate("home")
                                                         } else {
-                                                            showErrorText = true
                                                             errorMessage = authResult.exception?.message ?: "Falha no registro"
                                                         }
                                                     }
                                             } else {
-                                                showErrorText = true
                                                 errorMessage = "Há campos inválidos"
                                             }
                                         },
@@ -234,14 +288,6 @@ import java.util.regex.Pattern
                                             textAlign = TextAlign.Center,
                                             style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
                                             fontSize = 24.sp)
-
-                                    }
-
-                                    if (showErrorText) {
-                                        Text(
-                                            text = errorMessage,
-                                            color = Color.Red
-                                        )
                                     }
                                 }
                             }

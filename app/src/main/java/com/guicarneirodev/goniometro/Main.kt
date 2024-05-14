@@ -224,15 +224,13 @@ fun Goniometro(navController: NavController, userId: String) {
     var lines by remember { mutableStateOf(listOf<Pair<Offset, Offset>>()) }
     var isLineSet by remember { mutableStateOf(false) }
     var selectedAngleIndex by remember { mutableIntStateOf(0) }
-    val angleOptions =
-        listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
+    val angleOptions = listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
     var angleDropdownExpanded by remember { mutableStateOf(false) }
     var menuDropdownExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
     var currentImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var dialogOpen by remember { mutableStateOf(false) }
-    val importLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val importLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             currentImageUri = uri
         }
 

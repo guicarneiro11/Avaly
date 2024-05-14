@@ -102,6 +102,7 @@ dependencies {
     //FIREBASE//
     implementation 'com.google.firebase:firebase-auth:23.0.0'
     implementation 'com.google.firebase:firebase-firestore:25.0.0'
+    implementation 'com.google.firebase:firebase-functions:21.0.0'
 
     //CAMERA STUFF//
     implementation "androidx.camera:camera-core:$camerax_version"
