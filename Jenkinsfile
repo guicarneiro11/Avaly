@@ -23,7 +23,10 @@ pipeline {
         }
         stage('Test') {
             steps {
-                bat './gradlew connectedDebugAndroidTest'
+                bat '''
+                    adb uninstall com.guicarneirodev.goniometro || true
+                    ./gradlew connectedDebugAndroidTest
+                '''
             }
             post {
                 always {
