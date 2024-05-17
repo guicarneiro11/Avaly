@@ -15,23 +15,22 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './gradlew clean build'
+                bat './gradlew clean build'
             }
         }
 
         stage('Test') {
             steps {
-                sh './gradlew test'
-                sh './gradlew connectedAndroidTest'
+                bat './gradlew test'
+                bat './gradlew connectedAndroidTest'
             }
         }
 
         stage('Assemble APK') {
             steps {
-                sh './gradlew assembleRelease'
+                bat './gradlew assembleRelease'
             }
         }
-
     }
 
     post {
