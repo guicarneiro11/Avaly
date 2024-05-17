@@ -8,31 +8,38 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/guicarneiro11/GoniometroApp.git'
+                git credentialsId: '2c2a51ed-cb69-4369-acdf-d362b4bf2829', url: 'https://github.com/guicarneiro11/GoniometroApp.git'
+            }
+        }
+        stage('Clean') {
+            steps {
+                bat './gradlew clean'
             }
         }
         stage('Build') {
             steps {
-                bat './gradlew clean build'
+                bat './gradlew assembleDebug'
             }
         }
         stage('Test') {
             steps {
-                junit '**/build/test-results/test/*.xml'
+                bat './gradlew connectedDebugAndroidTest'
+            }
+            post {
+                always {
+                    junit '**/build/test-results/testDebugUnitTest/*.xml'
+                }
             }
         }
-
         stage('Assemble APK') {
             steps {
                 bat './gradlew assembleRelease'
             }
         }
     }
-
     post {
         always {
-            junit 'app/build/test-results/testDebugUnitTest/*.xml'
-            archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk', fingerprint: true
+            archiveArtifacts artifacts: '**/build/outputs/apk/release/*.apk', allowEmptyArchive: true
         }
     }
 }
