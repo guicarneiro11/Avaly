@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
+        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-18.0.2.1'
         ANDROID_HOME = "${env.JENKINS_HOME}/tools/android-sdk"
-        PATH = "${env.ANDROID_HOME}/cmdline-tools/latest/bin:${env.PATH}"
+        PATH = "${env.JAVA_HOME}\\bin;${env.ANDROID_HOME}/cmdline-tools/latest/bin;${env.PATH}"
     }
 
     stages {
