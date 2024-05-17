@@ -14,10 +14,10 @@ pipeline {
         stage('Setup Emulator') {
             steps {
                 script {
-                    sh 'echo no | android create avd --force -n test -t android-30 --abi x86_64'
-                    sh 'emulator -avd test -no-skin -no-audio -no-window &'
-                    sh 'adb wait-for-device'
-                    sh 'adb shell input keyevent 82 &'
+                    bat 'echo no | android create avd --force -n test -t android-30 --abi x86_64'
+                    bat 'emulator -avd test -no-skin -no-audio -no-window &'
+                    bat 'adb wait-for-device'
+                    bat 'adb shell input keyevent 82 &'
                 }
             }
         }
@@ -50,6 +50,11 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: '**/build/outputs/apk/release/*.apk', allowEmptyArchive: true
+        }
+        cleanup {
+            script {
+                bat 'adb -s emulator-5554 emu kill'
+            }
         }
     }
 }
