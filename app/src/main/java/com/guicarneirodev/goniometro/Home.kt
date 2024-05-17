@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,15 +26,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
-
 @Composable
 fun Home(navController: NavController) {
-    val background = painterResource(id = R.drawable.goniometria)
+    val background = painterResource(id = R.drawable.background)
 
     Box(
         modifier = Modifier
@@ -52,14 +51,14 @@ fun Home(navController: NavController) {
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
         ) {
-            Image(
-                painter = background,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(24.dp))
-            )
+                Image(
+                    painter = background,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(24.dp))
+                )
             Column(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
@@ -87,15 +86,15 @@ fun Home(navController: NavController) {
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(
-                            text = "Entrar",
-                            color = Color(0xFFFFFFFF),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
+                        Icon(
+                            painter = painterResource(id = R.drawable.login),
+                            contentDescription = "Login",
+                            modifier = Modifier.size(24.dp)
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("ENTRAR")
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
@@ -112,12 +111,13 @@ fun Home(navController: NavController) {
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(
-                            text = "Registro",
-                            color = Color(0xFFFFFFFF),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
+                        Icon(
+                            painter = painterResource(id = R.drawable.register),
+                            contentDescription = "Register",
+                            modifier = Modifier.size(24.dp)
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("REGISTRO")
                     }
                 }
             }

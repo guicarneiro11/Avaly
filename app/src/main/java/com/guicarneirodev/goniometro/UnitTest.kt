@@ -15,7 +15,7 @@ class ValidViewModelTest {
     }
     @Test
     fun testisPasswordValid() {
-        Assertions.assertTrue(validViewModel.isPasswordValid("123456"))
+        Assertions.assertTrue(validViewModel.isPasswordValid("Thklabr641!"))
 
         Assertions.assertFalse(validViewModel.isPasswordValid("1"))
 

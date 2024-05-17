@@ -66,3 +66,7 @@ local.properties
 /node_modules/nodemailer/SECURITY.txt
 /node_modules/nodemailer/lib/well-known/services.json
 /node_modules/nodemailer/lib/dkim/sign.js
+/app/src/main/res/drawable/background.jpg
+/app/src/main/res/drawable/login.xml
+/app/src/main/res/drawable/register.xml
+/app/release/release-112.aab

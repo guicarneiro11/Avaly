@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -227,6 +228,7 @@ fun Login(navController: NavController) {
                                             Log.e(TAG, "Erro ao chamar a função do Firebase Functions: $e")
                                         }
                                 },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3280C4)),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp),
@@ -275,7 +277,7 @@ fun Login(navController: NavController) {
                                         invalidCode = "Por favor, insira um código de segurança válido."
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3280C4), disabledContainerColor = Color(0xFFA1A1A1))
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF266399))
                             ) {
                                 Text(text = "Fornecer Link para troca da senha",
                                     color = Color(0xFFFFFFFF),
@@ -410,11 +412,13 @@ fun Login(navController: NavController) {
                                     .fillMaxWidth()
                                     .height(50.dp)
                             ) {
-                                Text(text = "Entrar",
-                                    color = Color(0xFFFFFFFF),
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
-                                    fontSize = 24.sp)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.login),
+                                    contentDescription = "Login",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("ENTRAR")
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             errorMessage?.let {

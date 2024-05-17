@@ -64,10 +64,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -171,7 +168,8 @@ fun InstructionsList() {
     ) {
         items(instructions) { instruction ->
             Text(text = instruction, modifier = Modifier.padding(8.dp))
-        } }
+        }
+    }
 }
 
 @SuppressLint("SimpleDateFormat")
@@ -597,11 +595,7 @@ fun Goniometro(navController: NavController, userId: String) {
                 modifier = Modifier.padding(2.dp)
             ) {
                 Text(
-                    text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
-                    color = Color(0xFFFFFFFF),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.Default),
-                    fontSize = 16.sp,
+                    text = if (isLineSet) "REINICIAR GONIOMETRIA" else "REALIZAR GONIOMETRIA",
                 )
             }
         }
