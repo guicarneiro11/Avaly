@@ -11,16 +11,6 @@ pipeline {
                 git credentialsId: '2c2a51ed-cb69-4369-acdf-d362b4bf2829', url: 'https://github.com/guicarneiro11/GoniometroApp.git'
             }
         }
-        stage('Setup Emulator') {
-            steps {
-                script {
-                    bat 'echo no | android create avd --force -n test -t android-30 --abi x86_64'
-                    bat 'emulator -avd test -no-skin -no-audio -no-window &'
-                    bat 'adb wait-for-device'
-                    bat 'adb shell input keyevent 82 &'
-                }
-            }
-        }
         stage('Clean') {
             steps {
                 bat './gradlew clean'
@@ -50,11 +40,6 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: '**/build/outputs/apk/release/*.apk', allowEmptyArchive: true
-        }
-        cleanup {
-            script {
-                bat 'adb -s emulator-5554 emu kill'
-            }
         }
     }
 }
