@@ -9,7 +9,7 @@ pipeline {
 
     stage('Checkout') {
             steps {
-                git url: 'https://github.com/guicarneiro11/GoniometroApp.git'
+                git credentialsId: '2c2a51ed-cb69-4369-acdf-d362b4bf2829', url: 'https://github.com/guicarneiro11/GoniometroApp.git'
             }
         }
 
