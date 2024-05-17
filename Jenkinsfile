@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         JAVA_HOME = 'C:\\Program Files\\Java\\jdk-18.0.2.1'
-        ANDROID_HOME = "${env.JENKINS_HOME}/tools/android-sdk"
-        PATH = "${env.JAVA_HOME}\\bin;${env.ANDROID_HOME}/cmdline-tools/latest/bin;${env.PATH}"
+        ANDROID_HOME = 'C:\\Users\\henry\\AppData\\Local\\Android\\Sdk'
+        PATH = "${env.JAVA_HOME}\\bin;${env.ANDROID_HOME}\\cmdline-tools\\latest\\bin;${env.ANDROID_HOME}\\platform-tools;${env.PATH}"
     }
 
     stages {
