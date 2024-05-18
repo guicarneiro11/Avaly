@@ -25,16 +25,6 @@ pipeline {
             steps {
                 bat './gradlew connectedDebugAndroidTest'
             }
-            post {
-                always {
-                    junit '**/build/test-results/testDebugUnitTest/*.xml'
-                }
-            }
-        }
-        stage('Assemble APK') {
-            steps {
-                bat './gradlew assembleRelease'
-            }
         }
     }
     post {
