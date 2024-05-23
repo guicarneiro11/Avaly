@@ -70,3 +70,5 @@ local.properties
 /app/src/main/res/drawable/login.xml
 /app/src/main/res/drawable/register.xml
 /app/release/release-112.aab
+/app/src/main/res/drawable/arrow.xml
+/app/src/main/res/drawable/search.xml

@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -85,6 +86,7 @@ fun Home(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
+                            .testTag("loginButton")
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.login),
@@ -110,6 +112,7 @@ fun Home(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
+                            .testTag("registerButton")
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.register),

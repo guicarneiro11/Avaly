@@ -97,10 +97,20 @@ class MainActivity : ComponentActivity() {
                 composable("login") { Login(navController) }
                 composable("register") { Register(navController, validViewModel) }
                 composable("main") { Main(navController) }
-                composable("results/{userId}", arguments = listOf(navArgument("userId") { type = NavType.StringType })) { backStackEntry ->
+                composable("patients/{userId}", arguments = listOf(navArgument("userId") { type = NavType.StringType })) { backStackEntry ->
                     val userId = backStackEntry.arguments?.getString("userId")
                         ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
-                    Angles(navController = navController, userId = userId)
+                    Patients(navController = navController, userId)
+                }
+                composable("results/{userId}/{patientId}", arguments = listOf(
+                    navArgument("userId") { type = NavType.StringType },
+                    navArgument("patientId") { type = NavType.StringType }
+                )) { backStackEntry ->
+                    val userId = backStackEntry.arguments?.getString("userId")
+                        ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
+                    val patientId = backStackEntry.arguments?.getString("patientId")
+                        ?: throw IllegalStateException("PatientID não encontrado na backStackEntry.")
+                    Results(navController = navController, userId, patientId)
                 }
             }
         }
@@ -469,17 +479,17 @@ fun Goniometro(navController: NavController, userId: String) {
                             }
                         }
                         DropdownMenuItem(onClick = {
-                            navController.navigate("results/$userId")
+                            navController.navigate("patients/$userId")
                             menuDropdownExpanded = false
                         }) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.clinical_notes),
-                                    contentDescription = "Go to Angles",
+                                    contentDescription = "Pacients List",
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Goniometrias")
+                                Text("Pacientes")
                             }
                         }
                         DropdownMenuItem(onClick = {

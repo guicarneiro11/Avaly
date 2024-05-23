@@ -44,12 +44,12 @@ import com.google.firebase.firestore.firestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResultsAppBar(
+fun PatientAppBar(
     navController: NavController,
-    addAngle: (String, String) -> Unit,
+    addPatient: (String, String) -> Unit,
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit
-    ) {
+) {
     val focusManager = LocalFocusManager.current
 
     TopAppBar(
@@ -57,7 +57,7 @@ fun ResultsAppBar(
             TextField(
                 value = searchQuery,
                 onValueChange = onSearchQueryChange,
-                placeholder = { Text("Buscar articulação") },
+                placeholder = { Text("Buscar paciente") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
@@ -77,7 +77,7 @@ fun ResultsAppBar(
         },
         actions = {
             IconButton(onClick = {
-                addAngle("Articulação", "0°")
+                addPatient("Nome", "01/01/2024")
             }) {
                 Icon(painter = painterResource(id = R.drawable.add), contentDescription = "Add")
             }
@@ -86,17 +86,17 @@ fun ResultsAppBar(
 }
 
 @Composable
-fun Results(navController: NavController, userId: String, patientId: String) {
-    val angles = remember { mutableStateListOf<Triple<String, String, String>>() }
+fun Patients(navController: NavController, userId: String) {
+    val patients = remember { mutableStateListOf<Triple<String, String, String>>() }
     var currentlyEditing by remember { mutableIntStateOf(-1) }
-    var editName by remember { mutableStateOf("") }
-    var editValue by remember { mutableStateOf("") }
+    var editPatient by remember { mutableStateOf("") }
+    var editDate by remember { mutableStateOf("") }
     var searchQuery by remember { mutableStateOf("") }
 
     val db = Firebase.firestore
-    val docRef = db.collection("users").document(userId).collection("patients").document(patientId).collection("results")
+    val docRef = db.collection("users").document(userId).collection("patients")
 
-    LaunchedEffect(key1 = patientId) {
+    LaunchedEffect(key1 = userId) {
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w("Firestore", "Listen failed.", e)
@@ -105,40 +105,41 @@ fun Results(navController: NavController, userId: String, patientId: String) {
             if (snapshot != null && !snapshot.isEmpty) {
                 val items = snapshot.documents.map {
                     val id = it.id
-                    val name = it["name"] as? String ?: throw IllegalStateException("Campo 'name' não encontrado ou nulo.")
-                    val value = it["value"] as? String ?: "Valor padrão"
-                    Triple(id, name, value)
+                    val patient = it["patient"] as? String ?: throw IllegalStateException("Campo 'patient' não encontrado ou nulo.")
+                    val date = it["date"] as? String ?: "01/01/2024"
+                    Triple(id, patient, date)
                 }
-                angles.clear()
-                angles.addAll(items)
+                patients.clear()
+                patients.addAll(items)
             } else {
                 Log.d("Firestore", "Current data: null")
             }
         }
     }
 
-    fun addAngle(name: String, value: String) {
-        val newAngle = hashMapOf("name" to name, "value" to value, "created" to FieldValue.serverTimestamp())
-        docRef.add(newAngle).addOnCompleteListener {
+    fun addPatient(patient: String, date: String) {
+        val newPatient = hashMapOf("patient" to patient, "date" to date, "created" to FieldValue.serverTimestamp())
+        docRef.add(newPatient).addOnCompleteListener {
             if (!it.isSuccessful) {
                 Log.e("Firestore", "Error adding document", it.exception)
             } else {
                 it.result?.let { docRef ->
-                    angles.add(Triple(docRef.id, name, value))
+                    patients.add(Triple(docRef.id, patient, date))
+                    docRef.collection("angles")
                 }
             }
         }
     }
 
-    fun updateAngle(docId: String, newName: String, newValue: String) {
-        docRef.document(docId).update(mapOf("name" to newName, "value" to newValue)).addOnCompleteListener {
+    fun updatePatient(docId: String, newPatient: String, newDate: String) {
+        docRef.document(docId).update(mapOf("patient" to newPatient, "date" to newDate)).addOnCompleteListener {
             if (!it.isSuccessful) {
                 Log.e("Firestore", "Error updating document", it.exception)
             }
         }
     }
 
-    fun deleteAngle(docId: String) {
+    fun deletePatient(docId: String) {
         docRef.document(docId).delete().addOnCompleteListener {
             if (!it.isSuccessful) {
                 Log.e("Firestore", "Error deleting document", it.exception)
@@ -146,14 +147,15 @@ fun Results(navController: NavController, userId: String, patientId: String) {
         }
     }
 
-    val filteredAngles = if (searchQuery.isEmpty()) {
-        angles
+    val filteredPatients = if (searchQuery.isEmpty()) {
+        patients
     } else {
-        angles.filter { it.second.contains(searchQuery, ignoreCase = true) }
+        patients.filter { it.second.contains(searchQuery, ignoreCase = true) }
     }
 
     Scaffold(
-        topBar = { ResultsAppBar(navController, ::addAngle, searchQuery) { searchQuery = it }
+        topBar = {
+            PatientAppBar(navController, ::addPatient, searchQuery) { searchQuery = it }
         }
     ) { innerPadding ->
         Box(
@@ -171,8 +173,8 @@ fun Results(navController: NavController, userId: String, patientId: String) {
         ) {
             Column {
                 LazyColumn {
-                    itemsIndexed(filteredAngles) { index, triple ->
-                        val (docId, angleName, angleValue) = triple
+                    itemsIndexed(filteredPatients) { index, triple ->
+                        val (docId, patientName, evaluationDate) = triple
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -180,8 +182,8 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                         ) {
                             if (index == currentlyEditing) {
                                 OutlinedTextField(
-                                    value = editName,
-                                    onValueChange = { editName = it },
+                                    value = editPatient,
+                                    onValueChange = { editPatient = it },
                                     modifier = Modifier.weight(1f),
                                     singleLine = true,
                                     textStyle = TextStyle(
@@ -190,8 +192,8 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                                     )
                                 )
                                 OutlinedTextField(
-                                    value = editValue,
-                                    onValueChange = { editValue = it },
+                                    value = editDate,
+                                    onValueChange = { editDate = it },
                                     modifier = Modifier.weight(1f),
                                     singleLine = true,
                                     textStyle = TextStyle(
@@ -200,7 +202,7 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                                     )
                                 )
                                 IconButton(onClick = {
-                                    updateAngle(docId, editName, editValue)
+                                    updatePatient(docId, editPatient, editDate)
                                     currentlyEditing = -1
                                 }) {
                                     Icon(
@@ -216,7 +218,7 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                                 }
                             } else {
                                 Text(
-                                    text = "$angleName: $angleValue",
+                                    text = "$patientName: $evaluationDate",
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center,
@@ -224,18 +226,24 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                                 )
                                 IconButton(onClick = {
                                     currentlyEditing = index
-                                    editName = angleName
-                                    editValue = angleValue
+                                    editPatient = patientName
+                                    editDate = evaluationDate
                                 }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.edit),
                                         contentDescription = "Edit"
                                     )
                                 }
-                                IconButton(onClick = { deleteAngle(docId) }) {
+                                IconButton(onClick = { deletePatient(docId) }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.delete),
                                         contentDescription = "Delete"
+                                    )
+                                }
+                                IconButton(onClick = { navController.navigate("results/$userId/${triple.first}") }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.arrow),
+                                        contentDescription = "Arrow"
                                     )
                                 }
                             }

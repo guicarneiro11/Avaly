@@ -53,7 +53,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.functions.functions
 
 class FirebaseAuthManager {
-    private val firebaseAuth = FirebaseAuth.getInstance()
+    private var firebaseAuth = FirebaseAuth.getInstance()
     fun resetPassword(email: String): String {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return "Endereço de e-mail inválido"
@@ -79,15 +79,15 @@ class FirebaseAuthManager {
                     val exception = task.exception
                     if (exception is FirebaseAuthInvalidUserException ||
                         exception is FirebaseAuthInvalidCredentialsException
-                ) {
-                    println("Falha no login: Email ou senha incorretos")
-                    callback(Result.failure(Exception("Email ou senha incorretos")))
-                } else {
-                    println("Falha no login: ${exception?.message}")
-                    callback(Result.failure(Exception(exception?.message)))
+                    ) {
+                        println("Falha no login: Email ou senha incorretos")
+                        callback(Result.failure(Exception("Email ou senha incorretos")))
+                    } else {
+                        println("Falha no login: ${exception?.message}")
+                        callback(Result.failure(Exception(exception?.message)))
+                    }
                 }
             }
-        }
     }
 }
 
