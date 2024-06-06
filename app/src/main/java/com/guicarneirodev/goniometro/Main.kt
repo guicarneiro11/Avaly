@@ -64,7 +64,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -177,7 +180,12 @@ fun InstructionsList() {
             .padding(16.dp)
     ) {
         items(instructions) { instruction ->
-            Text(text = instruction, modifier = Modifier.padding(8.dp))
+            Text(text = instruction,
+                modifier = Modifier.padding(8.dp),
+                color = Color(0xFF000000),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Black,
+                fontFamily = FontFamily.Default)
         }
     }
 }
@@ -433,7 +441,11 @@ fun Goniometro(navController: NavController, userId: String) {
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Alterar Quadrante")
+                                Text("Alterar Quadrante",
+                                    color = Color(0xFF000000),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
                                 DropdownMenu(
                                     expanded = angleDropdownExpanded,
                                     onDismissRequest = { angleDropdownExpanded = false }
@@ -489,7 +501,11 @@ fun Goniometro(navController: NavController, userId: String) {
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Pacientes")
+                                Text("Pacientes",
+                                    color = Color(0xFF000000),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                         }
                         DropdownMenuItem(onClick = {
@@ -503,7 +519,11 @@ fun Goniometro(navController: NavController, userId: String) {
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Importar Foto")
+                                Text("Importar Foto",
+                                    color = Color(0xFF000000),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                         }
                         DropdownMenuItem(onClick = {
@@ -525,7 +545,11 @@ fun Goniometro(navController: NavController, userId: String) {
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Tirar Foto")
+                                Text("Tirar Foto",
+                                    color = Color(0xFF000000),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                         }
                         DropdownMenuItem(onClick = {
@@ -538,12 +562,20 @@ fun Goniometro(navController: NavController, userId: String) {
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Ajuda")
+                                Text("Ajuda",
+                                    color = Color(0xFF000000),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                         }
                         if (dialogOpen) {
                             AlertDialog(onDismissRequest = { dialogOpen = false },
-                                title = { Text(text = "Instruções") },
+                                title = { Text(text = "Instruções",
+                                    color = Color(0xFF000000),
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif) },
                                 text = {
                                     InstructionsList()
                                 },
@@ -580,7 +612,11 @@ fun Goniometro(navController: NavController, userId: String) {
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Logout")
+                                Text("Logout",
+                                    color = Color(0xFF000000),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                         }
                     }
@@ -605,7 +641,11 @@ fun Goniometro(navController: NavController, userId: String) {
                 modifier = Modifier.padding(2.dp)
             ) {
                 Text(
-                    text = if (isLineSet) "REINICIAR GONIOMETRIA" else "REALIZAR GONIOMETRIA",
+                    text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
+                    color = Color(0xFFFFFFFF),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Black,
+                    fontFamily = FontFamily.SansSerif
                 )
             }
         }

@@ -19,7 +19,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -35,10 +34,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -162,7 +161,11 @@ import java.util.regex.Pattern
                                             email = it
                                             isEmailErrorVisible = false
                                         },
-                                        label = { Text("Email") },
+                                        label = { Text("Email",
+                                            color = Color(0xFF0F0F0F),
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            fontFamily = FontFamily.SansSerif) },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(8.dp)
@@ -185,7 +188,11 @@ import java.util.regex.Pattern
                                             passwordErrorVisible = false
                                             passwordErrorMessage = viewModel.getPasswordError(password)
                                         },
-                                        label = { Text("Senha") },
+                                        label = { Text("Senha",
+                                            color = Color(0xFF0F0F0F),
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            fontFamily = FontFamily.SansSerif) },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(8.dp)
@@ -223,7 +230,11 @@ import java.util.regex.Pattern
                                             println("Confirmar senha: $confirmPassword")
                                             passwordMatchError = viewModel.passwordMatchError(password, confirmPassword)
                                         },
-                                        label = { Text("Confirmar senha") },
+                                        label = { Text("Confirmar senha",
+                                            color = Color(0xFF0F0F0F),
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            fontFamily = FontFamily.SansSerif) },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(8.dp)
@@ -285,9 +296,9 @@ import java.util.regex.Pattern
                                     ) {
                                         Text(text = "Criar conta",
                                             color = Color(0xFFFFFFFF),
-                                            textAlign = TextAlign.Center,
-                                            style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
-                                            fontSize = 24.sp)
+                                            fontSize = 18.sp,
+                                            fontWeight = FontWeight.Black,
+                                            fontFamily = FontFamily.SansSerif)
                                     }
                                 }
                             }

@@ -189,7 +189,10 @@ fun Login(navController: NavController) {
                                 Spacer(modifier = Modifier.weight(0.9f))
                                 Text(
                                     text = "Redefinição de Senha",
-                                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
+                                    color = Color(0xFF3F48CC),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Black,
+                                    fontFamily = FontFamily.SansSerif,
                                     modifier = Modifier.padding(16.dp),
                                 )
                                 Spacer(modifier = Modifier.weight(1.5f))
@@ -233,7 +236,11 @@ fun Login(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(8.dp),
                             ) {
-                                Text(text = "Enviar Código para o Email")
+                                Text(text = "Enviar Código para o Email",
+                                    color = Color(0xFFFFFFFF),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Black,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                             TextField(
                                 value = securityCodeInput,
@@ -281,9 +288,9 @@ fun Login(navController: NavController) {
                             ) {
                                 Text(text = "Fornecer Link para troca da senha",
                                     color = Color(0xFFFFFFFF),
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
-                                    fontSize = 16.sp)
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Black,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                             if (invalidCode.isNotEmpty()) {
                                 Text(
@@ -295,7 +302,7 @@ fun Login(navController: NavController) {
                         } else {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Start,
+                                horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
@@ -306,18 +313,17 @@ fun Login(navController: NavController) {
                                         .size(40.dp)
                                 )
                                 Spacer(modifier = Modifier.weight(0.9f))
-                                Text(
-                                    text = "Faça o Login",
-                                    style = MaterialTheme.typography.headlineSmall.copy(fontFamily = FontFamily.SansSerif),
-                                    modifier = Modifier.padding(16.dp),
-                                )
                                 Spacer(modifier = Modifier.weight(1.5f))
                             }
                             TextField(
                                 value = email,
                                 onValueChange = { email = it },
-                                label = { Text("Email") },
-                                modifier = Modifier
+                                label = { Text("Email",
+                                    color = Color(0xFF0F0F0F),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = FontFamily.SansSerif) },
+                                    modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp)
                             )
@@ -339,13 +345,21 @@ fun Login(navController: NavController) {
                                 )
                                 Text(
                                     text = "Lembrar Email",
-                                    modifier = Modifier.padding(8.dp)
+                                    color = Color(0xFF0F0F0F),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = FontFamily.SansSerif,
+                                    modifier = Modifier.padding(8.dp),
                                 )
                             }
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
-                                label = { Text("Senha") },
+                                label = { Text("Senha",
+                                    color = Color(0xFF0F0F0F),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = FontFamily.SansSerif) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp),
@@ -376,6 +390,10 @@ fun Login(navController: NavController) {
                                     )
                                 Text(
                                     text = "Lembrar Senha",
+                                    color = Color(0xFF0F0F0F),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = FontFamily.SansSerif,
                                     modifier = Modifier.padding(8.dp)
                                 )
                             }
@@ -412,13 +430,12 @@ fun Login(navController: NavController) {
                                     .fillMaxWidth()
                                     .height(50.dp)
                             ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.login),
-                                    contentDescription = "Login",
-                                    modifier = Modifier.size(24.dp)
-                                )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("ENTRAR")
+                                Text("Entrar",
+                                    color = Color(0xFFFFFFFF),
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             errorMessage?.let {
@@ -434,8 +451,8 @@ fun Login(navController: NavController) {
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.clickable { showResetPassword = true },
                                 style = MaterialTheme.typography.bodyMedium.copy(fontFamily = FontFamily.Default),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Black
                             )
                         }
                     }
