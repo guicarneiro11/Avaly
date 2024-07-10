@@ -81,10 +81,13 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.auth.FirebaseAuth
+import retrofit2.http.Body
+import retrofit2.http.POST
 import java.io.File
 import java.lang.Math.toDegrees
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import kotlin.math.atan2
 
 class MainActivity : ComponentActivity() {

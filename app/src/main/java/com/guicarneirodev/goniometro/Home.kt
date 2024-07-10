@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -29,13 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,8 +42,6 @@ import androidx.navigation.NavController
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun Home(navController: NavController) {
-    val background = painterResource(id = R.drawable.background)
-
     var offsetY by remember { mutableFloatStateOf(0f) }
     val animatedOffsetY by animateDpAsState(
         targetValue = offsetY.dp,
@@ -55,6 +50,20 @@ fun Home(navController: NavController) {
             easing = FastOutSlowInEasing
         ), label = ""
     )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF2B6EA8),
+                        Color(0xFF2B6EA8)
+                    )
+                )
+            )
+    )
+    {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,14 +78,6 @@ fun Home(navController: NavController) {
                     )
                 }
         ) {
-                Image(
-                    painter = background,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .blur(10.dp)
-                )
             Column(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomCenter)
@@ -88,6 +89,17 @@ fun Home(navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text(
+                    text = "Bem-vindo ao                        " +
+                            "Angle Pro,                         " +
+                            "sua goniometria                    " +
+                            "em poucos cliques.",
+                    color = Color(0xFFFFFFFF),
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Black,
+                    fontFamily = FontFamily.Default
+                )
+                Spacer(modifier = Modifier.height(225.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,7 +111,7 @@ fun Home(navController: NavController) {
                         onClick = {
                             navController.navigate("login")
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2B6EA8)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFFFFF)),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -108,7 +120,7 @@ fun Home(navController: NavController) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Fazer Login",
-                            color = Color(0xFFFFFFFF),
+                            color = Color(0xFF2B6EA8),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Black,
                             fontFamily = FontFamily.SansSerif
@@ -127,7 +139,7 @@ fun Home(navController: NavController) {
                         onClick = {
                             navController.navigate("register")
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2B6EA8)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFFFFF)),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -136,7 +148,7 @@ fun Home(navController: NavController) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Criar Conta",
-                            color = Color(0xFFFFFFFF),
+                            color = Color(0xFF2B6EA8),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Black,
                             fontFamily = FontFamily.SansSerif
@@ -145,4 +157,5 @@ fun Home(navController: NavController) {
                 }
             }
         }
+    }
 }

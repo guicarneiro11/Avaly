@@ -72,3 +72,7 @@ local.properties
 /app/release/release-112.aab
 /app/src/main/res/drawable/arrow.xml
 /app/src/main/res/drawable/search.xml
+/.idea/material_theme_project_new.xml
+/.idea/other.xml
+/app/release/release-114.aab
+/app/release/release-115.aab
