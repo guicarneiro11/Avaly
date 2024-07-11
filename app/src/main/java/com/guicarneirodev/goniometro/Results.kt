@@ -12,9 +12,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,48 +46,95 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ResultsAppBar(
-    navController: NavController,
-    addAngle: (String, String) -> Unit,
-    searchQuery: String,
-    onSearchQueryChange: (String) -> Unit
+class ResultsAppBar () {
+    @Composable
+    fun AppBar(
+        navController: NavController,
+        addAngle: (String, String) -> Unit,
+        searchQuery: String,
+        onSearchQueryChange: (String) -> Unit
     ) {
-    val focusManager = LocalFocusManager.current
+        val focusManager = LocalFocusManager.current
 
-    TopAppBar(
-        title = {
-            TextField(
-                value = searchQuery,
-                onValueChange = onSearchQueryChange,
-                placeholder = { Text("Buscar articulação") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    focusManager.clearFocus()
-                })
-            )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE6E6E6)),
-        navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.voltar),
-                    contentDescription = "Voltar Tela"
+        TopAppBar(
+            title = {
+                TextField(
+                    value = searchQuery,
+                    onValueChange = onSearchQueryChange,
+                    placeholder = { Text("Buscar articulação") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    })
                 )
+            },
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE6E6E6)),
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.voltar),
+                        contentDescription = "Voltar Tela"
+                    )
+                }
+            },
+            actions = {
+                var showDialog by remember { mutableStateOf(false) }
+                var articulationName by remember { mutableStateOf("") }
+                var angleValue by remember { mutableStateOf("") }
+
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDialog = false },
+                        title = { Text("Adicionar Paciente") },
+                        text = {
+                            Column {
+                                OutlinedTextField(
+                                    value = articulationName,
+                                    onValueChange = { articulationName = it },
+                                    label = { Text("Nome da articulação") }
+                                )
+                                OutlinedTextField(
+                                    value = angleValue,
+                                    onValueChange = { newValue ->
+                                        val cleanedValue = newValue.replace("°", "")
+                                        angleValue = if (cleanedValue.isNotEmpty()) "$cleanedValue°" else ""
+                                    },
+                                    label = { Text("Valor encontrado") }
+                                )
+                            }
+                        },
+                        confirmButton = {
+                            Button(onClick = {
+                                if (articulationName.isNotBlank() && angleValue.isNotBlank()) {
+                                    addAngle(articulationName, angleValue)
+                                    showDialog = false
+                                    articulationName = ""
+                                    angleValue = ""
+                                }
+                            }) {
+                                Text("Adicionar")
+                            }
+                        },
+                        dismissButton = {
+                            Button(onClick = { showDialog = false }) {
+                                Text("Cancelar")
+                            }
+                        }
+                    )
+                }
+                IconButton(onClick = { showDialog = true }) {
+                    Icon(painter = painterResource(id = R.drawable.add), contentDescription = "Add")
+                }
             }
-        },
-        actions = {
-            IconButton(onClick = {
-                addAngle("Articulação", "0°")
-            }) {
-                Icon(painter = painterResource(id = R.drawable.add), contentDescription = "Add")
-            }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -92,6 +144,8 @@ fun Results(navController: NavController, userId: String, patientId: String) {
     var editName by remember { mutableStateOf("") }
     var editValue by remember { mutableStateOf("") }
     var searchQuery by remember { mutableStateOf("") }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var docIdToEdit by remember { mutableStateOf("") }
 
     val db = Firebase.firestore
     val docRef = db.collection("users").document(userId).collection("patients").document(patientId).collection("results")
@@ -153,7 +207,7 @@ fun Results(navController: NavController, userId: String, patientId: String) {
     }
 
     Scaffold(
-        topBar = { ResultsAppBar(navController, ::addAngle, searchQuery) { searchQuery = it }
+        topBar = { ResultsAppBar().AppBar(navController, ::addAngle, searchQuery) { searchQuery = it }
         }
     ) { innerPadding ->
         Box(
@@ -178,71 +232,77 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                                 .fillMaxWidth()
                                 .padding(24.dp), verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (index == currentlyEditing) {
-                                OutlinedTextField(
-                                    value = editName,
-                                    onValueChange = { editName = it },
-                                    modifier = Modifier.weight(1f),
-                                    singleLine = true,
-                                    textStyle = TextStyle(
-                                        fontSize = 24.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                            Text(
+                                text = "$angleName: $angleValue",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(onClick = {
+                                currentlyEditing = index
+                                editName = angleName
+                                editValue = angleValue
+                                docIdToEdit = docId
+                                showEditDialog = true
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.edit),
+                                    contentDescription = "Edit"
                                 )
-                                OutlinedTextField(
-                                    value = editValue,
-                                    onValueChange = { editValue = it },
-                                    modifier = Modifier.weight(1f),
-                                    singleLine = true,
-                                    textStyle = TextStyle(
-                                        fontSize = 24.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                            }
+                            IconButton(onClick = { deleteAngle(docId) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.delete),
+                                    contentDescription = "Delete"
                                 )
-                                IconButton(onClick = {
-                                    updateAngle(docId, editName, editValue)
-                                    currentlyEditing = -1
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.done),
-                                        contentDescription = "Done"
-                                    )
-                                }
-                                IconButton(onClick = { currentlyEditing = -1 }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.close),
-                                        contentDescription = "Close"
-                                    )
-                                }
-                            } else {
-                                Text(
-                                    text = "$angleName: $angleValue",
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.weight(1f)
-                                )
-                                IconButton(onClick = {
-                                    currentlyEditing = index
-                                    editName = angleName
-                                    editValue = angleValue
-                                }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.edit),
-                                        contentDescription = "Edit"
-                                    )
-                                }
-                                IconButton(onClick = { deleteAngle(docId) }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.delete),
-                                        contentDescription = "Delete"
-                                    )
-                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    if (showEditDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = { Text("Editar Goniometria") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = editName,
+                        onValueChange = { editName = it },
+                        label = { Text("Nome da articulação") }
+                    )
+                    OutlinedTextField(
+                        value = editValue,
+                        onValueChange = { newValue ->
+                            val cleanedValue = newValue.replace("°", "")
+                            editValue = if (cleanedValue.isNotEmpty()) "$cleanedValue°" else ""
+                        },
+                        label = { Text("Valor encontrado") }
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    if (editName.isNotBlank() && editValue.isNotBlank()) {
+                        updateAngle(docIdToEdit, editName, editValue)
+                        showEditDialog = false
+                        editName = ""
+                        editValue = ""
+                        currentlyEditing = -1
+                    }
+                }) {
+                    Text("Salvar")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showEditDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

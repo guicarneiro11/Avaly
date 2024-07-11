@@ -48,7 +48,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
@@ -128,7 +135,6 @@ class PatientAppBar() {
                                         )
                                     )
                                 } ?: ""
-                                Text("Data selecionada: $formattedDate", fontSize = 18.sp)
                             }
                         },
                         confirmButton = {
@@ -136,6 +142,8 @@ class PatientAppBar() {
                                 if (patientName.isNotBlank() && formattedDate.isNotBlank()) {
                                     addPatient(patientName, formattedDate)
                                     showDialog = false
+                                    patientName = ""
+                                    formattedDate = ""
                                 }
                             }) {
                                 Text("Adicionar")
@@ -156,177 +164,214 @@ class PatientAppBar() {
     }
 }
 
-    @Composable
-    fun Patients(navController: NavController, userId: String) {
-        val patients = remember { mutableStateListOf<Triple<String, String, String>>() }
-        var currentlyEditing by remember { mutableIntStateOf(-1) }
-        var editPatient by remember { mutableStateOf("") }
-        var editDate by remember { mutableStateOf("") }
-        var searchQuery by remember { mutableStateOf("") }
-        val db = Firebase.firestore
-        val docRef = db.collection("users").document(userId).collection("patients")
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Patients(navController: NavController, userId: String) {
+    val patients = remember { mutableStateListOf<Triple<String, String, String>>() }
+    var currentlyEditing by remember { mutableIntStateOf(-1) }
+    var editPatient by remember { mutableStateOf("") }
+    var editDate by remember { mutableStateOf("") }
+    var searchQuery by remember { mutableStateOf("") }
+    var showEditDialog by remember { mutableStateOf(false) }
 
-        LaunchedEffect(key1 = userId) {
-            docRef.addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.w("Firestore", "Listen failed.", e)
-                    return@addSnapshotListener
+    val db = Firebase.firestore
+    val docRef = db.collection("users").document(userId).collection("patients")
+
+    LaunchedEffect(key1 = userId) {
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("Firestore", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+            if (snapshot != null && !snapshot.isEmpty) {
+                val items = snapshot.documents.map {
+                    val id = it.id
+                    val patientName = it["patientName"] as? String ?: ""
+                    val evaluationDate = it["evaluationDate"] as? String ?: "01/01/2024"
+                    Triple(id, patientName, evaluationDate)
                 }
-                if (snapshot != null && !snapshot.isEmpty) {
-                    val items = snapshot.documents.map {
-                        val id = it.id
-                        val patientName = it["patientName"] as? String ?: ""
-                        val evaluationDate = it["evaluationDate"] as? String ?: "01/01/2024"
-                        Triple(id, patientName, evaluationDate)
-                    }
-                    patients.clear()
-                    patients.addAll(items)
-                } else {
-                    Log.d("Firestore", "Current data: null")
+                patients.clear()
+                patients.addAll(items)
+            } else {
+                Log.d("Firestore", "Current data: null")
+            }
+        }
+    }
+
+    fun addPatient(patient: String, date: String) {
+        val newPatient = hashMapOf(
+            "patientName" to patient,
+            "evaluationDate" to date,
+            "created" to FieldValue.serverTimestamp()
+        )
+        docRef.add(newPatient).addOnCompleteListener {
+            if (!it.isSuccessful) {
+                Log.e("Firestore", "Error adding document", it.exception)
+            } else {
+                it.result?.let { docRef ->
+                    patients.add(Triple(docRef.id, patient, date))
+                    docRef.collection("angles")
                 }
             }
         }
+    }
 
-        fun addPatient(patient: String, date: String) {
-            val newPatient = hashMapOf(
-                "patientName" to patient,
-                "evaluationDate" to date,
-                "created" to FieldValue.serverTimestamp()
-            )
-            docRef.add(newPatient).addOnCompleteListener {
+    fun updatePatient(docId: String, newPatient: String, newDate: String) {
+        docRef.document(docId)
+            .update(mapOf("patientName" to newPatient, "evaluationDate" to newDate))
+            .addOnCompleteListener {
                 if (!it.isSuccessful) {
-                    Log.e("Firestore", "Error adding document", it.exception)
-                } else {
-                    it.result?.let { docRef ->
-                        patients.add(Triple(docRef.id, patient, date))
-                        docRef.collection("angles")
-                    }
+                    Log.e("Firestore", "Error updating document", it.exception)
                 }
             }
-        }
+    }
 
-        fun updatePatient(docId: String, newPatient: String, newDate: String) {
-            docRef.document(docId)
-                .update(mapOf("patientName" to newPatient, "evaluationDate" to newDate))
-                .addOnCompleteListener {
-                    if (!it.isSuccessful) {
-                        Log.e("Firestore", "Error updating document", it.exception)
-                    }
-                }
-        }
+    fun startEditing(index: Int, patientName: String, evaluationDate: String) {
+        currentlyEditing = index
+        editPatient = patientName
+        editDate = evaluationDate
+        showEditDialog = true
+    }
 
-        fun deletePatient(docId: String) {
-            docRef.document(docId).delete().addOnCompleteListener {
-                if (!it.isSuccessful) {
-                    Log.e("Firestore", "Error deleting document", it.exception)
-                }
+    fun saveEdit(docId: String, newPatient: String, newDate: String) {
+        updatePatient(docId, newPatient, newDate)
+        currentlyEditing = -1
+        showEditDialog = false
+    }
+
+    fun deletePatient(docId: String) {
+        docRef.document(docId).delete().addOnCompleteListener {
+            if (!it.isSuccessful) {
+                Log.e("Firestore", "Error deleting document", it.exception)
             }
         }
+    }
 
-        val filteredPatients = if (searchQuery.isEmpty()) {
-            patients
-        } else {
-            patients.filter { it.second.contains(searchQuery, ignoreCase = true) }
+    val filteredPatients = if (searchQuery.isEmpty()) {
+        patients
+    } else {
+        patients.filter { it.second.contains(searchQuery, ignoreCase = true) }
+    }
+
+    Scaffold(
+        topBar = {
+            PatientAppBar().AppBar(navController, ::addPatient, searchQuery) { searchQuery = it }
         }
-
-        Scaffold(
-            topBar = {
-                PatientAppBar().AppBar(navController, ::addPatient, searchQuery) { searchQuery = it }
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0xFFCBE3FF),
-                                Color(0xFFCBE3FF)
-                            )
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFCBE3FF),
+                            Color(0xFFCBE3FF)
                         )
                     )
-            ) {
-                Column {
-                    LazyColumn {
-                        itemsIndexed(filteredPatients) { index, triple ->
-                            val (docId, patientName, evaluationDate) = triple
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(24.dp), verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                if (index == currentlyEditing) {
-                                    OutlinedTextField(
-                                        value = editPatient,
-                                        onValueChange = { editPatient = it },
-                                        modifier = Modifier.weight(1f),
-                                        singleLine = true,
-                                        textStyle = TextStyle(
-                                            fontSize = 24.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    )
-                                    OutlinedTextField(
-                                        value = editDate,
-                                        onValueChange = { editDate = it },
-                                        modifier = Modifier.weight(1f),
-                                        singleLine = true,
-                                        textStyle = TextStyle(
-                                            fontSize = 24.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    )
-                                    IconButton(onClick = {
-                                        updatePatient(docId, editPatient, editDate)
-                                        currentlyEditing = -1
-                                    }) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.done),
-                                            contentDescription = "Done"
-                                        )
-                                    }
-                                    IconButton(onClick = { currentlyEditing = -1 }) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.close),
-                                            contentDescription = "Close"
-                                        )
-                                    }
-                                } else {
-                                    Text(
-                                        text = "$patientName: $evaluationDate",
-                                        fontSize = 24.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    IconButton(onClick = {
-                                        currentlyEditing = index
-                                        editPatient = patientName
-                                        editDate = evaluationDate
-                                    }) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.edit),
-                                            contentDescription = "Edit"
-                                        )
-                                    }
-                                    IconButton(onClick = { deletePatient(docId) }) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.delete),
-                                            contentDescription = "Delete"
-                                        )
-                                    }
-                                    IconButton(onClick = { navController.navigate("results/$userId/${triple.first}") }) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.arrow),
-                                            contentDescription = "Arrow"
-                                        )
-                                    }
-                                }
+                )
+        ) {
+            Column {
+                LazyColumn {
+                    itemsIndexed(filteredPatients) { index, triple ->
+                        val (docId, patientName, evaluationDate) = triple
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp), verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "$patientName: $evaluationDate",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(onClick = {
+                                startEditing(index, patientName, evaluationDate)
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.edit),
+                                    contentDescription = "Edit"
+                                )
+                            }
+                            IconButton(onClick = { deletePatient(docId) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.delete),
+                                    contentDescription = "Delete"
+                                )
+                            }
+                            IconButton(onClick = { navController.navigate("results/$userId/${triple.first}") }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrow),
+                                    contentDescription = "Arrow"
+                                )
                             }
                         }
                     }
                 }
             }
         }
+
+        if (showEditDialog) {
+            var showDatePicker by remember { mutableStateOf(false) }
+            val editDatePickerState = rememberDatePickerState(
+                initialDisplayMode = DisplayMode.Input
+            )
+            var formattedEditDate by remember(editDatePickerState.selectedDateMillis) {
+                mutableStateOf(
+                    editDatePickerState.selectedDateMillis?.let {
+                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
+                    } ?: editDate
+                )
+            }
+
+            AlertDialog(
+                onDismissRequest = { showEditDialog = false },
+                title = { Text("Editar Paciente") },
+                text = {
+                    Column {
+                        OutlinedTextField(
+                            value = editPatient,
+                            onValueChange = { editPatient = it },
+                            label = { Text("Nome") }
+                        )
+
+                        Button(onClick = { showDatePicker = !showDatePicker }) {
+                            Text(if (showDatePicker) "Ocultar Calendário" else "Mostrar Calendário")
+                        }
+
+                        if (showDatePicker) {
+                            DatePicker(
+                                state = editDatePickerState,
+                                showModeToggle = false,
+                                colors = DatePickerDefaults.colors(
+                                    weekdayContentColor = MaterialTheme.colorScheme.onSurface,
+                                    selectedDayContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedDayContentColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            )
+                        }
+
+                        if (formattedEditDate.isNotBlank()) {
+                            Text("Data selecionada: $formattedEditDate", fontSize = 18.sp)
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = {
+                        val docId = filteredPatients[currentlyEditing].first
+                        saveEdit(docId, editPatient, formattedEditDate)
+                    }) {
+                        Text("Salvar")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { showEditDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
     }
+}
