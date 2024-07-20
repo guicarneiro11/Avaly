@@ -2,6 +2,10 @@ package com.guicarneirodev.goniometro
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
+import android.widget.Button
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.biodigital.humansdk.*
@@ -23,6 +27,15 @@ class HumanMain : AppCompatActivity(), HKServicesInterface, HKHumanInterface {
         modelId?.let {
             loadModel(it)
         }
+
+        val backButton = findViewById<Button>(R.id.back_button)
+        backButton.setOnClickListener {
+            finish()
+        }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            backButton.visibility = View.VISIBLE
+        }, 7000)
     }
 
     private fun loadModel(modelId: String) {
@@ -36,7 +49,6 @@ class HumanMain : AppCompatActivity(), HKServicesInterface, HKHumanInterface {
     }
 
     override fun onValidSDK() {
-
     }
 
     override fun onInvalidSDK() {
@@ -44,7 +56,6 @@ class HumanMain : AppCompatActivity(), HKServicesInterface, HKHumanInterface {
     }
 
     override fun onModelsLoaded() {
-
     }
 
     override fun onModelDownloaded(modelId: String?, count: Int?, total: Int?) {

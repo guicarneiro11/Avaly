@@ -2,4 +2,5 @@
     <string name="app_name">Goniometro</string>
     <string name="chapter_title">Chapter Title</string>
     <string name="desc">Desc</string>
+    <string name="back_button_text">Voltar</string>
 </resources>

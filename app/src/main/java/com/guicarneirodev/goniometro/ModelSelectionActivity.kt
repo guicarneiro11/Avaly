@@ -15,12 +15,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -29,35 +34,39 @@ import com.google.firebase.remoteconfig.remoteConfigSettings
 class ModelSelectionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            val navController = rememberNavController()
             initializeFirebaseRemoteConfig()
 
-            ModelSelectionScreenWrapper()
+            NavHost(navController = navController, startDestination = "modelSelectionLoading") {
+                composable("modelSelectionLoading") { ModelSelectionLoading(navController) }
+                composable("modelSelection") { ModelSelectionScreenWrapper(navController) }
+            }
         }
     }
-}
 
-fun initializeFirebaseRemoteConfig() {
-    val remoteConfig = FirebaseRemoteConfig.getInstance()
-    val configSettings = remoteConfigSettings {
-        minimumFetchIntervalInSeconds = 3600
-    }
-    remoteConfig.setConfigSettingsAsync(configSettings)
-
-    remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            val developerKey = remoteConfig.getString("DEVELOPER_KEY")
-            val developerSecret = remoteConfig.getString("DEVELOPER_SECRET")
-            TokenManager.developerKey = developerKey
-            TokenManager.developerSecret = developerSecret
-        } else {
-            println("Falha ao buscar configuração")
+    private fun initializeFirebaseRemoteConfig() {
+        val remoteConfig = FirebaseRemoteConfig.getInstance()
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 3600
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val developerKey = remoteConfig.getString("DEVELOPER_KEY")
+                val developerSecret = remoteConfig.getString("DEVELOPER_SECRET")
+                TokenManager.developerKey = developerKey
+                TokenManager.developerSecret = developerSecret
+            } else {
+                println("Falha ao buscar configuração")
+            }
         }
     }
 }
 
 @Composable
-fun ModelSelectionScreenWrapper() {
+fun ModelSelectionScreenWrapper(navController: NavController) {
     val accessTokenState = remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -69,17 +78,27 @@ fun ModelSelectionScreenWrapper() {
     }
 
     if (accessTokenState.value != null) {
-        ModelSelectionScreen(accessToken = accessTokenState.value!!)
+        ModelSelectionScreen(accessTokenState.value!!, navController)
     } else {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "Carregando a seleção de modelos...")
+        ModelSelectionLoading(navController)
+    }
+}
+
+@Composable
+fun ModelSelectionLoading(navController: NavController) {
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            TokenManager.getAccessToken()
+            navController.navigate("modelSelection")
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModelSelectionScreen(accessToken: String) {
+fun ModelSelectionScreen(accessToken: String, navController: NavController) {
     val context = LocalContext.current
     val models = remember { mutableStateOf<List<Model>>(emptyList()) }
 
@@ -90,7 +109,26 @@ fun ModelSelectionScreen(accessToken: String) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Selecione um Modelo Ortopédico") })
+            TopAppBar(
+                title = {
+                    Text("Selecione um Modelo Ortopédico")
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFFE6E6E6)
+                ),
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigate("main") {
+                            popUpTo("home") { inclusive = false }
+                        }
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.voltar),
+                            contentDescription = "Voltar"
+                        )
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         LazyColumn(

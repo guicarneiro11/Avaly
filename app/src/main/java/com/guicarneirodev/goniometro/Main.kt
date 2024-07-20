@@ -101,8 +101,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val validViewModel: ValidViewModel = viewModel()
+            val startDestination = intent.getStringExtra("destination") ?: "home"
 
-            NavHost(navController = navController, startDestination = "home") {
+            NavHost(navController = navController, startDestination = startDestination) {
                 composable("home") { Home(navController) }
                 composable("login") { Login(navController) }
                 composable("register") { Register(navController, validViewModel) }
@@ -123,6 +124,8 @@ class MainActivity : ComponentActivity() {
                     Results(navController = navController, userId, patientId)
                 }
                 composable("humanAPI") { HumanComposeScreen() }
+                composable("modelSelectionLoading") { ModelSelectionLoading(navController) }
+                composable("modelSelection") { ModelSelectionScreenWrapper(navController) }
             }
         }
     }
@@ -549,11 +552,11 @@ fun Goniometro(navController: NavController, userId: String) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.addphoto),
-                                    contentDescription = "Tirar Foto",
+                                    contentDescription = "Capturar Foto",
                                     modifier = Modifier.size(24.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Tirar Foto",
+                                Text("Capturar Foto",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
