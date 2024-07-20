@@ -1,6 +1,5 @@
 *.iml
 .gradle
-/local.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -10,9 +9,9 @@
 .DS_Store
 /build
 /captures
+/local.properties
 .externalNativeBuild
 .cxx
-local.properties
 /functions/.eslintrc.js
 /.firebaserc
 /node_modules/nodemailer/.gitattributes

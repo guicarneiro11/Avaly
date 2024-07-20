@@ -2,11 +2,13 @@ package com.guicarneirodev.goniometro
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -78,7 +80,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import com.google.firebase.FirebaseApp
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.http.Body
@@ -118,6 +122,7 @@ class MainActivity : ComponentActivity() {
                         ?: throw IllegalStateException("PatientID não encontrado na backStackEntry.")
                     Results(navController = navController, userId, patientId)
                 }
+                composable("humanAPI") { HumanComposeScreen() }
             }
         }
     }
@@ -309,7 +314,7 @@ fun Goniometro(navController: NavController, userId: String) {
     Box(modifier = Modifier.fillMaxSize()) {
         currentImageUri?.let {
             Image(
-                painter = rememberImagePainter(it),
+                painter = rememberAsyncImagePainter(it),
                 contentDescription = "Foto selecionada",
                 modifier = Modifier.fillMaxSize()
             )
@@ -549,6 +554,24 @@ fun Goniometro(navController: NavController, userId: String) {
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Tirar Foto",
+                                    color = Color(0xFF000000),
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.SansSerif)
+                            }
+                        }
+                        DropdownMenuItem(onClick = {
+                            navController.navigate("HumanAPI")
+                            menuDropdownExpanded = false
+                        }) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.human),
+                                    contentDescription = "Human",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Modelo 3D",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
