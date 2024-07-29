@@ -21,12 +21,14 @@ O Angle Pro é um aplicativo voltado para fisioterapeutas com o objetivo de auxi
 - Simula a funcionalidade de um goniômetro físico, permitindo realizar goniometrias em fotos importadas da galeria ou tiradas no momento da avaliação.
 - Possibilidade de alterar entre os quadrantes do goniômetro para se adaptar melhor ao plano referente à articulação.
 - Salva medições dentro do próprio app, separando os resultados individualmente para cada paciente, auxiliando na comparação das evoluções durante as semanas de tratamento.
+- Possibilidade de acessar diversos modelos 3D da área da ortopedia, auxiliando na avaliação e estudos de fisioterapeutas.
 
 ## Tecnologias Utilizadas
 
 - Kotlin
 - Jetpack Compose
 - Firebase
+- API REST
 
 ## Considerações Finais
 
