@@ -2,13 +2,11 @@ package com.guicarneirodev.goniometro
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.RectF
 import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -81,17 +79,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import com.google.firebase.FirebaseApp
 import com.guicarneirodev.goniometro.ui.theme.GoniometroTheme
 import com.google.firebase.auth.FirebaseAuth
-import retrofit2.http.Body
-import retrofit2.http.POST
 import java.io.File
 import java.lang.Math.toDegrees
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 import kotlin.math.atan2
 
 class MainActivity : ComponentActivity() {
@@ -189,11 +182,14 @@ fun InstructionsList() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .background(Color.White) // Adicione cor de fundo explícita
     ) {
         items(instructions) { instruction ->
             Text(text = instruction,
-                modifier = Modifier.padding(8.dp),
-                color = Color(0xFF000000),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .background(Color.White), // Adicione cor de fundo explícita
+                color = Color.Black, // Defina a cor do texto
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Black,
                 fontFamily = FontFamily.Default)
@@ -434,7 +430,8 @@ fun Goniometro(navController: NavController, userId: String) {
                         Icon(
                             painter = painterResource(id = R.drawable.menu),
                             contentDescription = "Menu",
-                            modifier = Modifier.size(44.dp)
+                            modifier = Modifier.size(44.dp),
+                            tint = Color(0xFF000000)
                         )
                     }
                     DropdownMenu(
@@ -449,7 +446,8 @@ fun Goniometro(navController: NavController, userId: String) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.tibia),
                                     contentDescription = "Alterar Quadrante",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Alterar Quadrante",
@@ -509,7 +507,8 @@ fun Goniometro(navController: NavController, userId: String) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.clinical_notes),
                                     contentDescription = "Pacients List",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Pacientes",
@@ -527,7 +526,8 @@ fun Goniometro(navController: NavController, userId: String) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.photo_library),
                                     contentDescription = "Importar Foto",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Importar Foto",
@@ -553,7 +553,8 @@ fun Goniometro(navController: NavController, userId: String) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.addphoto),
                                     contentDescription = "Capturar Foto",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Capturar Foto",
@@ -571,7 +572,8 @@ fun Goniometro(navController: NavController, userId: String) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.human),
                                     contentDescription = "Human",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Modelo 3D",
@@ -588,7 +590,8 @@ fun Goniometro(navController: NavController, userId: String) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.help),
                                     contentDescription = "Ajuda",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Ajuda",
@@ -631,14 +634,17 @@ fun Goniometro(navController: NavController, userId: String) {
                             )
                         }
                         DropdownMenuItem(onClick = {
-                            navController.popBackStack()
+                            navController.navigate("login") {
+                                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                            }
                             menuDropdownExpanded = false
                         }) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.logout),
                                     contentDescription = "Logout",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Logout",

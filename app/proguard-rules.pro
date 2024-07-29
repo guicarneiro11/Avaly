@@ -19,34 +19,23 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-# Manter nomes de classes, métodos e campos para bibliotecas específicas
--keep class com.google.** { *; }
--keep class okhttp3.** { *; }
-
-# Manter nomes de classes anotadas com @Keep
--keep @interface androidx.annotation.Keep
--keep class * {
-    @androidx.annotation.Keep *;
-}
-
-# Manter classes utilizadas para reflection
--keepclassmembers class * {
-    *;
-}
-
-# Firebase
+-keep @androidx.annotation.Keep class * { *; }
+-keep class androidx.** { *; }
+-keep class android.webkit.** { *; }
+-keep class org.chromium.** { *; }
 -keep class com.google.firebase.** { *; }
--keep class com.google.android.gms.** { *; }
+-keep class com.bumptech.glide.** { *; }
+-keep class com.guicarneirodev.goniometro.** { *; }
 
-# Retrofit
--keep class retrofit2.** { *; }
--keep class okhttp3.** { *; }
+# WebView-related classes
+-keep class android.webkit.WebView { *; }
+-keep class android.webkit.WebSettings { *; }
+-keep class org.chromium.** { *; }
+-keep class com.android.webview.** { *; }
+-keep class com.google.android.webview.** { *; }
 
-# Remover logging e debug
--assumenosideeffects class android.util.Log {
-    public static int d(...);
-    public static int w(...);
-    public static int v(...);
-    public static int i(...);
-    public static int e(...);
+# Retain all public and protected methods in classes extending WebView
+-keepclassmembers class * extends android.webkit.WebView {
+    public *;
+    protected *;
 }

@@ -184,7 +184,8 @@ fun Login(navController: NavController) {
                                     contentDescription = "Voltar Tela",
                                     modifier = Modifier
                                         .clickable { showResetPassword = false }
-                                        .size(40.dp)
+                                        .size(40.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.weight(0.9f))
                                 Text(
@@ -309,8 +310,11 @@ fun Login(navController: NavController) {
                                     painter = painterResource(id = R.drawable.voltar),
                                     contentDescription = "Voltar Tela",
                                     modifier = Modifier
-                                        .clickable { navController.popBackStack() }
-                                        .size(40.dp)
+                                        .clickable {
+                                            navController.navigate("home")
+                                        }
+                                        .size(40.dp),
+                                    tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.weight(0.9f))
                                 Spacer(modifier = Modifier.weight(1.5f))
@@ -323,7 +327,7 @@ fun Login(navController: NavController) {
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
                                     fontFamily = FontFamily.SansSerif) },
-                                    modifier = Modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp)
                             )
@@ -337,11 +341,11 @@ fun Login(navController: NavController) {
                                 Switch(checked = lembrarEmail,
                                     colors = SwitchDefaults.colors(checkedTrackColor = Color(0xFF3280C4)),
                                     onCheckedChange = { lembrarEmail = it
-                                    val editor = sharedPreferences.edit()
-                                    editor.putBoolean("lembrarEmail", it)
-                                    editor.apply()
-                                }
-                                ,modifier = Modifier.padding(start = 16.dp)
+                                        val editor = sharedPreferences.edit()
+                                        editor.putBoolean("lembrarEmail", it)
+                                        editor.apply()
+                                    }
+                                    ,modifier = Modifier.padding(start = 16.dp)
                                 )
                                 Text(
                                     text = "Lembrar Email",
@@ -368,7 +372,8 @@ fun Login(navController: NavController) {
                                     IconButton(onClick = { passwordVisibility = !passwordVisibility}) {
                                         Icon (
                                             painter  = if (passwordVisibility) painterResource(id = R.drawable.pass_off) else painterResource(id = R.drawable.pass_on),
-                                            contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha"
+                                            contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha",
+                                            tint = Color(0xFF000000)
                                         )
                                     }
                                 }
@@ -382,12 +387,12 @@ fun Login(navController: NavController) {
                                 Switch(checked = lembrarSenha,
                                     colors = SwitchDefaults.colors(checkedTrackColor = Color(0xFF3280C4)),
                                     onCheckedChange = { lembrarSenha = it
-                                    val editor = sharedPreferences.edit()
-                                    editor.putBoolean("lembrarSenha", it)
-                                    editor.apply()
-                                }
-                                ,modifier = Modifier.padding(start = 16.dp)
-                                    )
+                                        val editor = sharedPreferences.edit()
+                                        editor.putBoolean("lembrarSenha", it)
+                                        editor.apply()
+                                    }
+                                    ,modifier = Modifier.padding(start = 16.dp)
+                                )
                                 Text(
                                     text = "Lembrar Senha",
                                     color = Color(0xFF0F0F0F),

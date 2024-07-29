@@ -11,4 +11,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="my_primary_color">#000000</color>
+    <color name="my_on_primary_color">#FFFFFF</color>
+    <color name="my_background_color">#FFFFFF</color>
+    <color name="my_on_background_color">#000000</color>
 </resources>

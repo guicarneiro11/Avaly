@@ -86,9 +86,11 @@ class PatientAppBar() {
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
+                    keyboardActions = KeyboardActions(
+                        onDone = {
                         focusManager.clearFocus()
-                    })
+                        }
+                    )
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFE6E6E6)),
@@ -96,7 +98,8 @@ class PatientAppBar() {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.voltar),
-                        contentDescription = "Voltar Tela"
+                        contentDescription = "Voltar Tela",
+                        tint = Color(0xFF000000)
                     )
                 }
             },
@@ -157,7 +160,10 @@ class PatientAppBar() {
                     )
                 }
                 IconButton(onClick = { showDialog = true }) {
-                    Icon(painter = painterResource(id = R.drawable.add), contentDescription = "Add")
+                    Icon(painter = painterResource(id = R.drawable.add),
+                        contentDescription = "Add",
+                        tint = Color(0xFF000000)
+                    )
                 }
             }
         )
@@ -292,19 +298,22 @@ fun Patients(navController: NavController, userId: String) {
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.edit),
-                                    contentDescription = "Edit"
+                                    contentDescription = "Edit",
+                                    tint = Color(0xFF000000)
                                 )
                             }
                             IconButton(onClick = { deletePatient(docId) }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.delete),
-                                    contentDescription = "Delete"
+                                    contentDescription = "Delete",
+                                    tint = Color(0xFF000000)
                                 )
                             }
                             IconButton(onClick = { navController.navigate("results/$userId/${triple.first}") }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.arrow),
-                                    contentDescription = "Arrow"
+                                    contentDescription = "Arrow",
+                                    tint = Color(0xFF000000)
                                 )
                             }
                         }

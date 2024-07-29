@@ -1,5 +1,6 @@
 package com.guicarneirodev.goniometro
 
+import android.util.Log
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
@@ -8,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import java.io.BufferedReader
+import java.io.FileNotFoundException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
@@ -56,7 +58,11 @@ object TokenManager {
         val developerKey = remoteConfig.getString("DEVELOPER_KEY")
         val developerSecret = remoteConfig.getString("DEVELOPER_SECRET")
 
+        Log.d("TokenManager", "Developer Key: $developerKey")
+        Log.d("TokenManager", "Developer Secret: $developerSecret")
+
         val currentTime = System.currentTimeMillis()
+
         return withContext(Dispatchers.IO) {
             if (accessToken == null || currentTime >= tokenExpiryTime) {
                 val newToken = fetchAccessToken(developerKey, developerSecret)
@@ -77,7 +83,15 @@ object TokenManager {
             val postDataJson = gson.toJson(postDataObj)
 
             val connection = buildPostRequest(url, postDataJson, authStr)
+            val responseCode = connection.responseCode
+
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                Log.e("TokenManager", "Failed to fetch token, response code: $responseCode")
+                throw FileNotFoundException("Failed to fetch token, response code: $responseCode")
+            }
+
             val response = buildResponse(connection)
+            Log.d("TokenManager", "Response: $response")
 
             val responseObj = gson.fromJson(response, ResponseObject::class.java)
             val expiryTime = System.currentTimeMillis() + responseObj.expires_in * 1000
@@ -112,6 +126,7 @@ fun buildResponse(connection: HttpURLConnection): String {
             response.append(inputLine)
         }
     }
+    connection.disconnect()
     return response.toString()
 }
 

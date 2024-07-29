@@ -153,7 +153,8 @@ import java.util.regex.Pattern
                                         contentDescription = "Voltar Tela",
                                         modifier = Modifier
                                             .clickable { navController.popBackStack() }
-                                            .size(40.dp)
+                                            .size(40.dp),
+                                        tint = Color(0xFF000000)
                                     )
                                     TextField(
                                         value = email,
@@ -212,7 +213,8 @@ import java.util.regex.Pattern
                                             IconButton(onClick = { passwordVisibility = !passwordVisibility}) {
                                                 Icon (
                                                     painter  = if (passwordVisibility) painterResource(id = R.drawable.pass_off) else painterResource(id = R.drawable.pass_on),
-                                                    contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha"
+                                                    contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha",
+                                                    tint = Color(0xFF000000)
                                                 )
                                             }
                                         }
@@ -254,7 +256,8 @@ import java.util.regex.Pattern
                                             IconButton(onClick = { passwordVisibility = !passwordVisibility}) {
                                                 Icon (
                                                     painter  = if (passwordVisibility) painterResource(id = R.drawable.pass_off) else painterResource(id = R.drawable.pass_on),
-                                                    contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha"
+                                                    contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha",
+                                                    tint = Color(0xFF000000)
                                                 )
                                             }
                                         }

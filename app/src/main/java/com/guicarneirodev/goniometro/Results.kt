@@ -80,7 +80,8 @@ class ResultsAppBar () {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.voltar),
-                        contentDescription = "Voltar Tela"
+                        contentDescription = "Voltar Tela",
+                        tint = Color(0xFF000000)
                     )
                 }
             },
@@ -130,7 +131,10 @@ class ResultsAppBar () {
                     )
                 }
                 IconButton(onClick = { showDialog = true }) {
-                    Icon(painter = painterResource(id = R.drawable.add), contentDescription = "Add")
+                    Icon(painter = painterResource(id = R.drawable.add),
+                        contentDescription = "Add",
+                        tint = Color(0xFF000000)
+                    )
                 }
             }
         )
@@ -248,13 +252,15 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.edit),
-                                    contentDescription = "Edit"
+                                    contentDescription = "Edit",
+                                    tint = Color(0xFF000000)
                                 )
                             }
                             IconButton(onClick = { deleteAngle(docId) }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.delete),
-                                    contentDescription = "Delete"
+                                    contentDescription = "Delete",
+                                    tint = Color(0xFF000000)
                                 )
                             }
                         }
