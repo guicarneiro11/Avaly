@@ -116,9 +116,6 @@ class MainActivity : ComponentActivity() {
                         ?: throw IllegalStateException("PatientID não encontrado na backStackEntry.")
                     Results(navController = navController, userId, patientId)
                 }
-                composable("humanAPI") { HumanComposeScreen() }
-                composable("modelSelectionLoading") { ModelSelectionLoading(navController) }
-                composable("modelSelection") { ModelSelectionScreenWrapper(navController) }
             }
         }
     }
@@ -182,14 +179,14 @@ fun InstructionsList() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .background(Color.White) // Adicione cor de fundo explícita
+            .background(Color.White)
     ) {
         items(instructions) { instruction ->
             Text(text = instruction,
                 modifier = Modifier
                     .padding(8.dp)
-                    .background(Color.White), // Adicione cor de fundo explícita
-                color = Color.Black, // Defina a cor do texto
+                    .background(Color.White),
+                color = Color.Black,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Black,
                 fontFamily = FontFamily.Default)
@@ -254,8 +251,8 @@ fun Goniometro(navController: NavController, userId: String) {
     var currentImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var dialogOpen by remember { mutableStateOf(false) }
     val importLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-            currentImageUri = uri
-        }
+        currentImageUri = uri
+    }
 
     val file = context.createImageFile()
     val captureUri =
@@ -558,25 +555,6 @@ fun Goniometro(navController: NavController, userId: String) {
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Capturar Foto",
-                                    color = Color(0xFF000000),
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
-                            }
-                        }
-                        DropdownMenuItem(onClick = {
-                            navController.navigate("HumanAPI")
-                            menuDropdownExpanded = false
-                        }) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.human),
-                                    contentDescription = "Human",
-                                    modifier = Modifier.size(24.dp),
-                                    tint = Color(0xFF000000)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Modelo 3D",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,

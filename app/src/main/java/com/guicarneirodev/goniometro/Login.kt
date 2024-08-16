@@ -50,10 +50,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.functions.FirebaseFunctionsException
 import com.google.firebase.functions.functions
 
 class FirebaseAuthManager {
     private var firebaseAuth = FirebaseAuth.getInstance()
+
     fun resetPassword(email: String): String {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return "Endereço de e-mail inválido"
@@ -70,24 +72,23 @@ class FirebaseAuthManager {
         return "Email de redefinição de senha enviado"
     }
     fun signInEmail(email: String, password: String, callback: (Result<Unit>) -> Unit) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    println("Login bem-sucedido: $email")
-                    callback(Result.success(Unit))
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                println("Login bem-sucedido: $email")
+                callback(Result.success(Unit))
+            } else {
+                val exception = task.exception
+                if (exception is FirebaseAuthInvalidUserException ||
+                    exception is FirebaseAuthInvalidCredentialsException)
+                {
+                    println("Falha no login: Email ou senha incorretos")
+                    callback(Result.failure(Exception("Email ou senha incorretos")))
                 } else {
-                    val exception = task.exception
-                    if (exception is FirebaseAuthInvalidUserException ||
-                        exception is FirebaseAuthInvalidCredentialsException
-                    ) {
-                        println("Falha no login: Email ou senha incorretos")
-                        callback(Result.failure(Exception("Email ou senha incorretos")))
-                    } else {
-                        println("Falha no login: ${exception?.message}")
-                        callback(Result.failure(Exception(exception?.message)))
-                    }
+                    println("Falha no login: ${exception?.message}")
+                    callback(Result.failure(Exception(exception?.message)))
                 }
             }
+        }
     }
 }
 
@@ -229,7 +230,11 @@ fun Login(navController: NavController) {
                                             }
                                         }
                                         .addOnFailureListener { e ->
-                                            Log.e(TAG, "Erro ao chamar a função do Firebase Functions: $e")
+                                            Log.e(TAG, "Erro ao chamar a função do Firebase Functions: ${e.message}")
+                                            if (e is FirebaseFunctionsException) {
+                                                Log.e(TAG, "Código do erro: ${e.code}")
+                                                Log.e(TAG, "Detalhes do erro: ${e.details}")
+                                            }
                                         }
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3280C4)),
@@ -331,13 +336,11 @@ fun Login(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(8.dp)
                             )
-
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-
                                 Switch(checked = lembrarEmail,
                                     colors = SwitchDefaults.colors(checkedTrackColor = Color(0xFF3280C4)),
                                     onCheckedChange = { lembrarEmail = it

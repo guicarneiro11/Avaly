@@ -10,13 +10,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.github.com/biodigital-inc/human-android-sdk")
-            credentials {
-                username = "public"
-                password = System.getenv("BD_PASSWORD") ?: ""
-            }
-        }
     }
 }
 

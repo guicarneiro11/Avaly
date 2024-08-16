@@ -1,26 +1,22 @@
 package com.guicarneirodev.goniometro
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CalendarLocale
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerFormatter
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,28 +37,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -170,6 +168,15 @@ class PatientAppBar() {
     }
 }
 
+interface SendPdfApi {
+    @GET("api/users/{userId}/patients/{patientId}/send-pdf")
+    suspend fun sendPdfToEmail(
+        @Path("userId") userId: String,
+        @Path("patientId") patientId: String,
+        @Query("email") email: String
+    ): Response<Void>
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Patients(navController: NavController, userId: String) {
@@ -179,6 +186,12 @@ fun Patients(navController: NavController, userId: String) {
     var editDate by remember { mutableStateOf("") }
     var searchQuery by remember { mutableStateOf("") }
     var showEditDialog by remember { mutableStateOf(false) }
+
+    var showEmailDialog by remember { mutableStateOf(false) }
+    var emailToSend by remember { mutableStateOf("") }
+    var currentPatientId by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     val db = Firebase.firestore
     val docRef = db.collection("users").document(userId).collection("patients")
@@ -253,6 +266,28 @@ fun Patients(navController: NavController, userId: String) {
         }
     }
 
+    fun sendPdfToEmail(userId: String, patientId: String, email: String) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://ktor-app-cc5gi2t6tq-rj.a.run.app")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = retrofit.create(SendPdfApi::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val message = try {
+                val response = api.sendPdfToEmail(userId, patientId, email)
+                if (response.isSuccessful) "E-mail enviado com sucesso!" else "Erro ao enviar e-mail: ${response.errorBody()?.string()}"
+            } catch (e: Exception) {
+                "Erro ao enviar e-mail: ${e.message}"
+            }
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     val filteredPatients = if (searchQuery.isEmpty()) {
         patients
     } else {
@@ -294,25 +329,35 @@ fun Patients(navController: NavController, userId: String) {
                                 modifier = Modifier.weight(1f)
                             )
                             IconButton(onClick = {
+                                currentPatientId = triple.first
+                                showEmailDialog = true
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.reportpdf),
+                                    contentDescription = "Enviar PDF por email",
+                                    tint = Color(0xFF000000)
+                                )
+                            }
+                            IconButton(onClick = {
                                 startEditing(index, patientName, evaluationDate)
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.edit),
-                                    contentDescription = "Edit",
+                                    contentDescription = "Editar",
                                     tint = Color(0xFF000000)
                                 )
                             }
                             IconButton(onClick = { deletePatient(docId) }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.delete),
-                                    contentDescription = "Delete",
+                                    contentDescription = "Deletar",
                                     tint = Color(0xFF000000)
                                 )
                             }
                             IconButton(onClick = { navController.navigate("results/$userId/${triple.first}") }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.arrow),
-                                    contentDescription = "Arrow",
+                                    contentDescription = "Resultados",
                                     tint = Color(0xFF000000)
                                 )
                             }
@@ -382,5 +427,41 @@ fun Patients(navController: NavController, userId: String) {
                 }
             )
         }
+    }
+    if (showEmailDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showEmailDialog = false
+                emailToSend = ""
+            },
+            title = { Text("Enviar PDF por E-mail") },
+            text = {
+                OutlinedTextField(
+                    value = emailToSend,
+                    onValueChange = { emailToSend = it },
+                    label = { Text("E-mail") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    if (emailToSend.isNotBlank()) {
+                        sendPdfToEmail(userId, currentPatientId, emailToSend)
+                        showEmailDialog = false
+                        emailToSend = ""
+                    }
+                }) {
+                    Text("Enviar")
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    showEmailDialog = false
+                    emailToSend = ""
+                }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

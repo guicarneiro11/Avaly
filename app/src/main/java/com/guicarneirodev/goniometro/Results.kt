@@ -152,7 +152,13 @@ fun Results(navController: NavController, userId: String, patientId: String) {
     var docIdToEdit by remember { mutableStateOf("") }
 
     val db = Firebase.firestore
-    val docRef = db.collection("users").document(userId).collection("patients").document(patientId).collection("results")
+    val docRef = db.collection("users").document(userId).collection("patients").document(patientId)
+        .collection("results")
+    val filteredAngles = if (searchQuery.isEmpty()) {
+        angles
+    } else {
+        angles.filter { it.second.contains(searchQuery, ignoreCase = true) }
+    }
 
     LaunchedEffect(key1 = patientId) {
         docRef.addSnapshotListener { snapshot, e ->
@@ -163,7 +169,8 @@ fun Results(navController: NavController, userId: String, patientId: String) {
             if (snapshot != null && !snapshot.isEmpty) {
                 val items = snapshot.documents.map {
                     val id = it.id
-                    val name = it["name"] as? String ?: throw IllegalStateException("Campo 'name' não encontrado ou nulo.")
+                    val name = it["name"] as? String
+                        ?: throw IllegalStateException("Campo 'name' não encontrado ou nulo.")
                     val value = it["value"] as? String ?: "Valor padrão"
                     Triple(id, name, value)
                 }
@@ -176,7 +183,8 @@ fun Results(navController: NavController, userId: String, patientId: String) {
     }
 
     fun addAngle(name: String, value: String) {
-        val newAngle = hashMapOf("name" to name, "value" to value, "created" to FieldValue.serverTimestamp())
+        val newAngle =
+            hashMapOf("name" to name, "value" to value, "created" to FieldValue.serverTimestamp())
         docRef.add(newAngle).addOnCompleteListener {
             if (!it.isSuccessful) {
                 Log.e("Firestore", "Error adding document", it.exception)
@@ -189,11 +197,12 @@ fun Results(navController: NavController, userId: String, patientId: String) {
     }
 
     fun updateAngle(docId: String, newName: String, newValue: String) {
-        docRef.document(docId).update(mapOf("name" to newName, "value" to newValue)).addOnCompleteListener {
-            if (!it.isSuccessful) {
-                Log.e("Firestore", "Error updating document", it.exception)
+        docRef.document(docId).update(mapOf("name" to newName, "value" to newValue))
+            .addOnCompleteListener {
+                if (!it.isSuccessful) {
+                    Log.e("Firestore", "Error updating document", it.exception)
+                }
             }
-        }
     }
 
     fun deleteAngle(docId: String) {
@@ -204,14 +213,9 @@ fun Results(navController: NavController, userId: String, patientId: String) {
         }
     }
 
-    val filteredAngles = if (searchQuery.isEmpty()) {
-        angles
-    } else {
-        angles.filter { it.second.contains(searchQuery, ignoreCase = true) }
-    }
-
     Scaffold(
-        topBar = { ResultsAppBar().AppBar(navController, ::addAngle, searchQuery) { searchQuery = it }
+        topBar = {
+            ResultsAppBar().AppBar(navController, ::addAngle, searchQuery) { searchQuery = it }
         }
     ) { innerPadding ->
         Box(

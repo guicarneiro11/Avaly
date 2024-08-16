@@ -1,14 +1,15 @@
 package com.guicarneirodev.goniometro
 
 import org.junit.jupiter.api.Assertions
-import org.junit.Test
+import org.junit.jupiter.api.Test
+
 
 class ValidViewModelTest {
 
     private val validViewModel = ValidViewModel()
 
     @Test
-    fun testisEmailValid() {
+    fun testEmailValid() {
         Assertions.assertTrue(validViewModel.isEmailValid("test@example.com"))
 
         Assertions.assertFalse(validViewModel.isEmailValid("invalid_email.com"))
@@ -17,7 +18,7 @@ class ValidViewModelTest {
     }
 
     @Test
-    fun testisPasswordValid() {
+    fun testPasswordValid() {
         Assertions.assertTrue(validViewModel.isPasswordValid("Abc123!"))
 
         Assertions.assertTrue(validViewModel.isPasswordValid("Abcdef123%#"))

@@ -1,6 +1,5 @@
 package com.guicarneirodev.goniometro
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
-@SuppressLint("SuspiciousIndentation")
 @Composable
 fun Home(navController: NavController) {
     var offsetY by remember { mutableFloatStateOf(0f) }
@@ -87,24 +85,25 @@ fun Home(navController: NavController) {
                     .padding(16.dp)
                     .height(IntrinsicSize.Min),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Bem-vindo ao                        " +
-                            "Angle Pro,                         " +
-                            "sua goniometria                    " +
+                    text = "Bem-vindo ao\n" +
+                            "Angle Pro,\n" +
+                            "sua goniometria\n" +
                             "em poucos cliques.",
                     color = Color(0xFFFFFFFF),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Black,
-                    fontFamily = FontFamily.Default
+                    fontFamily = FontFamily.Default,
+                    lineHeight = 40.sp
                 )
                 Spacer(modifier = Modifier.height(225.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .clip(RoundedCornerShape(24.dp)),
+                        .clip(RoundedCornerShape(24.dp))
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
