@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -62,33 +63,44 @@ class FirebaseAuthManager {
         }
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+                task.onSuccess {
                     println("Email de redefinição de senha enviado para: $email")
-                } else {
-                    val exception = task.exception
-                    println("Erro ao enviar email de redefinição de senha: ${exception?.message}")
+                }.onFailure { exception ->
+                    println("Erro ao enviar email de redefinição de senha: ${exception.message}")
                 }
             }
         return "Email de redefinição de senha enviado"
     }
+
     fun signInEmail(email: String, password: String, callback: (Result<Unit>) -> Unit) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
+            task.onSuccess {
                 println("Login bem-sucedido: $email")
                 callback(Result.success(Unit))
-            } else {
-                val exception = task.exception
-                if (exception is FirebaseAuthInvalidUserException ||
-                    exception is FirebaseAuthInvalidCredentialsException)
-                {
-                    println("Falha no login: Email ou senha incorretos")
-                    callback(Result.failure(Exception("Email ou senha incorretos")))
-                } else {
-                    println("Falha no login: ${exception?.message}")
-                    callback(Result.failure(Exception(exception?.message)))
+            }.onFailure { exception ->
+                when (exception) {
+                    is FirebaseAuthInvalidUserException,
+                    is FirebaseAuthInvalidCredentialsException -> {
+                        println("Falha no login: Email ou senha incorretos")
+                        callback(Result.failure(Exception("Email ou senha incorretos")))
+                    }
+                    else -> {
+                        println("Falha no login: ${exception.message}")
+                        callback(Result.failure(Exception(exception.message)))
+                    }
                 }
             }
         }
+    }
+
+    private fun <T> Task<T>.onSuccess(block: () -> Unit): Task<T> {
+        if (isSuccessful) block()
+        return this
+    }
+
+    private fun <T> Task<T>.onFailure(block: (Exception) -> Unit): Task<T> {
+        exception?.let(block)
+        return this
     }
 }
 
@@ -107,10 +119,8 @@ fun Login(navController: NavController) {
     var passwordVisibility by remember { mutableStateOf(false) }
 
     var loginError by remember { mutableStateOf(false) }
-    val errorMessage = if (loginError) {
+    val errorMessage = loginError.takeIf { it }?.let {
         "Email ou senha incorretos. Por favor, tente novamente."
-    } else {
-        null
     }
 
     var securityCodeInput by remember { mutableStateOf("") }
