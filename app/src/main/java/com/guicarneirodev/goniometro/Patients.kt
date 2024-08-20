@@ -1,5 +1,6 @@
 package com.guicarneirodev.goniometro
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -177,6 +178,19 @@ interface SendPdfApi {
     ): Response<Void>
 }
 
+object RetrofitInstance {
+    val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://ktor-app-cc5gi2t6tq-rj.a.run.app")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    val api: SendPdfApi by lazy {
+        retrofit.create(SendPdfApi::class.java)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Patients(navController: NavController, userId: String) {
@@ -191,27 +205,31 @@ fun Patients(navController: NavController, userId: String) {
     var emailToSend by remember { mutableStateOf("") }
     var currentPatientId by remember { mutableStateOf("") }
 
-    val context = LocalContext.current
-
     val db = Firebase.firestore
     val docRef = db.collection("users").document(userId).collection("patients")
 
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = userId) {
         docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.w("Firestore", "Listen failed.", e)
+            e?.let {
+                Log.w("Firestore", "Listen failed.", it)
                 return@addSnapshotListener
             }
-            if (snapshot != null && !snapshot.isEmpty) {
-                val items = snapshot.documents.map {
-                    val id = it.id
-                    val patientName = it["patientName"] as? String ?: ""
-                    val evaluationDate = it["evaluationDate"] as? String ?: "01/01/2024"
-                    Triple(id, patientName, evaluationDate)
+
+            snapshot?.takeIf { !it.isEmpty }?.let {
+                val items = it.documents.map { document ->
+                    Triple(
+                        document.id,
+                        document["patientName"] as? String ?: "",
+                        document["evaluationDate"] as? String ?: "01/01/2024"
+                    )
                 }
-                patients.clear()
-                patients.addAll(items)
-            } else {
+                patients.apply {
+                    clear()
+                    addAll(items)
+                }
+            } ?: run {
                 Log.d("Firestore", "Current data: null")
             }
         }
@@ -223,15 +241,12 @@ fun Patients(navController: NavController, userId: String) {
             "evaluationDate" to date,
             "created" to FieldValue.serverTimestamp()
         )
-        docRef.add(newPatient).addOnCompleteListener {
-            if (!it.isSuccessful) {
-                Log.e("Firestore", "Error adding document", it.exception)
-            } else {
-                it.result?.let { docRef ->
-                    patients.add(Triple(docRef.id, patient, date))
-                    docRef.collection("angles")
-                }
-            }
+
+        docRef.add(newPatient).addOnCompleteListener { task ->
+            task.result?.let { docRef ->
+                patients.add(Triple(docRef.id, patient, date))
+                docRef.collection("angles")
+            } ?: Log.e("Firestore", "Error adding document", task.exception)
         }
     }
 
@@ -266,18 +281,13 @@ fun Patients(navController: NavController, userId: String) {
         }
     }
 
-    fun sendPdfToEmail(userId: String, patientId: String, email: String) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://ktor-app-cc5gi2t6tq-rj.a.run.app")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = retrofit.create(SendPdfApi::class.java)
-
+    fun sendPdfToEmail(userId: String, patientId: String, email: String, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             val message = try {
-                val response = api.sendPdfToEmail(userId, patientId, email)
-                if (response.isSuccessful) "E-mail enviado com sucesso!" else "Erro ao enviar e-mail: ${response.errorBody()?.string()}"
+                val response = RetrofitInstance.api.sendPdfToEmail(userId, patientId, email)
+                response.takeIf { it.isSuccessful }?.let {
+                    "E-mail enviado com sucesso!"
+                } ?: "Erro ao enviar e-mail: ${response.errorBody()?.string()}"
             } catch (e: Exception) {
                 "Erro ao enviar e-mail: ${e.message}"
             }
@@ -288,11 +298,9 @@ fun Patients(navController: NavController, userId: String) {
         }
     }
 
-    val filteredPatients = if (searchQuery.isEmpty()) {
-        patients
-    } else {
-        patients.filter { it.second.contains(searchQuery, ignoreCase = true) }
-    }
+    val filteredPatients = searchQuery.takeIf { it.isNotEmpty() }
+        ?.let { query -> patients.filter { it.second.contains(query, ignoreCase = true) } }
+        ?: patients
 
     Scaffold(
         topBar = {
@@ -392,7 +400,7 @@ fun Patients(navController: NavController, userId: String) {
                         )
 
                         Button(onClick = { showDatePicker = !showDatePicker }) {
-                            Text(if (showDatePicker) "Ocultar Calendário" else "Mostrar Calendário")
+                            Text(showDatePicker.takeIf { it }?.let { "Ocultar Calendário" } ?: "Mostrar Calendário")
                         }
 
                         if (showDatePicker) {
@@ -446,7 +454,7 @@ fun Patients(navController: NavController, userId: String) {
             confirmButton = {
                 Button(onClick = {
                     if (emailToSend.isNotBlank()) {
-                        sendPdfToEmail(userId, currentPatientId, emailToSend)
+                        sendPdfToEmail(userId, currentPatientId, emailToSend, context)
                         showEmailDialog = false
                         emailToSend = ""
                     }
