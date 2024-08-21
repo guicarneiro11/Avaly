@@ -210,6 +210,10 @@ fun Patients(navController: NavController, userId: String) {
 
     val context = LocalContext.current
 
+    val filteredPatients = searchQuery.takeIf { it.isNotEmpty() }
+        ?.let { query -> patients.filter { it.second.contains(query, ignoreCase = true) } }
+        ?: patients
+
     LaunchedEffect(key1 = userId) {
         docRef.addSnapshotListener { snapshot, e ->
             e?.let {
@@ -297,10 +301,6 @@ fun Patients(navController: NavController, userId: String) {
             }
         }
     }
-
-    val filteredPatients = searchQuery.takeIf { it.isNotEmpty() }
-        ?.let { query -> patients.filter { it.second.contains(query, ignoreCase = true) } }
-        ?: patients
 
     Scaffold(
         topBar = {

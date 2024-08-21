@@ -104,8 +104,10 @@ class ResultsAppBar () {
                                 OutlinedTextField(
                                     value = angleValue,
                                     onValueChange = { newValue ->
-                                        val cleanedValue = newValue.replace("°", "")
-                                        angleValue = if (cleanedValue.isNotEmpty()) "$cleanedValue°" else ""
+                                        angleValue = newValue.replace("°", "")
+                                            .takeIf { it.isNotEmpty() }
+                                            ?.let { "$it°" }
+                                            ?: ""
                                     },
                                     label = { Text("Valor encontrado") }
                                 )
@@ -154,45 +156,45 @@ fun Results(navController: NavController, userId: String, patientId: String) {
     val db = Firebase.firestore
     val docRef = db.collection("users").document(userId).collection("patients").document(patientId)
         .collection("results")
-    val filteredAngles = if (searchQuery.isEmpty()) {
-        angles
-    } else {
-        angles.filter { it.second.contains(searchQuery, ignoreCase = true) }
-    }
+    val filteredAngles = searchQuery.takeIf { it.isNotEmpty() }
+        ?.let { query -> angles.filter { it.second.contains(query, ignoreCase = true) } }
+        ?: angles
 
     LaunchedEffect(key1 = patientId) {
         docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.w("Firestore", "Listen failed.", e)
+            e?.let {
+                Log.w("Firestore", "Listen failed.", it)
                 return@addSnapshotListener
             }
-            if (snapshot != null && !snapshot.isEmpty) {
-                val items = snapshot.documents.map {
-                    val id = it.id
-                    val name = it["name"] as? String
+
+            snapshot?.takeIf { !it.isEmpty }?.let { nonEmptySnapshot ->
+                val items = nonEmptySnapshot.documents.map { document ->
+                    val id = document.id
+                    val name = document["name"] as? String
                         ?: throw IllegalStateException("Campo 'name' não encontrado ou nulo.")
-                    val value = it["value"] as? String ?: "Valor padrão"
+                    val value = document["value"] as? String ?: "Valor padrão"
                     Triple(id, name, value)
                 }
                 angles.clear()
                 angles.addAll(items)
-            } else {
-                Log.d("Firestore", "Current data: null")
-            }
+            } ?: Log.d("Firestore", "Current data: null")
         }
     }
 
     fun addAngle(name: String, value: String) {
-        val newAngle =
-            hashMapOf("name" to name, "value" to value, "created" to FieldValue.serverTimestamp())
-        docRef.add(newAngle).addOnCompleteListener {
-            if (!it.isSuccessful) {
-                Log.e("Firestore", "Error adding document", it.exception)
-            } else {
-                it.result?.let { docRef ->
+        val newAngle = hashMapOf(
+                "name" to name,
+                "value" to value,
+                "created" to FieldValue.serverTimestamp()
+        )
+
+        docRef.add(newAngle).addOnCompleteListener { task ->
+            task.takeIf { it.isSuccessful }
+                ?.result
+                ?.let { docRef ->
                     angles.add(Triple(docRef.id, name, value))
                 }
-            }
+                ?: Log.e("Firestore", "Error adding document", task.exception)
         }
     }
 
@@ -289,7 +291,7 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                         value = editValue,
                         onValueChange = { newValue ->
                             val cleanedValue = newValue.replace("°", "")
-                            editValue = if (cleanedValue.isNotEmpty()) "$cleanedValue°" else ""
+                            editValue = cleanedValue.takeIf { it.isNotEmpty() }?.let { "$it°" } ?: ""
                         },
                         label = { Text("Valor encontrado") }
                     )
