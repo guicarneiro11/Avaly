@@ -101,7 +101,10 @@ class MainActivity : ComponentActivity() {
                 composable("login") { Login(navController) }
                 composable("register") { Register(navController, validViewModel) }
                 composable("main") { Main(navController) }
-                composable("patients/{userId}", arguments = listOf(navArgument("userId") { type = NavType.StringType })) { backStackEntry ->
+                composable(
+                    "patients/{userId}",
+                    arguments = listOf(navArgument("userId") { type = NavType.StringType })
+                ) { backStackEntry ->
                     val userId = backStackEntry.arguments?.getString("userId")
                         ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
                     Patients(navController = navController, userId)
@@ -182,14 +185,16 @@ fun InstructionsList() {
             .background(Color.White)
     ) {
         items(instructions) { instruction ->
-            Text(text = instruction,
+            Text(
+                text = instruction,
                 modifier = Modifier
                     .padding(8.dp)
                     .background(Color.White),
                 color = Color.Black,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Black,
-                fontFamily = FontFamily.Default)
+                fontFamily = FontFamily.Default
+            )
         }
     }
 }
@@ -244,15 +249,17 @@ fun Goniometro(navController: NavController, userId: String) {
     var lines by remember { mutableStateOf(listOf<Pair<Offset, Offset>>()) }
     var isLineSet by remember { mutableStateOf(false) }
     var selectedAngleIndex by remember { mutableIntStateOf(0) }
-    val angleOptions = listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
+    val angleOptions =
+        listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
     var angleDropdownExpanded by remember { mutableStateOf(false) }
     var menuDropdownExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
     var currentImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var dialogOpen by remember { mutableStateOf(false) }
-    val importLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        currentImageUri = uri
-    }
+    val importLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+            currentImageUri = uri
+        }
 
     val file = context.createImageFile()
     val captureUri =
@@ -447,11 +454,13 @@ fun Goniometro(navController: NavController, userId: String) {
                                     tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Alterar Quadrante",
+                                Text(
+                                    "Alterar Quadrante",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                                 DropdownMenu(
                                     expanded = angleDropdownExpanded,
                                     onDismissRequest = { angleDropdownExpanded = false }
@@ -508,11 +517,13 @@ fun Goniometro(navController: NavController, userId: String) {
                                     tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Pacientes",
+                                Text(
+                                    "Pacientes",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                         }
                         DropdownMenuItem(onClick = {
@@ -527,11 +538,13 @@ fun Goniometro(navController: NavController, userId: String) {
                                     tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Importar Foto",
+                                Text(
+                                    "Importar Foto",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                         }
                         DropdownMenuItem(onClick = {
@@ -554,11 +567,13 @@ fun Goniometro(navController: NavController, userId: String) {
                                     tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Capturar Foto",
+                                Text(
+                                    "Capturar Foto",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                         }
                         DropdownMenuItem(onClick = {
@@ -572,20 +587,26 @@ fun Goniometro(navController: NavController, userId: String) {
                                     tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Ajuda",
+                                Text(
+                                    "Ajuda",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                         }
                         if (dialogOpen) {
                             AlertDialog(onDismissRequest = { dialogOpen = false },
-                                title = { Text(text = "Instruções",
-                                    color = Color(0xFF000000),
-                                    fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif) },
+                                title = {
+                                    Text(
+                                        text = "Instruções",
+                                        color = Color(0xFF000000),
+                                        fontSize = 24.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = FontFamily.SansSerif
+                                    )
+                                },
                                 text = {
                                     InstructionsList()
                                 },
@@ -625,11 +646,13 @@ fun Goniometro(navController: NavController, userId: String) {
                                     tint = Color(0xFF000000)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Logout",
+                                Text(
+                                    "Logout",
                                     color = Color(0xFF000000),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                         }
                     }

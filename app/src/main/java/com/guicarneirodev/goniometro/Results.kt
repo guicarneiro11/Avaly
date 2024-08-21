@@ -51,7 +51,7 @@ import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
-class ResultsAppBar () {
+class ResultsAppBar() {
     @Composable
     fun AppBar(
         navController: NavController,
@@ -133,7 +133,8 @@ class ResultsAppBar () {
                     )
                 }
                 IconButton(onClick = { showDialog = true }) {
-                    Icon(painter = painterResource(id = R.drawable.add),
+                    Icon(
+                        painter = painterResource(id = R.drawable.add),
                         contentDescription = "Add",
                         tint = Color(0xFF000000)
                     )
@@ -183,9 +184,9 @@ fun Results(navController: NavController, userId: String, patientId: String) {
 
     fun addAngle(name: String, value: String) {
         val newAngle = hashMapOf(
-                "name" to name,
-                "value" to value,
-                "created" to FieldValue.serverTimestamp()
+            "name" to name,
+            "value" to value,
+            "created" to FieldValue.serverTimestamp()
         )
 
         docRef.add(newAngle).addOnCompleteListener { task ->
@@ -291,7 +292,8 @@ fun Results(navController: NavController, userId: String, patientId: String) {
                         value = editValue,
                         onValueChange = { newValue ->
                             val cleanedValue = newValue.replace("°", "")
-                            editValue = cleanedValue.takeIf { it.isNotEmpty() }?.let { "$it°" } ?: ""
+                            editValue =
+                                cleanedValue.takeIf { it.isNotEmpty() }?.let { "$it°" } ?: ""
                         },
                         label = { Text("Valor encontrado") }
                     )

@@ -232,7 +232,8 @@ fun Login(navController: NavController) {
                                                 if (success == true) {
                                                     Log.d(TAG, "Email enviado com sucesso.")
                                                 } else {
-                                                    val error = responseData["error"] as? String ?: "Erro desconhecido"
+                                                    val error = responseData["error"] as? String
+                                                        ?: "Erro desconhecido"
                                                     Log.e(TAG, "Erro ao enviar email: $error")
                                                 }
                                             } else {
@@ -240,23 +241,32 @@ fun Login(navController: NavController) {
                                             }
                                         }
                                         .addOnFailureListener { e ->
-                                            Log.e(TAG, "Erro ao chamar a função do Firebase Functions: ${e.message}")
+                                            Log.e(
+                                                TAG,
+                                                "Erro ao chamar a função do Firebase Functions: ${e.message}"
+                                            )
                                             if (e is FirebaseFunctionsException) {
                                                 Log.e(TAG, "Código do erro: ${e.code}")
                                                 Log.e(TAG, "Detalhes do erro: ${e.details}")
                                             }
                                         }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3280C4)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(
+                                        0xFF3280C4
+                                    )
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp),
                             ) {
-                                Text(text = "Enviar Código para o Email",
+                                Text(
+                                    text = "Enviar Código para o Email",
                                     color = Color(0xFFFFFFFF),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Black,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                             TextField(
                                 value = securityCodeInput,
@@ -270,7 +280,8 @@ fun Login(navController: NavController) {
                                 onClick = {
                                     if (securityCodeInput.isNotBlank()) {
                                         val functions = Firebase.functions
-                                        val verifyCodeFunction = functions.getHttpsCallable("verifySecurityCode")
+                                        val verifyCodeFunction =
+                                            functions.getHttpsCallable("verifySecurityCode")
                                         val requestData = hashMapOf(
                                             "email" to email,
                                             "code" to securityCodeInput
@@ -279,34 +290,50 @@ fun Login(navController: NavController) {
                                             .addOnSuccessListener { result ->
                                                 val responseData = result.data
                                                 if (responseData is Map<*, *>) {
-                                                    val success = responseData["success"] as? Boolean
+                                                    val success =
+                                                        responseData["success"] as? Boolean
                                                     if (success == true) {
                                                         invalidCode = ""
                                                         firebaseAuthManager.resetPassword(email)
                                                         navController.popBackStack()
                                                     } else {
-                                                        val error = responseData["error"] as? String ?: "Erro desconhecido"
-                                                        invalidCode = "Código de segurança incorreto."
-                                                        Log.e(TAG, "Erro ao verificar o código de segurança: $error")
+                                                        val error = responseData["error"] as? String
+                                                            ?: "Erro desconhecido"
+                                                        invalidCode =
+                                                            "Código de segurança incorreto."
+                                                        Log.e(
+                                                            TAG,
+                                                            "Erro ao verificar o código de segurança: $error"
+                                                        )
                                                     }
                                                 } else {
                                                     Log.e(TAG, "Resposta inesperada do servidor")
                                                 }
                                             }
                                             .addOnFailureListener { e ->
-                                                Log.e(TAG, "Erro ao verificar o código de segurança: $e")
+                                                Log.e(
+                                                    TAG,
+                                                    "Erro ao verificar o código de segurança: $e"
+                                                )
                                             }
                                     } else {
-                                        invalidCode = "Por favor, insira um código de segurança válido."
+                                        invalidCode =
+                                            "Por favor, insira um código de segurança válido."
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF266399))
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(
+                                        0xFF266399
+                                    )
+                                )
                             ) {
-                                Text(text = "Fornecer Link para troca da senha",
+                                Text(
+                                    text = "Fornecer Link para troca da senha",
                                     color = Color(0xFFFFFFFF),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Black,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                             if (invalidCode.isNotEmpty()) {
                                 Text(
@@ -337,11 +364,15 @@ fun Login(navController: NavController) {
                             TextField(
                                 value = email,
                                 onValueChange = { email = it },
-                                label = { Text("Email",
-                                    color = Color(0xFF0F0F0F),
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    fontFamily = FontFamily.SansSerif) },
+                                label = {
+                                    Text(
+                                        "Email",
+                                        color = Color(0xFF0F0F0F),
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        fontFamily = FontFamily.SansSerif
+                                    )
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp)
@@ -352,13 +383,17 @@ fun Login(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Switch(checked = lembrarEmail,
-                                    colors = SwitchDefaults.colors(checkedTrackColor = Color(0xFF3280C4)),
-                                    onCheckedChange = { lembrarEmail = it
+                                    colors = SwitchDefaults.colors(
+                                        checkedTrackColor = Color(
+                                            0xFF3280C4
+                                        )
+                                    ),
+                                    onCheckedChange = {
+                                        lembrarEmail = it
                                         val editor = sharedPreferences.edit()
                                         editor.putBoolean("lembrarEmail", it)
                                         editor.apply()
-                                    }
-                                    ,modifier = Modifier.padding(start = 16.dp)
+                                    }, modifier = Modifier.padding(start = 16.dp)
                                 )
                                 Text(
                                     text = "Lembrar Email",
@@ -372,20 +407,28 @@ fun Login(navController: NavController) {
                             TextField(
                                 value = password,
                                 onValueChange = { password = it },
-                                label = { Text("Senha",
-                                    color = Color(0xFF0F0F0F),
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    fontFamily = FontFamily.SansSerif) },
+                                label = {
+                                    Text(
+                                        "Senha",
+                                        color = Color(0xFF0F0F0F),
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        fontFamily = FontFamily.SansSerif
+                                    )
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp),
                                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                                 trailingIcon = {
-                                    IconButton(onClick = { passwordVisibility = !passwordVisibility}) {
-                                        Icon (
-                                            painter  = if (passwordVisibility) painterResource(id = R.drawable.pass_off) else painterResource(id = R.drawable.pass_on),
-                                            contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha",
+                                    IconButton(onClick = {
+                                        passwordVisibility = !passwordVisibility
+                                    }) {
+                                        Icon(
+                                            painter = if (passwordVisibility) painterResource(id = R.drawable.pass_on) else painterResource(
+                                                id = R.drawable.pass_off
+                                            ),
+                                            contentDescription = if (passwordVisibility) "Mostrar Senha" else "Esconder Senha",
                                             tint = Color(0xFF000000)
                                         )
                                     }
@@ -398,13 +441,17 @@ fun Login(navController: NavController) {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Switch(checked = lembrarSenha,
-                                    colors = SwitchDefaults.colors(checkedTrackColor = Color(0xFF3280C4)),
-                                    onCheckedChange = { lembrarSenha = it
+                                    colors = SwitchDefaults.colors(
+                                        checkedTrackColor = Color(
+                                            0xFF3280C4
+                                        )
+                                    ),
+                                    onCheckedChange = {
+                                        lembrarSenha = it
                                         val editor = sharedPreferences.edit()
                                         editor.putBoolean("lembrarSenha", it)
                                         editor.apply()
-                                    }
-                                    ,modifier = Modifier.padding(start = 16.dp)
+                                    }, modifier = Modifier.padding(start = 16.dp)
                                 )
                                 Text(
                                     text = "Lembrar Senha",
@@ -420,16 +467,17 @@ fun Login(navController: NavController) {
 
                             Button(
                                 onClick = {
-                                    if (email.isNotEmpty() && password.isNotEmpty()) {
-                                        if (lembrarEmail) {
-                                            saveEmailNoSharedPreferences(context, email)
-                                        } else {
-                                            removerEmailDoSharedPreferences(context)
+                                    email.takeIf { it.isNotEmpty() && password.isNotEmpty() }?.let {
+                                        lembrarEmail.run {
+                                            if (this) saveEmailNoSharedPreferences(context, email)
+                                            else removerEmailDoSharedPreferences(context)
                                         }
-                                        if (lembrarSenha) {
-                                            saveSenhaNoSharedPreferences(context, password)
-                                        } else {
-                                            removerSenhaDoSharedPreferences(context)
+                                        lembrarSenha.run {
+                                            if (this) saveSenhaNoSharedPreferences(
+                                                context,
+                                                password
+                                            )
+                                            else removerSenhaDoSharedPreferences(context)
                                         }
                                         firebaseAuthManager.signInEmail(email, password) { result ->
                                             result.fold(
@@ -439,21 +487,27 @@ fun Login(navController: NavController) {
                                                 onFailure = { loginError = true }
                                             )
                                         }
-                                    } else {
+                                    } ?: run {
                                         loginError = true
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF266399)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(
+                                        0xFF266399
+                                    )
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp)
                             ) {
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Entrar",
+                                Text(
+                                    "Entrar",
                                     color = Color(0xFFFFFFFF),
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = FontFamily.SansSerif)
+                                    fontFamily = FontFamily.SansSerif
+                                )
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             errorMessage?.let {

@@ -87,7 +87,7 @@ class PatientAppBar() {
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                        focusManager.clearFocus()
+                            focusManager.clearFocus()
                         }
                     )
                 )
@@ -159,7 +159,8 @@ class PatientAppBar() {
                     )
                 }
                 IconButton(onClick = { showDialog = true }) {
-                    Icon(painter = painterResource(id = R.drawable.add),
+                    Icon(
+                        painter = painterResource(id = R.drawable.add),
                         contentDescription = "Add",
                         tint = Color(0xFF000000)
                     )
@@ -400,7 +401,8 @@ fun Patients(navController: NavController, userId: String) {
                         )
 
                         Button(onClick = { showDatePicker = !showDatePicker }) {
-                            Text(showDatePicker.takeIf { it }?.let { "Ocultar Calendário" } ?: "Mostrar Calendário")
+                            Text(showDatePicker.takeIf { it }?.let { "Ocultar Calendário" }
+                                ?: "Mostrar Calendário")
                         }
 
                         if (showDatePicker) {
