@@ -119,9 +119,10 @@ fun Login(navController: NavController) {
     var passwordVisibility by remember { mutableStateOf(false) }
 
     var loginError by remember { mutableStateOf(false) }
-    val errorMessage = loginError.takeIf { it }?.let {
-        "Email ou senha incorretos. Por favor, tente novamente."
-    }
+    val errorMessage = loginError.takeIf { it }?.let { "Email ou senha incorretos. Por favor, tente novamente." }
+
+    val visibilityIcon = if (passwordVisibility) R.drawable.pass_on else R.drawable.pass_off
+    val visibilityDescription = if (passwordVisibility) "Mostrar Senha" else "Esconder Senha"
 
     var securityCodeInput by remember { mutableStateOf("") }
     var invalidCode by remember { mutableStateOf("") }
@@ -150,6 +151,11 @@ fun Login(navController: NavController) {
         editor.remove("senha")
         editor.apply()
     }
+
+    fun getVisualTransformation(passwordVisibility: Boolean): VisualTransformation {
+        return if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -219,35 +225,27 @@ fun Login(navController: NavController) {
                             )
                             Button(
                                 onClick = {
-                                    val requestData = hashMapOf(
-                                        "email" to email
-                                    )
+                                    val requestData = hashMapOf("email" to email)
                                     val functions = Firebase.functions
                                     val sendEmailFunction = functions.getHttpsCallable("sendEmail")
+
                                     sendEmailFunction.call(requestData)
                                         .addOnSuccessListener { result ->
-                                            val responseData = result.data
-                                            if (responseData is Map<*, *>) {
+                                            (result.data as? Map<*, *>)?.let { responseData ->
                                                 val success = responseData["success"] as? Boolean
                                                 if (success == true) {
                                                     Log.d(TAG, "Email enviado com sucesso.")
                                                 } else {
-                                                    val error = responseData["error"] as? String
-                                                        ?: "Erro desconhecido"
+                                                    val error = responseData["error"] as? String ?: "Erro desconhecido"
                                                     Log.e(TAG, "Erro ao enviar email: $error")
                                                 }
-                                            } else {
-                                                Log.e(TAG, "Resposta inesperada do servidor")
-                                            }
+                                            } ?: Log.e(TAG, "Resposta inesperada do servidor")
                                         }
                                         .addOnFailureListener { e ->
-                                            Log.e(
-                                                TAG,
-                                                "Erro ao chamar a função do Firebase Functions: ${e.message}"
-                                            )
-                                            if (e is FirebaseFunctionsException) {
-                                                Log.e(TAG, "Código do erro: ${e.code}")
-                                                Log.e(TAG, "Detalhes do erro: ${e.details}")
+                                            Log.e(TAG, "Erro ao chamar a função do Firebase Functions: ${e.message}")
+                                            (e as? FirebaseFunctionsException)?.let {
+                                                Log.e(TAG, "Código do erro: ${it.code}")
+                                                Log.e(TAG, "Detalhes do erro: ${it.details}")
                                             }
                                         }
                                 },
@@ -261,7 +259,7 @@ fun Login(navController: NavController) {
                                     .padding(8.dp),
                             ) {
                                 Text(
-                                    text = "Enviar Código para o Email",
+                                    text = "Enviar código de redefinição",
                                     color = Color(0xFFFFFFFF),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Black,
@@ -278,47 +276,33 @@ fun Login(navController: NavController) {
                             )
                             Button(
                                 onClick = {
-                                    if (securityCodeInput.isNotBlank()) {
+                                    securityCodeInput.takeIf { it.isNotBlank() }?.let { code ->
                                         val functions = Firebase.functions
-                                        val verifyCodeFunction =
-                                            functions.getHttpsCallable("verifySecurityCode")
+                                        val verifyCodeFunction = functions.getHttpsCallable("verifySecurityCode")
                                         val requestData = hashMapOf(
                                             "email" to email,
-                                            "code" to securityCodeInput
+                                            "code" to code
                                         )
                                         verifyCodeFunction.call(requestData)
                                             .addOnSuccessListener { result ->
-                                                val responseData = result.data
-                                                if (responseData is Map<*, *>) {
-                                                    val success =
-                                                        responseData["success"] as? Boolean
+                                                (result.data as? Map<*, *>)?.let { responseData ->
+                                                    val success = responseData["success"] as? Boolean
                                                     if (success == true) {
                                                         invalidCode = ""
                                                         firebaseAuthManager.resetPassword(email)
                                                         navController.popBackStack()
                                                     } else {
-                                                        val error = responseData["error"] as? String
-                                                            ?: "Erro desconhecido"
-                                                        invalidCode =
-                                                            "Código de segurança incorreto."
-                                                        Log.e(
-                                                            TAG,
-                                                            "Erro ao verificar o código de segurança: $error"
-                                                        )
+                                                        val error = responseData["error"] as? String ?: "Erro desconhecido"
+                                                        invalidCode = "Código de segurança incorreto."
+                                                        Log.e(TAG, "Erro ao verificar o código de segurança: $error")
                                                     }
-                                                } else {
-                                                    Log.e(TAG, "Resposta inesperada do servidor")
-                                                }
+                                                } ?: Log.e(TAG, "Resposta inesperada do servidor")
                                             }
                                             .addOnFailureListener { e ->
-                                                Log.e(
-                                                    TAG,
-                                                    "Erro ao verificar o código de segurança: $e"
-                                                )
+                                                Log.e(TAG, "Erro ao verificar o código de segurança: $e")
                                             }
-                                    } else {
-                                        invalidCode =
-                                            "Por favor, insira um código de segurança válido."
+                                    } ?: run {
+                                        invalidCode = "Por favor, insira um código de segurança válido."
                                     }
                                 },
                                 colors = ButtonDefaults.buttonColors(
@@ -328,7 +312,7 @@ fun Login(navController: NavController) {
                                 )
                             ) {
                                 Text(
-                                    text = "Fornecer Link para troca da senha",
+                                    text = "Enviar email de redefinição",
                                     color = Color(0xFFFFFFFF),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Black,
@@ -419,16 +403,12 @@ fun Login(navController: NavController) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp),
-                                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                                visualTransformation = getVisualTransformation(passwordVisibility),
                                 trailingIcon = {
-                                    IconButton(onClick = {
-                                        passwordVisibility = !passwordVisibility
-                                    }) {
+                                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                                         Icon(
-                                            painter = if (passwordVisibility) painterResource(id = R.drawable.pass_on) else painterResource(
-                                                id = R.drawable.pass_off
-                                            ),
-                                            contentDescription = if (passwordVisibility) "Mostrar Senha" else "Esconder Senha",
+                                            painter = painterResource(id = visibilityIcon),
+                                            contentDescription = visibilityDescription,
                                             tint = Color(0xFF000000)
                                         )
                                     }
@@ -473,16 +453,12 @@ fun Login(navController: NavController) {
                                             else removerEmailDoSharedPreferences(context)
                                         }
                                         lembrarSenha.run {
-                                            if (this) saveSenhaNoSharedPreferences(
-                                                context,
-                                                password
-                                            )
+                                            if (this) saveSenhaNoSharedPreferences(context, password)
                                             else removerSenhaDoSharedPreferences(context)
                                         }
                                         firebaseAuthManager.signInEmail(email, password) { result ->
                                             result.fold(
-                                                onSuccess = {
-                                                    navController.navigate("main")
+                                                onSuccess = { navController.navigate("main")
                                                 },
                                                 onFailure = { loginError = true }
                                             )

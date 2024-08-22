@@ -256,30 +256,25 @@ fun Goniometro(navController: NavController, userId: String) {
     val context = LocalContext.current
     var currentImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var dialogOpen by remember { mutableStateOf(false) }
-    val importLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val importLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             currentImageUri = uri
-        }
-
+    }
     val file = context.createImageFile()
-    val captureUri =
-        FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
-    val captureLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) {
-                currentImageUri = captureUri
-                menuDropdownExpanded = false
-            }
+    val captureUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+    val captureLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            currentImageUri = captureUri
+            menuDropdownExpanded = false
         }
-    val permissionLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-                captureLauncher.launch(captureUri)
-            } else {
-                Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
-            }
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
+            captureLauncher.launch(captureUri)
+        } else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
+    }
 
     fun calculateAngleBetweenLines(
         start1: Offset,

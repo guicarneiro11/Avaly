@@ -97,11 +97,6 @@ class ValidViewModel : ViewModel() {
     }
 }
 
-fun Boolean.toVisualTransformation(): VisualTransformation {
-    return if (this) VisualTransformation.None
-    else PasswordVisualTransformation()
-}
-
 @Composable
 fun Register(navController: NavController, viewModel: ValidViewModel) {
     val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -123,8 +118,12 @@ fun Register(navController: NavController, viewModel: ValidViewModel) {
 
     var errorMessage by remember { mutableStateOf("") }
 
-    val iconResourceId = if (passwordVisibility) R.drawable.pass_on else R.drawable.pass_off
-    val contentDescription = if (passwordVisibility) "Mostrar Senha" else "Esconder Senha"
+    val visibilityIcon = if (passwordVisibility) R.drawable.pass_on else R.drawable.pass_off
+    val visibilityDescription = if (passwordVisibility) "Mostrar Senha" else "Esconder Senha"
+
+    fun getVisualTransformation(passwordVisibility: Boolean): VisualTransformation {
+        return if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation()
+    }
 
     Box(
         modifier = Modifier
@@ -218,7 +217,7 @@ fun Register(navController: NavController, viewModel: ValidViewModel) {
                                 .fillMaxWidth()
                                 .padding(8.dp)
                                 .focusRequester(passwordFocusRequester),
-                            visualTransformation = passwordVisibility.toVisualTransformation(),
+                            visualTransformation = getVisualTransformation(passwordVisibility),
                             isError = passwordErrorMessage.isNotEmpty(),
                             keyboardActions = KeyboardActions(
                                 onDone = {
@@ -231,14 +230,9 @@ fun Register(navController: NavController, viewModel: ValidViewModel) {
                             ),
                             trailingIcon = {
                                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                                    val (iconRes, description) = when (passwordVisibility) {
-                                        true -> R.drawable.pass_on to "Mostrar Senha"
-                                        false -> R.drawable.pass_off to "Esconder Senha"
-                                    }
-
                                     Icon(
-                                        painter = painterResource(id = iconRes),
-                                        contentDescription = description,
+                                        painter = painterResource(id = visibilityIcon),
+                                        contentDescription = visibilityDescription,
                                         tint = Color(0xFF000000)
                                     )
                                 }
@@ -269,9 +263,7 @@ fun Register(navController: NavController, viewModel: ValidViewModel) {
                                 .fillMaxWidth()
                                 .padding(8.dp)
                                 .focusRequester(passwordFocusRequester),
-                            visualTransformation =
-                            if (passwordVisibility) VisualTransformation.None
-                            else PasswordVisualTransformation(),
+                            visualTransformation = getVisualTransformation(passwordVisibility),
                             isError = password.isNotEmpty() && !isPasswordValid(password),
                             keyboardActions = KeyboardActions(
                                 onDone = {
@@ -283,8 +275,8 @@ fun Register(navController: NavController, viewModel: ValidViewModel) {
                             trailingIcon = {
                                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                                     Icon(
-                                        painter = painterResource(id = iconResourceId),
-                                        contentDescription = contentDescription,
+                                        painter = painterResource(id = visibilityIcon),
+                                        contentDescription = visibilityDescription,
                                         tint = Color(0xFF000000)
                                     )
                                 }
@@ -299,22 +291,22 @@ fun Register(navController: NavController, viewModel: ValidViewModel) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
                             onClick = {
-                                if (viewModel.isEmailValid(email) &&
-                                    viewModel.isPasswordValid(password) &&
-                                    viewModel.passwordsMatch(password, confirmPassword)
-                                ) {
+                                viewModel.takeIf {
+                                    it.isEmailValid(email) &&
+                                            it.isPasswordValid(password) &&
+                                            it.passwordsMatch(password, confirmPassword)
+                                }?.apply {
                                     firebaseAuth.createUserWithEmailAndPassword(email, password)
                                         .addOnCompleteListener { authResult ->
-                                            if (authResult.isSuccessful) {
+                                            authResult.takeIf { it.isSuccessful }?.let {
                                                 val firebaseUser = firebaseAuth.currentUser!!
                                                 println("Usuário autenticado: ${firebaseUser.email}")
                                                 navController.navigate("home")
-                                            } else {
-                                                errorMessage = authResult.exception?.message
-                                                    ?: "Falha no registro"
+                                            } ?: run {
+                                                errorMessage = authResult.exception?.message ?: "Falha no registro"
                                             }
                                         }
-                                } else {
+                                } ?: run {
                                     errorMessage = "Há campos inválidos"
                                 }
                             },
