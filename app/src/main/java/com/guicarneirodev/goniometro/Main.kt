@@ -88,6 +88,7 @@ import java.util.Date
 import kotlin.math.atan2
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

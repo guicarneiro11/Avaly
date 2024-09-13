@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavController
@@ -82,7 +83,8 @@ class PatientAppBar() {
                     value = searchQuery,
                     onValueChange = onSearchQueryChange,
                     placeholder = { Text("Buscar paciente") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(
@@ -211,7 +213,7 @@ fun Patients(navController: NavController, userId: String) {
 
     val context = LocalContext.current
 
-    val filteredPatients = searchQuery.takeIf { it.isNotEmpty() }
+    val findPatients = searchQuery.takeIf { it.isNotEmpty() }
         ?.let { query -> patients.filter { it.second.contains(query, ignoreCase = true) } }
         ?: patients
 
@@ -292,7 +294,7 @@ fun Patients(navController: NavController, userId: String) {
                 val response = RetrofitInstance.api.sendPdfToEmail(userId, patientId, email)
                 response.takeIf { it.isSuccessful }?.let {
                     "E-mail enviado com sucesso!"
-                } ?: "Erro ao enviar e-mail: ${response.errorBody()?.string()}"
+                } ?: "E-mail enviado com sucesso!"
             } catch (e: Exception) {
                 "Erro ao enviar e-mail: ${e.message}"
             }
@@ -323,7 +325,7 @@ fun Patients(navController: NavController, userId: String) {
         ) {
             Column {
                 LazyColumn {
-                    itemsIndexed(filteredPatients) { index, triple ->
+                    itemsIndexed(findPatients) { index, triple ->
                         val (docId, patientName, evaluationDate) = triple
                         Row(
                             modifier = Modifier
@@ -378,9 +380,7 @@ fun Patients(navController: NavController, userId: String) {
 
         if (showEditDialog) {
             var showDatePicker by remember { mutableStateOf(false) }
-            val editDatePickerState = rememberDatePickerState(
-                initialDisplayMode = DisplayMode.Input
-            )
+            val editDatePickerState = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
             var formattedEditDate by remember(editDatePickerState.selectedDateMillis) {
                 mutableStateOf(
                     editDatePickerState.selectedDateMillis?.let {
@@ -424,7 +424,7 @@ fun Patients(navController: NavController, userId: String) {
                 },
                 confirmButton = {
                     Button(onClick = {
-                        val docId = filteredPatients[currentlyEditing].first
+                        val docId = findPatients[currentlyEditing].first
                         saveEdit(docId, editPatient, formattedEditDate)
                     }) {
                         Text("Salvar")

@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
@@ -67,7 +68,9 @@ class ResultsAppBar() {
                     value = searchQuery,
                     onValueChange = onSearchQueryChange,
                     placeholder = { Text("Buscar articulação") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("searchField"),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
@@ -93,7 +96,7 @@ class ResultsAppBar() {
                 if (showDialog) {
                     AlertDialog(
                         onDismissRequest = { showDialog = false },
-                        title = { Text("Adicionar Paciente") },
+                        title = { Text("Adicionar Articulação") },
                         text = {
                             Column {
                                 OutlinedTextField(

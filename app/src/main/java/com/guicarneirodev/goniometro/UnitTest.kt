@@ -1,8 +1,13 @@
 package com.guicarneirodev.goniometro
 
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
+import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-
+import org.junit.runner.RunWith
 
 class ValidViewModelTest {
 

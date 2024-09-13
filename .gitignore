@@ -12,6 +12,7 @@
 /local.properties
 .externalNativeBuild
 .cxx
+google-services.json
 /functions/.eslintrc.js
 /.firebaserc
 /node_modules/nodemailer/.gitattributes
