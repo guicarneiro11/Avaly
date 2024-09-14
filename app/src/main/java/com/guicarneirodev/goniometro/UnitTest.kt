@@ -3,11 +3,18 @@ package com.guicarneirodev.goniometro
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
+import com.google.android.gms.tasks.TaskCompletionSource
+import com.google.firebase.auth.FirebaseAuth
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 
 class ValidViewModelTest {
 

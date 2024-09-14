@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -105,8 +106,7 @@ class FirebaseAuthManager {
 }
 
 @Composable
-fun Login(navController: NavController) {
-    val firebaseAuthManager = FirebaseAuthManager()
+fun Login(navController: NavController, firebaseAuthManager: FirebaseAuthManager) {
     val context = LocalContext.current
     val sharedPreferences = LocalContext.current.getSharedPreferences("", Context.MODE_PRIVATE)
 
@@ -360,6 +360,7 @@ fun Login(navController: NavController) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp)
+                                    .testTag("emailField")
                             )
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -402,7 +403,8 @@ fun Login(navController: NavController) {
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp),
+                                    .padding(8.dp)
+                                    .testTag("passwordField"),
                                 visualTransformation = getVisualTransformation(passwordVisibility),
                                 trailingIcon = {
                                     IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
@@ -475,6 +477,7 @@ fun Login(navController: NavController) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp)
+                                    .testTag("loginButton")
                             ) {
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(

@@ -96,10 +96,11 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val validViewModel: ValidViewModel = viewModel()
             val startDestination = intent.getStringExtra("destination") ?: "home"
+            val firebaseAuthManager = FirebaseAuthManager()
 
             NavHost(navController = navController, startDestination = startDestination) {
                 composable("home") { Home(navController) }
-                composable("login") { Login(navController) }
+                composable("login") { Login(navController, firebaseAuthManager) }
                 composable("register") { Register(navController, validViewModel) }
                 composable("main") { Main(navController) }
                 composable(

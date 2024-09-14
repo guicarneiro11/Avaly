@@ -66,6 +66,7 @@ fun Home(navController: NavController) {
                 )
             )
             .semantics { testTagsAsResourceId = true }
+            .testTag("homeBackground")
     )
     {
         Box(
