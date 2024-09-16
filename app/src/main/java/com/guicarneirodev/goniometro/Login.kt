@@ -106,7 +106,8 @@ class FirebaseAuthManager {
 }
 
 @Composable
-fun Login(navController: NavController, firebaseAuthManager: FirebaseAuthManager) {
+fun Login(navController: NavController) {
+    val firebaseAuthManager = FirebaseAuthManager()
     val context = LocalContext.current
     val sharedPreferences = LocalContext.current.getSharedPreferences("", Context.MODE_PRIVATE)
 
