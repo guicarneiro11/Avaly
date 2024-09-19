@@ -150,7 +150,6 @@ class AppBarTest {
             )
         }
 
-        // Abre o diálogo
         rule.onNodeWithContentDescription("Add")
             .performClick()
 
@@ -160,13 +159,11 @@ class AppBarTest {
         rule.onNodeWithText("Valor encontrado")
             .assertTextContains("")
 
-        // Clica no botão de cancelar
         rule.onNodeWithText("Cancelar")
             .assertIsDisplayed()
             .assertHasClickAction()
             .performClick()
 
-        // Verifica se o diálogo foi fechado
         rule.onNodeWithText("Adicionar Articulação")
             .assertDoesNotExist()
     }
@@ -184,21 +181,17 @@ class AppBarTest {
             )
         }
 
-        // Verificar se os elementos têm descrições de conteúdo apropriadas
         rule.onNodeWithContentDescription("Voltar Tela").assertExists()
         rule.onNodeWithContentDescription("Add").assertExists()
 
-        // Verificar se o campo de busca tem as propriedades corretas
         rule.onNodeWithTag("searchField")
             .assert(hasSetTextAction())
             .assert(hasText("Buscar articulação"))
             .assert(hasImeAction(ImeAction.Done))
 
-        // Verificar se o campo de busca está inicialmente vazio
         rule.onNodeWithTag("searchField")
             .assert(hasText(""))
 
-        // Verificar se o placeholder está presente
         rule.onNodeWithTag("searchField")
             .assert(hasText("Buscar articulação"))
     }
@@ -223,11 +216,9 @@ class AppBarTest {
         rule.onNodeWithTag("searchField")
             .assertTextEquals("Test")
 
-        // Simular a ação "Done" do teclado
         rule.onNodeWithTag("searchField")
             .performImeAction()
 
-        // Verificar se o foco é removido após a ação "Done"
         rule.onNodeWithTag("searchField")
             .assertIsNotFocused()
     }

@@ -1,6 +1,5 @@
 package com.guicarneirodev.goniometro
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -35,6 +34,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -66,19 +66,18 @@ fun HomeBackground(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("homeBackground")
+            .semantics { testTagsAsResourceId = true }
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(Color(0xFF2B6EA8), Color(0xFF2B6EA8))
                 )
             )
-            .semantics { testTagsAsResourceId = true }
-            .testTag("homeBackground")
     ) {
         content()
     }
 }
 
-@SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun DraggableContent(
     offsetY: Float,
@@ -95,7 +94,7 @@ fun DraggableContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .offset(y = animatedOffsetY)
+            .offset { IntOffset(0, animatedOffsetY.roundToPx()) }
             .pointerInput(Unit) {
                 detectVerticalDragGestures(
                     onDragEnd = { onDragEnd() },
@@ -141,7 +140,8 @@ fun WelcomeText() {
         fontSize = 30.sp,
         fontWeight = FontWeight.Black,
         fontFamily = FontFamily.Default,
-        lineHeight = 40.sp
+        lineHeight = 40.sp,
+        modifier = Modifier.testTag("welcomeText")
     )
 }
 

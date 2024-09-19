@@ -94,13 +94,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            val validViewModel: ValidViewModel = viewModel()
             val startDestination = intent.getStringExtra("destination") ?: "home"
 
             NavHost(navController = navController, startDestination = startDestination) {
                 composable("home") { HomeScreen(navController) }
                 composable("login") { Login(navController) }
-                composable("register") { Register(navController, validViewModel) }
+                composable ("register") { Register(navController, viewModel()) }
                 composable("main") { Main(navController) }
                 composable(
                     "patients/{userId}",
