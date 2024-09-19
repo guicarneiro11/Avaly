@@ -113,7 +113,7 @@ fun PasswordField(
     passwordVisibility: Boolean,
     onPasswordVisibilityChange: (Boolean) -> Unit,
     label: String,
-    testTag: String // Novo parâmetro
+    testTag: String
 ) {
     Column {
         TextField(
@@ -121,7 +121,7 @@ fun PasswordField(
             onValueChange = onValueChange,
             label = {
                 Text(
-                    label, // Use o label já passado
+                    label,
                     color = Color(0xFF0F0F0F),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
@@ -131,7 +131,7 @@ fun PasswordField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .testTag(testTag), // Atribuindo o testTag ao TextField
+                .testTag(testTag),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             isError = error.isNotEmpty(),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -316,7 +316,7 @@ fun RegisterForm(
             passwordVisibility = passwordVisibility,
             onPasswordVisibilityChange = onPasswordVisibilityChange,
             label = "Senha",
-            testTag = "passwordField" // Identificador único para o campo de senha
+            testTag = "passwordField"
         )
         Spacer(modifier = Modifier.height(8.dp))
         PasswordField(
@@ -326,7 +326,7 @@ fun RegisterForm(
             passwordVisibility = passwordVisibility,
             onPasswordVisibilityChange = onPasswordVisibilityChange,
             label = "Confirmar senha",
-            testTag = "confirmPasswordField" // Identificador único para o campo de confirmação de senha
+            testTag = "confirmPasswordField"
         )
         Spacer(modifier = Modifier.height(16.dp))
         RegisterButton(
