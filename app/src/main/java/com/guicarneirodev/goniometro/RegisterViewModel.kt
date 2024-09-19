@@ -11,6 +11,7 @@ class RegisterViewModel(
     private val validator: Validator,
     private val authRepository: AuthRepository
 ) : ViewModel() {
+
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email.asStateFlow()
 

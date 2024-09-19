@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -111,7 +112,8 @@ fun PasswordField(
     onValueChange: (String) -> Unit,
     passwordVisibility: Boolean,
     onPasswordVisibilityChange: (Boolean) -> Unit,
-    label: String
+    label: String,
+    testTag: String // Novo parâmetro
 ) {
     Column {
         TextField(
@@ -119,7 +121,7 @@ fun PasswordField(
             onValueChange = onValueChange,
             label = {
                 Text(
-                    label,
+                    label, // Use o label já passado
                     color = Color(0xFF0F0F0F),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
@@ -128,7 +130,8 @@ fun PasswordField(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .testTag(testTag), // Atribuindo o testTag ao TextField
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             isError = error.isNotEmpty(),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -312,7 +315,8 @@ fun RegisterForm(
             onValueChange = onPasswordChange,
             passwordVisibility = passwordVisibility,
             onPasswordVisibilityChange = onPasswordVisibilityChange,
-            label = "Senha"
+            label = "Senha",
+            testTag = "passwordField" // Identificador único para o campo de senha
         )
         Spacer(modifier = Modifier.height(8.dp))
         PasswordField(
@@ -321,7 +325,8 @@ fun RegisterForm(
             onValueChange = onConfirmPasswordChange,
             passwordVisibility = passwordVisibility,
             onPasswordVisibilityChange = onPasswordVisibilityChange,
-            label = "Confirmar senha"
+            label = "Confirmar senha",
+            testTag = "confirmPasswordField" // Identificador único para o campo de confirmação de senha
         )
         Spacer(modifier = Modifier.height(16.dp))
         RegisterButton(
