@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class AuthRepository {
+class RegisterAuthRepository {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     suspend fun registerUser(email: String, password: String): Result<Unit> = withContext(

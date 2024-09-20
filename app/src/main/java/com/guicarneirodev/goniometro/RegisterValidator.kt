@@ -2,7 +2,7 @@ package com.guicarneirodev.goniometro
 
 import java.util.regex.Pattern
 
-class Validator {
+class RegisterValidator {
     private val emailPattern: Pattern = Pattern.compile(
         "[a-zA-Z0-9+._%\\-]{1,256}" + "@" +
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +

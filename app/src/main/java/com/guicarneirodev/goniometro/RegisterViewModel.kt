@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 
 class RegisterViewModel : ViewModel() {
 
-    private val validator = Validator()
-    private val authRepository = AuthRepository()
+    private val registerValidator = RegisterValidator()
+    private val registerRepositoryImpl = RegisterAuthRepository()
 
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email.asStateFlow()
@@ -46,21 +46,21 @@ class RegisterViewModel : ViewModel() {
     }
 
     private fun validateEmail() {
-        _emailError.value = if (validator.isEmailValid(_email.value)) "" else "Email inválido"
+        _emailError.value = if (registerValidator.isEmailValid(_email.value)) "" else "Email inválido"
     }
 
     private fun validatePassword() {
-        _passwordError.value = validator.getPasswordError(_password.value)
+        _passwordError.value = registerValidator.getPasswordError(_password.value)
     }
 
     private fun validateConfirmPassword() {
-        _confirmPasswordError.value = validator.passwordMatchError(_password.value, _confirmPassword.value)
+        _confirmPasswordError.value = registerValidator.passwordMatchError(_password.value, _confirmPassword.value)
     }
 
     fun registerUser(onSuccess: () -> Unit, onError: (String) -> Unit) {
         if (_emailError.value.isEmpty() && _passwordError.value.isEmpty() && _confirmPasswordError.value.isEmpty()) {
             viewModelScope.launch {
-                authRepository.registerUser(_email.value, _password.value)
+                registerRepositoryImpl.registerUser(_email.value, _password.value)
                     .onSuccess { onSuccess() }
                     .onFailure { onError(it.message ?: "Falha no registro") }
             }
