@@ -39,24 +39,31 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun Login(navController: NavController) {
+fun LoginScreen(navController: NavController) {
     val context = LocalContext.current
     val viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context))
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState.navigateToMain) {
         if (uiState.navigateToMain) {
-            navController.navigate("main")
+            navController.navigate("main") {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
         }
     }
-    LoginScreen(
-        viewModel = viewModel
+    Login(
+        viewModel = viewModel,
+        navController = navController
     )
 }
 
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel
+fun Login(
+    viewModel: LoginViewModel,
+    navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -88,7 +95,19 @@ fun LoginScreen(
                     onBackToLoginClick = viewModel::onBackToLoginClick,
                     onSendResetCodeClick = viewModel::onSendResetCodeClick,
                     onVerifyResetCodeClick = viewModel::onVerifyResetCodeClick,
-                    onSecurityCodeChange = viewModel::onSecurityCodeChange
+                    onSecurityCodeChange = viewModel::onSecurityCodeChange,
+                    onBackClick = {
+                        if (navController.currentDestination?.route == "login") {
+                            navController.navigate("home") {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        } else {
+                            navController.popBackStack()
+                        }
+                    }
                 )
             }
         }
@@ -107,7 +126,8 @@ fun LoginContent(
     onBackToLoginClick: () -> Unit,
     onSendResetCodeClick: () -> Unit,
     onVerifyResetCodeClick: () -> Unit,
-    onSecurityCodeChange: (String) -> Unit
+    onSecurityCodeChange: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -141,7 +161,8 @@ fun LoginContent(
                     onRememberEmailChange = onRememberEmailChange,
                     onRememberPasswordChange = onRememberPasswordChange,
                     onLoginClick = onLoginClick,
-                    onResetPasswordClick = onResetPasswordClick
+                    onResetPasswordClick = onResetPasswordClick,
+                    onBackClick = onBackClick
                 )
             }
 
@@ -167,10 +188,13 @@ fun LoginFields(
     onRememberEmailChange: (Boolean) -> Unit,
     onRememberPasswordChange: (Boolean) -> Unit,
     onLoginClick: () -> Unit,
-    onResetPasswordClick: () -> Unit
+    onResetPasswordClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
     val visibilityIcon = if (passwordVisibility) R.drawable.pass_on else R.drawable.pass_off
+
+    BackButton(onClick = onBackClick)
 
     TextField(
         value = email,

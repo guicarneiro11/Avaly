@@ -1,4 +1,5 @@
-import com.guicarneirodev.goniometro.RegisterValidator
+package com.guicarneirodev.goniometro
+
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,27 +17,27 @@ class RegisterValidatorTest {
     }
 
     @Test
-    fun isEmailValid_returnsTrue_forValidEmail() {
+    fun isEmailValidReturnsTrueForValidEmail() {
         assertTrue(registerValidator.isEmailValid("test@example.com"))
         assertTrue(registerValidator.isEmailValid("user.name+tag@example.co.uk"))
     }
 
     @Test
-    fun isEmailValid_returnsFalse_forInvalidEmail() {
+    fun isEmailValidReturnsFalseForInvalidEmail() {
         assertFalse(registerValidator.isEmailValid("invalid_email.com"))
         assertFalse(registerValidator.isEmailValid("invalid_email@com"))
         assertFalse(registerValidator.isEmailValid("@example.com"))
     }
 
     @Test
-    fun isPasswordValid_returns_true_for_valid_password() {
+    fun isPasswordValidReturnsTrueForValidPassword() {
         assertTrue(registerValidator.isPasswordValid("Abc123!"))
         assertTrue(registerValidator.isPasswordValid("P@ssw0rd"))
         assertTrue(registerValidator.isPasswordValid("C0mpl3x!Pass"))
     }
 
     @Test
-    fun isPasswordValid_returns_false_for_invalid_password() {
+    fun isPasswordValidReturnsFalseForInvalidPassword() {
         assertFalse(registerValidator.isPasswordValid("abc123!"))
         assertFalse(registerValidator.isPasswordValid("ABC123!"))
         assertFalse(registerValidator.isPasswordValid("Abcdef!"))
@@ -45,17 +46,17 @@ class RegisterValidatorTest {
     }
 
     @Test
-    fun passwordMatchError_returns_error_message_when_passwords_dont_match() {
+    fun passwordMatchErrorReturnsErrorMessageWhenPasswordsDontMatch() {
         assertEquals("As senhas não coincidem.", registerValidator.passwordMatchError("password1", "password2"))
     }
 
     @Test
-    fun passwordMatchError_returns_empty_string_when_passwords_match() {
+    fun passwordMatchErrorReturnsEmptyStringWhenPasswordsMatch() {
         assertEquals("", registerValidator.passwordMatchError("password", "password"))
     }
 
     @Test
-    fun getPasswordError_returns_appropriate_error_messages() {
+    fun getPasswordErrorReturnsAppropriateErrorMessages() {
         assertEquals("A senha deve ter pelo menos 6 caracteres.", registerValidator.getPasswordError("Abc1!"))
         assertEquals("A senha deve conter pelo menos uma letra minúscula.", registerValidator.getPasswordError("ABC123!"))
         assertEquals("A senha deve conter pelo menos uma letra maiúscula.", registerValidator.getPasswordError("abc123!"))

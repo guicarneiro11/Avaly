@@ -18,7 +18,7 @@ class RegisterScreenInstrumentedTest {
     @Test
     fun registerUser_calls_authRepository_and_invokes_onSuccess_when_successful() {
         composeTestRule.setContent {
-            RegisterScreen(
+            Register(
                 email = "",
                 password = "",
                 confirmPassword = "",
