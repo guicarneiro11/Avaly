@@ -7,6 +7,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.guicarneirodev.goniometro.presentation.ui.components.LoginButton
+import com.guicarneirodev.goniometro.presentation.ui.components.RegisterButton
+import com.guicarneirodev.goniometro.presentation.ui.components.WelcomeText
+import com.guicarneirodev.goniometro.presentation.ui.screens.home.HomeContent
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

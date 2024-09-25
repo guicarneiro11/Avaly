@@ -25,6 +25,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.guicarneirodev.goniometro.presentation.ui.screens.results.ResultsAppBar
 import org.mockito.Mockito.*
 import org.junit.Before
 import org.junit.Rule
