@@ -33,7 +33,7 @@ O Angle Pro é um aplicativo voltado para fisioterapeutas com o objetivo de auxi
 - Firebase (Authentication, Functions, FireStore, Remote Config, Crashlytics, Analytics)
 - Google Cloud Platform (GCP)
 - Injeção de Dependência (Koin)
-- API back-end
+- API back-end (Ktor)
 - Testes: JUnit (unitários), Espresso (UI/integração), Mockito (mocks)
 - Controle de versão: Git/GitHub
 
