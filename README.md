@@ -31,7 +31,7 @@ O Angle Pro é um aplicativo voltado para fisioterapeutas com o objetivo de auxi
 - Arquitetura MVVM
 - Princípios SOLID
 - Firebase (Authentication, Functions, FireStore, Remote Config, Crashlytics, Analytics)
-- Google Cloud Platform (GCP)
+- Google Cloud Platform (Cloud Run)
 - Injeção de Dependência (Koin)
 - API back-end (Ktor)
 - Testes: JUnit (unitários), Espresso (UI/integração), Mockito (mocks)
