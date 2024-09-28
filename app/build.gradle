@@ -8,6 +8,7 @@ plugins {
 
 def compose_ui_version = "1.7.0"
 def camerax_version = "1.4.0-beta01"
+def koin_version = "3.4.0"
 
 android {
     bundle {
@@ -31,8 +32,8 @@ android {
         applicationId "com.guicarneirodev.goniometro"
         minSdk 26
         targetSdk 34
-        versionCode 16
-        versionName "1.1.11"
+        versionCode 17
+        versionName "1.2.0"
 
         vectorDrawables {
             useSupportLibrary true
@@ -174,4 +175,8 @@ dependencies {
 
     // Picasso //
     implementation 'com.squareup.picasso:picasso:2.8'
+
+    // Koin //
+    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-androidx-compose:$koin_version"
 }

@@ -48,8 +48,7 @@ fun SetupNavGraph(
                 ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
             val patientId = backStackEntry.arguments?.getString("patientId")
                 ?: throw IllegalStateException("PatientID não encontrado na backStackEntry.")
-            val resultsViewModel = getResultsViewModel(userId, patientId)
-            ResultsScreen(navController = navController, viewModel = resultsViewModel)
+            ResultsScreen(navController = navController, userId, patientId)
         }
     }
 }

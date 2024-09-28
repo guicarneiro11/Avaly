@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -42,33 +42,40 @@ import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
 import com.guicarneirodev.goniometro.data.repository.AngleData
 import com.guicarneirodev.goniometro.presentation.ui.components.BackButton
+import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
-fun ResultsScreen(navController: NavController, viewModel: ResultsScreenViewModel) {
-    var currentlyEditing by remember { mutableIntStateOf(-1) }
+fun ResultsScreen(navController: NavController, userId: String, patientId: String) {
+    val viewModel: ResultsScreenViewModel = getViewModel { parametersOf(userId, patientId) }
+    val angles by viewModel.angles.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    var currentlyEditing by remember { mutableStateOf<AngleData?>(null) }
     var showEditDialog by remember { mutableStateOf(false) }
-    var editName by remember { mutableStateOf("") }
-    var editValue by remember { mutableStateOf("") }
-    var docIdToEdit by remember { mutableStateOf("") }
+
+    val filteredAngles = remember(angles, searchQuery) {
+        if (searchQuery.isEmpty()) {
+            angles
+        } else {
+            angles.filter { it.name.contains(searchQuery, ignoreCase = true) }
+        }
+    }
 
     Scaffold(
         topBar = {
             ResultsAppBar(
                 navController = navController,
                 onAddAngle = viewModel::addAngle,
-                searchQuery = viewModel.searchQuery.value,
+                searchQuery = searchQuery,
                 onSearchQueryChange = viewModel::setSearchQuery
             )
         }
     ) { innerPadding ->
         ResultsContent(
             modifier = Modifier.padding(innerPadding),
-            angles = viewModel.getFilteredAngles(),
-            onEditAngle = { index, docId, name, value ->
-                currentlyEditing = index
-                editName = name
-                editValue = value
-                docIdToEdit = docId
+            angles = filteredAngles,
+            onEditAngle = { angle ->
+                currentlyEditing = angle
                 showEditDialog = true
             },
             onDeleteAngle = viewModel::deleteAngle
@@ -76,16 +83,21 @@ fun ResultsScreen(navController: NavController, viewModel: ResultsScreenViewMode
     }
 
     if (showEditDialog) {
-        EditAngleDialog(
-            initialName = editName,
-            initialValue = editValue,
-            onDismiss = { showEditDialog = false },
-            onConfirm = { newName, newValue ->
-                viewModel.updateAngle(docIdToEdit, newName, newValue)
-                showEditDialog = false
-                currentlyEditing = -1
-            }
-        )
+        currentlyEditing?.let { angle ->
+            EditAngleDialog(
+                initialName = angle.name,
+                initialValue = angle.value,
+                onDismiss = {
+                    showEditDialog = false
+                    currentlyEditing = null
+                },
+                onConfirm = { newName, newValue ->
+                    viewModel.updateAngle(angle.id, newName, newValue)
+                    showEditDialog = false
+                    currentlyEditing = null
+                }
+            )
+        }
     }
 }
 
@@ -93,7 +105,7 @@ fun ResultsScreen(navController: NavController, viewModel: ResultsScreenViewMode
 fun ResultsContent(
     modifier: Modifier = Modifier,
     angles: List<AngleData>,
-    onEditAngle: (Int, String, String, String) -> Unit,
+    onEditAngle: (AngleData) -> Unit,
     onDeleteAngle: (String) -> Unit
 ) {
     Box(
@@ -109,10 +121,13 @@ fun ResultsContent(
             )
     ) {
         LazyColumn {
-            itemsIndexed(angles) { index, angle ->
+            items(
+                items = angles,
+                key = { angle -> angle.id }
+            ) { angle ->
                 AngleItem(
                     angle = angle,
-                    onEdit = { onEditAngle(index, angle.id, angle.name, angle.value) },
+                    onEdit = { onEditAngle(angle) },
                     onDelete = { onDeleteAngle(angle.id) }
                 )
             }

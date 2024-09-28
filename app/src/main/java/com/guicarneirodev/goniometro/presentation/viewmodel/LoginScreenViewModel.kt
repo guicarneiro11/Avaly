@@ -1,15 +1,9 @@
 package com.guicarneirodev.goniometro.presentation.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.functions.FirebaseFunctions
-import com.guicarneirodev.goniometro.data.repository.FirebaseRepository
 import com.guicarneirodev.goniometro.data.repository.LoginRepository
 import com.guicarneirodev.goniometro.data.repository.LoginPreferencesRepository
-import com.guicarneirodev.goniometro.data.repository.SharedPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

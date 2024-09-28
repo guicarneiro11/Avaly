@@ -1,31 +1,23 @@
 package com.guicarneirodev.goniometro.presentation.viewmodel
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guicarneirodev.goniometro.data.repository.AngleData
 import com.guicarneirodev.goniometro.data.repository.ResultsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ResultsScreenViewModel  (
+class ResultsScreenViewModel(
     private val repository: ResultsRepository
 ) : ViewModel() {
-    private val _angles = mutableStateListOf<AngleData>()
-    private val angles: List<AngleData> = _angles
+    val angles = repository.angles
 
-    private val _searchQuery = mutableStateOf("")
-    val searchQuery: State<String> = _searchQuery
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     fun setSearchQuery(query: String) {
         _searchQuery.value = query
-    }
-
-    fun getFilteredAngles(): List<AngleData> {
-        return searchQuery.value.takeIf { it.isNotEmpty() }
-            ?.let { query -> angles.filter { it.name.contains(query, ignoreCase = true) } }
-            ?: angles
     }
 
     fun addAngle(name: String, value: String) {
@@ -43,15 +35,6 @@ class ResultsScreenViewModel  (
     fun deleteAngle(docId: String) {
         viewModelScope.launch {
             repository.deleteAngle(docId)
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-            repository.getAngles().collect { newAngles ->
-                _angles.clear()
-                _angles.addAll(newAngles)
-            }
         }
     }
 }

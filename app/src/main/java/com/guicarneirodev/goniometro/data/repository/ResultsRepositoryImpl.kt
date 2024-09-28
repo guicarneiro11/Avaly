@@ -1,11 +1,13 @@
 package com.guicarneirodev.goniometro.data.repository
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
 
 class ResultsRepositoryImpl(
@@ -16,10 +18,13 @@ class ResultsRepositoryImpl(
     private val resultsCollection = db.collection("users").document(userId)
         .collection("patients").document(patientId).collection("results")
 
-    override suspend fun getAngles(): Flow<List<AngleData>> = callbackFlow {
-        val listener = resultsCollection.addSnapshotListener { snapshot, e ->
+    private val _angles = MutableStateFlow<List<AngleData>>(emptyList())
+    override val angles: StateFlow<List<AngleData>> = _angles.asStateFlow()
+
+    init {
+        resultsCollection.addSnapshotListener { snapshot, e ->
             if (e != null) {
-                close(e)
+                Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
             }
 
@@ -31,10 +36,8 @@ class ResultsRepositoryImpl(
                 )
             } ?: emptyList()
 
-            trySend(angles)
+            _angles.value = angles
         }
-
-        awaitClose { listener.remove() }
     }
 
     override suspend fun addAngle(name: String, value: String) {

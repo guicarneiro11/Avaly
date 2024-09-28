@@ -8,6 +8,7 @@
     <uses-feature android:name="android.hardware.camera.any"/>
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
