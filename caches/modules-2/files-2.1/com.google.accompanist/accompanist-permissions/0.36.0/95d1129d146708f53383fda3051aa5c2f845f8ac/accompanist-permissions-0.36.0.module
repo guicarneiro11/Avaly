@@ -1,0 +1,137 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.google.accompanist",
+    "module": "accompanist-permissions",
+    "version": "0.36.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.7"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.9.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "accompanist-permissions-0.36.0.aar",
+          "url": "accompanist-permissions-0.36.0.aar",
+          "size": 1040953,
+          "sha512": "50db028c9b59f1998d4e72dd2d8444bda3873bfa4986ed37dacb942a6da47307012242b272a8e747a7ec49802143d206d046d5de3ee508378b144cc106251a87",
+          "sha256": "f30dffe2d832a7caef3d6e0a3a2e8bef845e032fe5ff1b825f88fcd10dc88238",
+          "sha1": "330f3bb43c6ab8753ed4007957338a454a7cbdb5",
+          "md5": "285be1f063fca53e1b5fc02003659510"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.activity",
+          "module": "activity-compose",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "androidx.compose.foundation",
+          "module": "foundation",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-android",
+          "version": {
+            "requires": "1.6.4"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.9.22"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "accompanist-permissions-0.36.0.aar",
+          "url": "accompanist-permissions-0.36.0.aar",
+          "size": 1040953,
+          "sha512": "50db028c9b59f1998d4e72dd2d8444bda3873bfa4986ed37dacb942a6da47307012242b272a8e747a7ec49802143d206d046d5de3ee508378b144cc106251a87",
+          "sha256": "f30dffe2d832a7caef3d6e0a3a2e8bef845e032fe5ff1b825f88fcd10dc88238",
+          "sha1": "330f3bb43c6ab8753ed4007957338a454a7cbdb5",
+          "md5": "285be1f063fca53e1b5fc02003659510"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "accompanist-permissions-0.36.0-sources.jar",
+          "url": "accompanist-permissions-0.36.0-sources.jar",
+          "size": 8882,
+          "sha512": "b75e8e3bf1974fe62c65e62e78a55d53e088ac88b9088a34bbc1f578daad7e186de1eaf5f1bab595857d0094725c9612da8cf8010e5390dadecadf468b86c6ca",
+          "sha256": "5d2071d9f612653edde86e9e4ee48a0298fadae996776fb67aa56044271741f8",
+          "sha1": "2e5f44b9863aa8d372c1629dc05d1e3423ca7707",
+          "md5": "2cfffcf0f5cebbf498fbdca1cd42d225"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseJavaDocPublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "accompanist-permissions-0.36.0-javadoc.jar",
+          "url": "accompanist-permissions-0.36.0-javadoc.jar",
+          "size": 291999,
+          "sha512": "2e582c33073bbaecfcbea8455582de54f392c38cbb3ab448801e537e424c41c11e44852f328bb8495f44cbcb7b9893f6b34cb9dbf883daf0df65a1028d179ef4",
+          "sha256": "8330cbf8a009682ae436097cbfc0cb9dd67791aec0da88f49801b50b4f5399f7",
+          "sha1": "6376c5d918eb17e90ac99ecddd9b795d0c1f3f09",
+          "md5": "d1cf90a4b24f5e65a730bc14bc202fb0"
+        }
+      ]
+    }
+  ]
+}

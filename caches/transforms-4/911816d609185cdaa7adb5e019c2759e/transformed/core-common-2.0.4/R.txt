@@ -1,0 +1,1 @@
+int style Theme_PlayCore_Transparent 0x00000000

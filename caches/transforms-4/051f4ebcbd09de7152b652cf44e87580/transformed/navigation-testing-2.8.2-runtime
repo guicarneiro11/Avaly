@@ -1,0 +1,13 @@
+androidx.navigation.testing.SavedStateHandleFactoryKt
+androidx.navigation.testing.SavedStateHandleFactoryKt$CommonizedStringArrayType$1
+androidx.navigation.testing.SavedStateHandleFactoryKt$CommonizedStringListType$1
+androidx.navigation.testing.SavedStateHandleFactoryKt$CommonizedStringType$1
+androidx.navigation.testing.TestNavHostController
+androidx.navigation.testing.TestNavigatorProvider
+androidx.navigation.testing.TestNavigatorProvider$navigator$1
+androidx.navigation.testing.TestNavigatorState
+androidx.navigation.testing.TestNavigatorState$prepareForTransition$1
+androidx.navigation.testing.TestNavigatorState$prepareForTransition$1$1
+androidx.navigation.testing.TestNavigatorState$updateMaxLifecycle$1
+androidx.navigation.testing.TestNavigatorState$updateMaxLifecycle$1$1
+androidx.navigation.testing.TestNavigatorState$viewModelStoreProvider$1

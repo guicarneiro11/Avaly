@@ -1,0 +1,116 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../koin-core/4.0.0/koin-core-4.0.0.module",
+    "group": "io.insert-koin",
+    "module": "koin-core",
+    "version": "4.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "koin-core-jvm-4.0.0.jar",
+          "url": "koin-core-jvm-4.0.0.jar",
+          "size": 379292,
+          "sha512": "daa7493dd524f42d515cf496cd530ad7b1b9b5822209559bf7dd0b74137c5e8c4304f3f7cc21a4de32f2b4d22538bdfed127466c4ee1caaf90b584d01e7b4197",
+          "sha256": "87eb8a9a5604920dbc225082f272f575155489ed9b78e0595f36d611645d2281",
+          "sha1": "6a66dcf3885c4783432e98845b10f0b5e48ef5b1",
+          "md5": "1b908cc75d440924b1f753936be87e87"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.20"
+          }
+        },
+        {
+          "group": "co.touchlab",
+          "module": "stately-concurrency",
+          "version": {
+            "requires": "2.1.0"
+          }
+        },
+        {
+          "group": "co.touchlab",
+          "module": "stately-concurrent-collections",
+          "version": {
+            "requires": "2.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "koin-core-jvm-4.0.0.jar",
+          "url": "koin-core-jvm-4.0.0.jar",
+          "size": 379292,
+          "sha512": "daa7493dd524f42d515cf496cd530ad7b1b9b5822209559bf7dd0b74137c5e8c4304f3f7cc21a4de32f2b4d22538bdfed127466c4ee1caaf90b584d01e7b4197",
+          "sha256": "87eb8a9a5604920dbc225082f272f575155489ed9b78e0595f36d611645d2281",
+          "sha1": "6a66dcf3885c4783432e98845b10f0b5e48ef5b1",
+          "md5": "1b908cc75d440924b1f753936be87e87"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "koin-core-jvm-4.0.0-sources.jar",
+          "url": "koin-core-jvm-4.0.0-sources.jar",
+          "size": 69136,
+          "sha512": "e626ed0e996994554d79f7087181ab5f1e4e0a3beb91eb15c301b70d6a98ebf689cc07799882d314982d396348d259fc7567ecd9231a9edbfa32c2523e2ecb47",
+          "sha256": "502735f4b36b0a10e91b0f8603cad94df28711d3daeab662cf86b85aa743be24",
+          "sha1": "62ae30c6922717586ff5c20dd0c55378f26a1d3a",
+          "md5": "3da0d01a45b1fef850faef46fee6574f"
+        }
+      ]
+    }
+  ]
+}

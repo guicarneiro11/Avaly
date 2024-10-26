@@ -14,9 +14,7 @@ import com.guicarneirodev.goniometro.presentation.viewmodel.PatientsScreenViewMo
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.PatientsScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.RegisterScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.ResultsScreen
-import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
 import com.guicarneirodev.goniometro.data.repository.FirestorePatientRepository
-import com.guicarneirodev.goniometro.data.repository.ResultsRepositoryImpl
 import com.guicarneirodev.goniometro.data.service.RetrofitPdfService
 
 @Composable
@@ -57,9 +55,4 @@ fun getPatientViewModel(userId: String): PatientsScreenViewModel {
     val patientRepository = FirestorePatientRepository(userId)
     val pdfService = RetrofitPdfService()
     return PatientsScreenViewModel(patientRepository, pdfService)
-}
-
-fun getResultsViewModel(userId: String, patientId: String): ResultsScreenViewModel {
-    val resultsRepository = ResultsRepositoryImpl(userId, patientId)
-    return ResultsScreenViewModel(resultsRepository)
 }

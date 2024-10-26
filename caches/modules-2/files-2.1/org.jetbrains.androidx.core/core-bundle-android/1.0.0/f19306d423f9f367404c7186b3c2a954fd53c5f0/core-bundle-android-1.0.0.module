@@ -1,0 +1,139 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../core-bundle/1.0.0/core-bundle-1.0.0.module",
+    "group": "org.jetbrains.androidx.core",
+    "module": "core-bundle",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.0"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.2.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.9.23"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "core-bundle-release.aar",
+          "url": "core-bundle-android-1.0.0.aar",
+          "size": 2251,
+          "sha512": "ff7e2f6fecfee1e9675a75f443efaa3e7d9eabc639fe3e29dd43e5e6b76c9e03371134d9d6ac2f0de39fb1d325ae563093587c9e3f9730a4bb35cd0710248573",
+          "sha256": "b35c4c924b40c83dbd0fc888ab5046e540e073fe3501023994b6b0c67c84bdde",
+          "sha1": "8c8f915554aaad290148f5bf746b99083aa7892f",
+          "md5": "fc6fa84b46cb11ddcd5ca9426b9e7483"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.2.0"
+          },
+          "excludes": [
+            {
+              "group": "org.jetbrains.kotlin",
+              "module": "kotlin-stdlib-common"
+            },
+            {
+              "group": "org.jetbrains.kotlin",
+              "module": "kotlin-test-common"
+            },
+            {
+              "group": "org.jetbrains.kotlin",
+              "module": "kotlin-test-annotations-common"
+            }
+          ]
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.9.23"
+          },
+          "excludes": [
+            {
+              "group": "org.jetbrains.kotlin",
+              "module": "kotlin-stdlib-common"
+            },
+            {
+              "group": "org.jetbrains.kotlin",
+              "module": "kotlin-test-common"
+            },
+            {
+              "group": "org.jetbrains.kotlin",
+              "module": "kotlin-test-annotations-common"
+            }
+          ]
+        }
+      ],
+      "files": [
+        {
+          "name": "core-bundle-release.aar",
+          "url": "core-bundle-android-1.0.0.aar",
+          "size": 2251,
+          "sha512": "ff7e2f6fecfee1e9675a75f443efaa3e7d9eabc639fe3e29dd43e5e6b76c9e03371134d9d6ac2f0de39fb1d325ae563093587c9e3f9730a4bb35cd0710248573",
+          "sha256": "b35c4c924b40c83dbd0fc888ab5046e540e073fe3501023994b6b0c67c84bdde",
+          "sha1": "8c8f915554aaad290148f5bf746b99083aa7892f",
+          "md5": "fc6fa84b46cb11ddcd5ca9426b9e7483"
+        }
+      ]
+    },
+    {
+      "name": "releaseSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "fake-sources",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "files": [
+        {
+          "name": "core-bundle-android-1.0.0-sources.jar",
+          "url": "core-bundle-android-1.0.0-sources.jar",
+          "size": 2942,
+          "sha512": "1802606f4964acb9895a6ebd4627019a3d58a3d405ede3edf90b9958fa98913f6a77135450aead4f8c0ce1d13c68061ad8fc2be2795e1daa7c5390e90640def1",
+          "sha256": "be2ab62216a833696614351f2ad2d427f63a3eef95be52df048bce6fab5ca79f",
+          "sha1": "37854bca40c4a27840bb5274f63fe6b498eb1fd2",
+          "md5": "3bca3736feb3dad6fb9518b6510ebadc"
+        }
+      ]
+    }
+  ]
+}

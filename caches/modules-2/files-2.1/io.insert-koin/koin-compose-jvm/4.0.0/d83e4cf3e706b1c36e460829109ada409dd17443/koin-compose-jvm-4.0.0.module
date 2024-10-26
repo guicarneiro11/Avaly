@@ -1,0 +1,130 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../koin-compose/4.0.0/koin-compose-4.0.0.module",
+    "group": "io.insert-koin",
+    "module": "koin-compose",
+    "version": "4.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "jvmApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.6.11"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "koin-compose-jvm-4.0.0.jar",
+          "url": "koin-compose-jvm-4.0.0.jar",
+          "size": 26450,
+          "sha512": "54fa6aaf2d82cde54ea7be77567a923e913a8a21e9c087436b677f82399df07cfa88e20cd7a435e4d7781c0b6667c412a2c003b8185bf118efee0dee7f048087",
+          "sha256": "51906dedcbc721b4904ddd572f928ab72f7f7d42138c6c716de178f8bfa646be",
+          "sha1": "cf45eee3ae6e58e04a6771a8c04a8937395f8ea0",
+          "md5": "a502505f375363e699c9975016e0cb90"
+        }
+      ]
+    },
+    {
+      "name": "jvmRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "io.insert-koin",
+          "module": "koin-core",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.6.11"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "koin-compose-jvm-4.0.0.jar",
+          "url": "koin-compose-jvm-4.0.0.jar",
+          "size": 26450,
+          "sha512": "54fa6aaf2d82cde54ea7be77567a923e913a8a21e9c087436b677f82399df07cfa88e20cd7a435e4d7781c0b6667c412a2c003b8185bf118efee0dee7f048087",
+          "sha256": "51906dedcbc721b4904ddd572f928ab72f7f7d42138c6c716de178f8bfa646be",
+          "sha1": "cf45eee3ae6e58e04a6771a8c04a8937395f8ea0",
+          "md5": "a502505f375363e699c9975016e0cb90"
+        }
+      ]
+    },
+    {
+      "name": "jvmSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "koin-compose-jvm-4.0.0-sources.jar",
+          "url": "koin-compose-jvm-4.0.0-sources.jar",
+          "size": 10415,
+          "sha512": "c3f1143eb39ffa0198152426f046ef5bbeb2dd1a258cf0d48d769f75c98098c60e07da24be8aebd780723e8f4d670ad092b220ac18879bcd62c9e63a72dfccf3",
+          "sha256": "a084949ec6c4ffc9726a92cde16d944248f1f02064fcef6c7324cd547b619ee5",
+          "sha1": "55befd22bb4e08356bf003d34d14bd6198b05e6e",
+          "md5": "805d9affd7a1f0b30e58b86f1f3a9dad"
+        }
+      ]
+    }
+  ]
+}

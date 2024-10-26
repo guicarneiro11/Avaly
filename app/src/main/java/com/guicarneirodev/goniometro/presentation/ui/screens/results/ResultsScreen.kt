@@ -42,12 +42,12 @@ import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
 import com.guicarneirodev.goniometro.data.repository.AngleData
 import com.guicarneirodev.goniometro.presentation.ui.components.BackButton
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ResultsScreen(navController: NavController, userId: String, patientId: String) {
-    val viewModel: ResultsScreenViewModel = getViewModel { parametersOf(userId, patientId) }
+    val viewModel: ResultsScreenViewModel = koinViewModel { parametersOf(userId, patientId) }
     val angles by viewModel.angles.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     var currentlyEditing by remember { mutableStateOf<AngleData?>(null) }

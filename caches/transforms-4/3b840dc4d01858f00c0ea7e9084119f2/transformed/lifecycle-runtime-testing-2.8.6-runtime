@@ -1,0 +1,5 @@
+androidx.lifecycle.testing.TestLifecycleOwner
+androidx.lifecycle.testing.TestLifecycleOwner$currentState$1
+androidx.lifecycle.testing.TestLifecycleOwner$currentState$2
+androidx.lifecycle.testing.TestLifecycleOwner$handleLifecycleEvent$1
+androidx.lifecycle.testing.TestLifecycleOwner$setCurrentState$2

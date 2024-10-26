@@ -1,0 +1,132 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.insert-koin",
+    "module": "koin-androidx-compose",
+    "version": "4.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.6.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "io.insert-koin",
+          "module": "koin-android",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.6.8"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-viewmodel-compose",
+          "version": {
+            "requires": "2.8.5"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "koin-androidx-compose-4.0.0.aar",
+          "url": "koin-androidx-compose-4.0.0.aar",
+          "size": 22774,
+          "sha512": "38e67ccb3926b3a606395e1af2f019c01d29a958d64ad49ab7e7ef22001c2842eacf820e9d91c411cc81b1c12a8f9124681f2dee5089a4cb3a57bb1f466a1bf7",
+          "sha256": "b1902e0b8a34a4130226a11376b5aed95757ec89a3b17918bef4b54ffb8dec8a",
+          "sha1": "6acfefc2cb7a4a1ee525e1d861fdc66a86e87dbc",
+          "md5": "57f2e7cfe3d74570ecbc57b4a299bc1e"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "io.insert-koin",
+          "module": "koin-android",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "io.insert-koin",
+          "module": "koin-compose",
+          "version": {
+            "requires": "4.0.0"
+          }
+        },
+        {
+          "group": "androidx.compose.runtime",
+          "module": "runtime",
+          "version": {
+            "requires": "1.6.8"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-viewmodel-compose",
+          "version": {
+            "requires": "2.8.5"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.20"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "koin-androidx-compose-4.0.0.aar",
+          "url": "koin-androidx-compose-4.0.0.aar",
+          "size": 22774,
+          "sha512": "38e67ccb3926b3a606395e1af2f019c01d29a958d64ad49ab7e7ef22001c2842eacf820e9d91c411cc81b1c12a8f9124681f2dee5089a4cb3a57bb1f466a1bf7",
+          "sha256": "b1902e0b8a34a4130226a11376b5aed95757ec89a3b17918bef4b54ffb8dec8a",
+          "sha1": "6acfefc2cb7a4a1ee525e1d861fdc66a86e87dbc",
+          "md5": "57f2e7cfe3d74570ecbc57b4a299bc1e"
+        }
+      ]
+    }
+  ]
+}
