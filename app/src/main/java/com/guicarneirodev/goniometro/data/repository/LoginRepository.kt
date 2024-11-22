@@ -11,6 +11,7 @@ interface LoginRepository {
     suspend fun resetPassword(email: String): Result<Unit>
     suspend fun sendSecurityCode(email: String): Result<Unit>
     suspend fun verifySecurityCode(email: String, code: String): Result<Boolean>
+    suspend fun getIdToken(): Result<String>
 }
 
 class FirebaseRepository(
@@ -53,11 +54,26 @@ class FirebaseRepository(
         withContext(Dispatchers.IO) {
             try {
                 val verifyCodeFunction = firebaseFunctions.getHttpsCallable("verifySecurityCode")
-                val result = verifyCodeFunction.call(hashMapOf("email" to email, "code" to code)).await()
+                val result =
+                    verifyCodeFunction.call(hashMapOf("email" to email, "code" to code)).await()
                 val success = (result.data as? Map<*, *>)?.get("success") as? Boolean ?: false
                 Result.success(success)
             } catch (e: Exception) {
                 Result.failure(e)
             }
         }
-    }
+
+    override suspend fun getIdToken(): Result<String> =
+        withContext(Dispatchers.IO) {
+            try {
+                val token = firebaseAuth.currentUser?.getIdToken(false)?.await()?.token
+                if (token != null) {
+                    Result.success(token)
+                } else {
+                    Result.failure(Exception("Failed to get token"))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+}

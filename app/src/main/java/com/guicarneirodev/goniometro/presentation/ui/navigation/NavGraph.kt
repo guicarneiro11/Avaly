@@ -7,6 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.functions.FirebaseFunctions
+import com.guicarneirodev.goniometro.data.repository.FirebaseRepository
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.HomeScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.login.LoginScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.main.MainScreen
@@ -53,6 +56,10 @@ fun SetupNavGraph(
 
 fun getPatientViewModel(userId: String): PatientsScreenViewModel {
     val patientRepository = FirestorePatientRepository(userId)
-    val pdfService = RetrofitPdfService()
+    val loginRepository = FirebaseRepository(
+        FirebaseAuth.getInstance(),
+        FirebaseFunctions.getInstance()
+    )
+    val pdfService = RetrofitPdfService(loginRepository)
     return PatientsScreenViewModel(patientRepository, pdfService)
 }

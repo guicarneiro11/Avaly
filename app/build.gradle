@@ -2,6 +2,8 @@ plugins {
     id 'kotlin-android'
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'org.jetbrains.kotlin.plugin.serialization'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
 }
@@ -60,14 +62,15 @@ android {
         compose true
         viewBinding true
         dataBinding true
-        buildConfig = true
+        buildConfig true
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.14'
+        kotlinCompilerExtensionVersion '1.5.15'
     }
 
-    packagingOptions {
+
+packagingOptions {
         resources {
             exclude 'META-INF/LICENSE.md'
             exclude 'META-INF/LICENSE-notice.md'
@@ -180,4 +183,8 @@ dependencies {
 
     // Picasso //
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Serialization //
+    implementation 'androidx.compose.compiler:compiler:1.5.15'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0'
 }
