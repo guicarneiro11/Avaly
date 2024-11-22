@@ -1,62 +1,116 @@
+# 📱 AnglePro
+
+Aplicativo profissional de goniometria digital para fisioterapeutas, oferecendo medições precisas e gerenciamento completo de pacientes.
+
+[![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.guicarneirodev.goniometro)
+[![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+[![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/)
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=for-the-badge&logo=jetpack-compose&logoColor=white)](https://developer.android.com/jetpack/compose)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
+
 <div align="center">
-  
-# Angle Pro
-
-![Language](https://img.shields.io/badge/Language-Kotlin-orange)
-![Platform](https://img.shields.io/badge/Platform-Android-green)
-![Category](https://img.shields.io/badge/Category-Health-blue)
-
-![Gif Funcionalidade](https://i.imgur.com/rB9wRz8.gif)
-
-*(Gif meramente ilustrativo de uma das funcionalidades)*
-
+    <img src="https://i.imgur.com/rB9wRz8.gif" width="300px" alt="Demonstração de Funcionalidade"/>
 </div>
 
-## Descrição
+## 📋 Sobre o Projeto
 
-O Angle Pro é um aplicativo voltado para fisioterapeutas com o objetivo de auxiliar nas avaliações de pacientes.
+O AnglePro revoluciona a forma como fisioterapeutas realizam avaliações goniométricas, substituindo instrumentos físicos por uma solução digital precisa e eficiente. Desenvolvido com foco na experiência do usuário e precisão clínica.
 
-## Funcionalidades
+## ⭐ Destaques
 
-- Simula a funcionalidade de um goniômetro físico, permitindo realizar goniometrias em fotos importadas da galeria ou tiradas no momento da avaliação.
-- Possibilidade de alterar entre os quadrantes do goniômetro para se adaptar melhor ao plano referente à articulação.
-- Salva medições dentro do próprio app, separando os resultados individualmente para cada paciente, auxiliando na comparação das evoluções durante as semanas de tratamento.
-- Possibilidade de acessar diversos modelos 3D da área da ortopedia, auxiliando na avaliação e estudos de fisioterapeutas (Descontinuado)
-- Possibilidade de enviar automaticamente via email um relatório de cada paciente no formato pdf.
+- 📊 Usado em clínicas e consultórios
+- 🔄 Atualizações frequentes
+- 📱 Interface moderna e intuitiva
 
-## Tecnologias
+## 🚀 Funcionalidades Principais
 
+### 📐 Goniometria Digital
+- Medições precisas em fotos da galeria ou câmera
+- Quadrantes adaptáveis para diferentes articulações
+- Interface intuitiva para profissionais
+
+### 👥 Gestão de Pacientes
+- Cadastro completo de pacientes
+- Organização por fichas individuais
+- Histórico detalhado de avaliações
+
+### 📊 Relatórios e Análises
+- Geração automática de relatórios PDF
+- Envio por email integrado
+- Acompanhamento de evolução
+
+### 💾 Backup e Segurança
+- Sincronização com nuvem
+- Backup automático de dados
+- Proteção de informações sensíveis
+
+## 🛠️ Tecnologias
+
+### Frontend
 - Kotlin
-- Jetpack Compose (UI toolkit)
-- Arquitetura MVVM
-- Princípios SOLID
-- Firebase (Authentication, Functions, FireStore, Remote Config, Crashlytics, Analytics)
-- Google Cloud Platform (Cloud Run)
-- Injeção de Dependência (Koin)
-- API back-end (Ktor)
-- Testes: JUnit (unitários), Espresso (UI/integração), Mockito (mocks)
-- Controle de versão: Git/GitHub
+- Jetpack Compose
+- Material Design 3
+- MVVM Architecture
+- SOLID Principles
 
-## Algumas bibliotecas utilizadas
-- SharedPreferences
-- Coroutines
+### Backend e Cloud
+- Firebase Suite
+  - Authentication
+  - Firestore
+  - Functions
+  - Remote Config
+  - Analytics
+  - Crashlytics
+- Google Cloud Platform
+  - Cloud Run
+
+### Desenvolvimento
+- Koin (Dependency Injection)
+- Coroutines & Flow
 - ViewModel
-- Material Design
 - StateFlow
-- Regex
+- SharedPreferences
 
-## Considerações Finais
+### Testes
+- JUnit (Unitários)
+- Espresso (UI/Integração)
+- Mockito (Mocks)
 
-O projeto atualmente já está na Google Play Store, sendo modificado sempre com novas ferramentas, melhorias e correções.
+## 📈 Roadmap
 
-## Instalação
+- [x] Lançamento na Play Store
+- [x] Integração com Firebase
+- [x] Sistema de relatórios PDF
+- [x] Backup em nuvem
+- [ ] Modo offline aprimorado
+- [ ] Novas ferramentas de medição
+- [ ] Interface em outros idiomas
 
-[Google Play](https://play.google.com/store/apps/details?id=com.guicarneirodev.goniometro)
+## 🔧 Instalação
 
-## Contato
+1. Download direto da [Google Play Store](https://play.google.com/store/apps/details?id=com.guicarneirodev.goniometro)
+2. Realize login ou cadastro
+3. Comece a usar imediatamente
 
-Guilherme Carneiro
+## 💡 Feedback e Suporte
 
-[LinkedIn](https://www.linkedin.com/in/guicarneiro1)
+- ⭐ Avalie na Play Store
+- 📧 Envie sugestões via email
+- 🐛 Reporte bugs através das issues
 
-Email: guicarneiro.dev@gmail.com
+## 👨‍💻 Desenvolvedor
+
+**Guilherme Carneiro**
+- [LinkedIn](https://www.linkedin.com/in/guicarneiro1)
+- [GitHub](https://github.com/guicarneiro11)
+- Email: guicarneiro.dev@gmail.com
+
+<div align="center">
+
+### ⭐ Gostou do projeto? Deixe uma estrela!
+
+[![GitHub stars](https://img.shields.io/github/stars/guicarneiro11/anglepro?style=social)](https://github.com/guicarneiro11/anglepro/stargazers)
+
+</div>
