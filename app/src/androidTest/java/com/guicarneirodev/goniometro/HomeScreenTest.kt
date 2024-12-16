@@ -7,9 +7,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.guicarneirodev.goniometro.presentation.ui.components.LoginButton
-import com.guicarneirodev.goniometro.presentation.ui.components.RegisterButton
-import com.guicarneirodev.goniometro.presentation.ui.components.WelcomeText
+import androidx.test.runner.AndroidJUnit4
+import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.HomeLoginButton
+import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterButton
+import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.WelcomeText
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.HomeContent
 import org.junit.Before
 import org.junit.Rule
@@ -54,7 +55,7 @@ class HomeScreenTest {
     @Test
     fun loginButtonTest() {
         rule.setContent {
-            LoginButton(navController = mockNavController)
+            HomeLoginButton(navController = mockNavController)
         }
 
         rule.onNodeWithTag("loginButton")
