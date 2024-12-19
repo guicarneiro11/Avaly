@@ -24,7 +24,6 @@ fun RegisterHeader(onBackClick: () -> Unit) {
             .fillMaxWidth()
             .padding(top = 16.dp)
     ) {
-        // Botão voltar
         IconButton(
             onClick = onBackClick,
             modifier = Modifier.align(Alignment.CenterStart)
@@ -36,8 +35,7 @@ fun RegisterHeader(onBackClick: () -> Unit) {
                 modifier = Modifier.size(28.dp)
             )
         }
-
-        // Título
+        
         Text(
             text = "Criar Conta",
             color = Color.White,

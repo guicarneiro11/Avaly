@@ -1,12 +1,15 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.register
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,21 +22,17 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.compose.foundation.layout.size
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterScreenViewModel
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
-import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterForm
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterHeader
+import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterCard
 
 @Composable
-fun RegisterScreen(navController: NavController, viewModel: RegisterScreenViewModel) {
-    val email by viewModel.email.collectAsState()
-    val password by viewModel.password.collectAsState()
-    val confirmPassword by viewModel.confirmPassword.collectAsState()
-    val emailError by viewModel.emailError.collectAsState()
-    val passwordError by viewModel.passwordError.collectAsState()
-    val confirmPasswordError by viewModel.confirmPasswordError.collectAsState()
-    var passwordVisibility by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
+fun RegisterScreen(navController: NavController) {
+    val viewModel: RegisterScreenViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -50,41 +49,55 @@ fun RegisterScreen(navController: NavController, viewModel: RegisterScreenViewMo
         // Elementos decorativos de fundo
         BackgroundDecorations()
 
-        // Conteúdo principal
-        Column(
+        // Loading overlay
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
+        }
+
+        // Conteúdo principal centralizado
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            contentAlignment = Alignment.Center
         ) {
-            // Cabeçalho com título e botão voltar
-            RegisterHeader(
-                onBackClick = { navController.popBackStack() }
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Cabeçalho
+                RegisterHeader(
+                    onBackClick = { navController.popBackStack() }
+                )
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // Formulário
-            RegisterForm(
-                email = email,
-                password = password,
-                confirmPassword = confirmPassword,
-                emailError = emailError,
-                passwordError = passwordError,
-                confirmPasswordError = confirmPasswordError,
-                passwordVisibility = passwordVisibility,
-                onEmailChange = viewModel::updateEmail,
-                onPasswordChange = viewModel::updatePassword,
-                onConfirmPasswordChange = viewModel::updateConfirmPassword,
-                onPasswordVisibilityChange = { passwordVisibility = it },
-                onRegisterClick = {
-                    viewModel.registerUser(
-                        onSuccess = { navController.navigate("home") },
-                        onError = { error -> errorMessage = error }
-                    )
-                },
-                errorMessage = errorMessage
-            )
+                // Card principal com campos
+                RegisterCard(
+                    uiState = uiState,
+                    onEmailChange = viewModel::updateEmail,
+                    onPasswordChange = viewModel::updatePassword,
+                    onConfirmPasswordChange = viewModel::updateConfirmPassword,
+                    onRegisterClick = {
+                        viewModel.registerUser(
+                            onSuccess = { navController.navigate("home") },
+                            onError = { /* Erro já mostrado no card */ }
+                        )
+                    }
+                )
+            }
         }
     }
 }

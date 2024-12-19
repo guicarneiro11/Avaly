@@ -1,5 +1,10 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.login
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,16 +14,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,9 +42,17 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.TextField
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginUiState
@@ -42,6 +60,11 @@ import com.guicarneirodev.goniometro.presentation.viewmodel.LoginScreenViewModel
 import com.guicarneirodev.goniometro.presentation.factory.LoginViewModelFactory
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.components.BackButton
+import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -59,37 +82,56 @@ fun LoginScreen(navController: NavController) {
             }
         }
     }
-    Login(
-        viewModel = viewModel,
-        navController = navController
-    )
-}
-
-@Composable
-fun Login(
-    viewModel: LoginScreenViewModel,
-    navController: NavController
-) {
-    val uiState by viewModel.uiState.collectAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFF2C73B1), Color(0xFF2C73B1))
+                    colors = listOf(
+                        Color(0xFF1E88E5),
+                        Color(0xFF4FC3F7)
+                    )
                 )
             )
     ) {
-        LazyColumn(
+        // Elementos decorativos de fundo
+        BackgroundDecorations()
+
+        // Conteúdo principal centralizado
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .fillMaxSize()
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
         ) {
-            item {
-                LoginContent(
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Cabeçalho
+                LoginHeader(
+                    showResetPassword = uiState.showResetPassword,
+                    onBackClick = {
+                        if (uiState.showResetPassword) {
+                            viewModel.onBackToLoginClick()
+                        } else {
+                            navController.navigate("home") {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Card principal com conteúdo
+                LoginCard(
                     uiState = uiState,
                     onEmailChange = viewModel::onEmailChange,
                     onPasswordChange = viewModel::onPasswordChange,
@@ -97,22 +139,9 @@ fun Login(
                     onRememberPasswordChange = viewModel::onRememberPasswordChange,
                     onLoginClick = viewModel::onLoginClick,
                     onResetPasswordClick = viewModel::onResetPasswordClick,
-                    onBackToLoginClick = viewModel::onBackToLoginClick,
                     onSendResetCodeClick = viewModel::onSendResetCodeClick,
                     onVerifyResetCodeClick = viewModel::onVerifyResetCodeClick,
-                    onSecurityCodeChange = viewModel::onSecurityCodeChange,
-                    onBackClick = {
-                        if (navController.currentDestination?.route == "login") {
-                            navController.navigate("home") {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = true
-                                }
-                                launchSingleTop = true
-                            }
-                        } else {
-                            navController.popBackStack()
-                        }
-                    }
+                    onSecurityCodeChange = viewModel::onSecurityCodeChange
                 )
             }
         }
@@ -120,7 +149,39 @@ fun Login(
 }
 
 @Composable
-fun LoginContent(
+private fun LoginHeader(
+    showResetPassword: Boolean,
+    onBackClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // Botão voltar
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.voltar),
+                contentDescription = "Voltar",
+                tint = Color.White,
+                modifier = Modifier.size(28.dp)
+            )
+        }
+
+        // Título
+        Text(
+            text = if (showResetPassword) "Recuperar Senha" else "Login",
+            color = Color.White,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun LoginCard(
     uiState: LoginUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -128,24 +189,26 @@ fun LoginContent(
     onRememberPasswordChange: (Boolean) -> Unit,
     onLoginClick: () -> Unit,
     onResetPasswordClick: () -> Unit,
-    onBackToLoginClick: () -> Unit,
     onSendResetCodeClick: () -> Unit,
     onVerifyResetCodeClick: () -> Unit,
-    onSecurityCodeChange: (String) -> Unit,
-    onBackClick: () -> Unit
+    onSecurityCodeChange: (String) -> Unit
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(12.dp)
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White.copy(alpha = 0.95f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (uiState.showResetPassword) {
-                ResetPasswordContent(
+                ResetPasswordFields(
                     email = uiState.email,
                     onEmailChange = onEmailChange,
                     securityCode = uiState.securityCode,
@@ -153,7 +216,8 @@ fun LoginContent(
                     resetCodeSent = uiState.resetCodeSent,
                     onSendResetCodeClick = onSendResetCodeClick,
                     onVerifyResetCodeClick = onVerifyResetCodeClick,
-                    onBackToLoginClick = onBackToLoginClick
+                    resetEmailSent = uiState.resetEmailSent,
+                    isLoading = uiState.isLoading
                 )
             } else {
                 LoginFields(
@@ -166,8 +230,7 @@ fun LoginContent(
                     onRememberEmailChange = onRememberEmailChange,
                     onRememberPasswordChange = onRememberPasswordChange,
                     onLoginClick = onLoginClick,
-                    onResetPasswordClick = onResetPasswordClick,
-                    onBackClick = onBackClick
+                    onResetPasswordClick = onResetPasswordClick
                 )
             }
 
@@ -175,7 +238,9 @@ fun LoginContent(
                 Text(
                     text = it,
                     color = Color.Red,
-                    modifier = Modifier.padding(top = 8.dp)
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -193,132 +258,290 @@ fun LoginFields(
     onRememberEmailChange: (Boolean) -> Unit,
     onRememberPasswordChange: (Boolean) -> Unit,
     onLoginClick: () -> Unit,
-    onResetPasswordClick: () -> Unit,
-    onBackClick: () -> Unit
+    onResetPasswordClick: () -> Unit
 ) {
     var passwordVisibility by remember { mutableStateOf(false) }
-    val visibilityIcon = if (passwordVisibility) R.drawable.pass_on else R.drawable.pass_off
 
-    BackButton(onClick = onBackClick)
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Campo de email
+        OutlinedTextField(
+            value = email,
+            onValueChange = onEmailChange,
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(0xFF1E88E5),
+                focusedLabelColor = Color(0xFF1E88E5),
+                cursorColor = Color(0xFF1E88E5)
+            ),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            shape = RoundedCornerShape(12.dp)
+        )
 
-    TextField(
-        value = email,
-        onValueChange = onEmailChange,
-        label = { Text("Email") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    )
+        // Campo de senha
+        OutlinedTextField(
+            value = password,
+            onValueChange = onPasswordChange,
+            label = { Text("Senha") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color(0xFF1E88E5),
+                focusedLabelColor = Color(0xFF1E88E5),
+                cursorColor = Color(0xFF1E88E5)
+            ),
+            singleLine = true,
+            visualTransformation = if (passwordVisibility)
+                VisualTransformation.None
+            else
+                PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            trailingIcon = {
+                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (passwordVisibility)
+                                R.drawable.pass_on
+                            else
+                                R.drawable.pass_off
+                        ),
+                        contentDescription = if (passwordVisibility)
+                            "Esconder Senha"
+                        else
+                            "Mostrar Senha",
+                        tint = Color(0xFF1E88E5)
+                    )
+                }
+            },
+            shape = RoundedCornerShape(12.dp)
+        )
 
-    TextField(
-        value = password,
-        onValueChange = onPasswordChange,
-        label = { Text("Senha") },
-        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-        trailingIcon = {
-            IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                Icon(
-                    painter = painterResource(id = visibilityIcon),
-                    contentDescription = if (passwordVisibility) "Esconder Senha" else "Mostrar Senha"
+        // Checkboxes de lembrar
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Checkbox(
+                    checked = rememberEmail,
+                    onCheckedChange = onRememberEmailChange,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color(0xFF1E88E5)
+                    )
+                )
+                Text(
+                    "Lembrar Email",
+                    fontSize = 14.sp
                 )
             }
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    )
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = rememberEmail,
-            onCheckedChange = onRememberEmailChange
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Checkbox(
+                    checked = rememberPassword,
+                    onCheckedChange = onRememberPasswordChange,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = Color(0xFF1E88E5)
+                    )
+                )
+                Text(
+                    "Lembrar Senha",
+                    fontSize = 14.sp
+                )
+            }
+        }
+
+        // Botão de login com debounce
+        var isClickable by remember { mutableStateOf(true) }
+
+        Button(
+            onClick = {
+                if (isClickable) {
+                    isClickable = false
+                    onLoginClick()
+                    // Reabilita o botão após 1 segundo
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(1000)
+                        isClickable = true
+                    }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF1E88E5),
+                disabledContainerColor = Color(0xFF1E88E5).copy(alpha = 0.5f)
+            ),
+            shape = RoundedCornerShape(12.dp),
+            enabled = isClickable
+        ) {
+            Text(
+                text = "Entrar",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        // Link para recuperar senha
+        Text(
+            text = "Esqueceu sua senha?",
+            color = Color(0xFF1E88E5),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier
+                .clickable(onClick = onResetPasswordClick)
+                .padding(vertical = 8.dp)
+                .align(Alignment.CenterHorizontally)
         )
-        Text("Lembrar Email")
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Checkbox(
-            checked = rememberPassword,
-            onCheckedChange = onRememberPasswordChange
-        )
-        Text("Lembrar Senha")
     }
-
-    Button(
-        onClick = onLoginClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-    ) {
-        Text("Entrar")
-    }
-
-    Text(
-        text = "Esqueceu sua senha?",
-        color = Color.Blue,
-        modifier = Modifier
-            .clickable(onClick = onResetPasswordClick)
-            .padding(vertical = 8.dp)
-    )
 }
 
 @Composable
-fun ResetPasswordContent(
+private fun ResetPasswordFields(
     email: String,
     onEmailChange: (String) -> Unit,
     securityCode: String,
     onSecurityCodeChange: (String) -> Unit,
     resetCodeSent: Boolean,
+    resetEmailSent: Boolean,
+    isLoading: Boolean,
     onSendResetCodeClick: () -> Unit,
-    onVerifyResetCodeClick: () -> Unit,
-    onBackToLoginClick: () -> Unit
+    onVerifyResetCodeClick: () -> Unit
 ) {
-    if (resetCodeSent) {
-        TextField(
-            value = securityCode,
-            onValueChange = onSecurityCodeChange,
-            label = { Text("Código de Segurança") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
-
-        Button(
-            onClick = onVerifyResetCodeClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        AnimatedVisibility(
+            visible = !resetCodeSent,
+            enter = fadeIn() + slideInHorizontally(),
+            exit = fadeOut() + slideOutHorizontally()
         ) {
-            Text("Verificar Código")
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = onEmailChange,
+                    label = { Text("Email") },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !isLoading,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF1E88E5),
+                        focusedLabelColor = Color(0xFF1E88E5),
+                        cursorColor = Color(0xFF1E88E5)
+                    ),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Done
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+                Button(
+                    onClick = onSendResetCodeClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1E88E5)
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    enabled = !isLoading
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Enviar Código",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                if (resetEmailSent) {
+                    Text(
+                        text = "Email de recuperação enviado com sucesso!",
+                        color = Color(0xFF4CAF50),
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
         }
-    } else {
-        TextField(
-            value = email,
-            onValueChange = onEmailChange,
-            label = { Text("Email") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
 
-        Button(
-            onClick = onSendResetCodeClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
+        AnimatedVisibility(
+            visible = resetCodeSent,
+            enter = fadeIn() + slideInHorizontally(initialOffsetX = { it }),
+            exit = fadeOut() + slideOutHorizontally(targetOffsetX = { -it })
         ) {
-            Text("Enviar Código de Segurança")
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = securityCode,
+                    onValueChange = onSecurityCodeChange,
+                    label = { Text("Código de Segurança") },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !isLoading,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = Color(0xFF1E88E5),
+                        focusedLabelColor = Color(0xFF1E88E5),
+                        cursorColor = Color(0xFF1E88E5)
+                    ),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+                Button(
+                    onClick = onVerifyResetCodeClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1E88E5)
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    enabled = !isLoading
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Verificar Código",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
         }
     }
-
-    Text(
-        text = "Voltar para o login",
-        color = Color.Blue,
-        modifier = Modifier
-            .clickable(onClick = onBackToLoginClick)
-            .padding(vertical = 8.dp)
-    )
 }

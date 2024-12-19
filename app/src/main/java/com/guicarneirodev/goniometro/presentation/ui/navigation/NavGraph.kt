@@ -27,7 +27,7 @@ fun SetupNavGraph(
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { HomeScreen(navController) }
         composable("login") { LoginScreen(navController) }
-        composable("register") { RegisterScreen(navController, viewModel()) }
+        composable("register") { RegisterScreen(navController) }
         composable("main") { MainScreen(navController) }
         composable(
             "patients/{userId}",

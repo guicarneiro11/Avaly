@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun MainContent(navController: NavController) {
+fun HomeContent(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -24,8 +24,7 @@ fun MainContent(navController: NavController) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            LoginButton(navController)
-            RegisterButton(navController)
+            NavigationButtons(navController)
         }
     }
 }

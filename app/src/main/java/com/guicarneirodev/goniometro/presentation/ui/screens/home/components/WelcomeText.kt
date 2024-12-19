@@ -21,7 +21,7 @@ fun WelcomeText() {
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "Angle Pro",
+            text = "Avaly",
             color = Color.White.copy(alpha = 0.9f),
             fontSize = 40.sp,
             fontWeight = FontWeight.ExtraBold

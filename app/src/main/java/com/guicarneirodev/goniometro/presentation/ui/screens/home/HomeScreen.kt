@@ -20,13 +20,13 @@ import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.presentation.viewmodel.HomeScreenViewModel
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.DraggableContent
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
+import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.HomeContent
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.LogoSection
-import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.MainContent
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    val homeScreenViewModel: HomeScreenViewModel = viewModel()
-    val offsetY by homeScreenViewModel.offsetY.collectAsState()
+    val viewModel: HomeScreenViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -43,9 +43,9 @@ fun HomeScreen(navController: NavController) {
         BackgroundDecorations()
 
         DraggableContent(
-            offsetY = offsetY,
-            onDrag = { dragAmount -> homeScreenViewModel.updateOffsetY(dragAmount) },
-            onDragEnd = { homeScreenViewModel.resetOffsetY() }
+            offsetY = uiState.offsetY,
+            onDrag = { dragAmount -> viewModel.updateOffsetY(dragAmount) },
+            onDragEnd = { viewModel.resetOffsetY() }
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -61,7 +61,7 @@ fun HomeScreen(navController: NavController) {
                         .padding(24.dp),
                     contentAlignment = Alignment.BottomCenter
                 ) {
-                    MainContent(navController)
+                    HomeContent(navController)
                 }
             }
         }
