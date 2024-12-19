@@ -1,4 +1,4 @@
-# 📱 AnglePro
+# 📱 Avaly
 
 Aplicativo profissional de goniometria digital para fisioterapeutas, oferecendo medições precisas e gerenciamento completo de pacientes.
 
