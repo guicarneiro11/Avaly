@@ -105,7 +105,7 @@ O Avaly revoluciona a forma como fisioterapeutas realizam avaliações goniomét
 **Guilherme Carneiro**
 - [LinkedIn](https://www.linkedin.com/in/guicarneiro1)
 - [GitHub](https://github.com/guicarneiro11)
-- Email: guicarneiro.dev@gmail.com
+- Email: contato@avaly.com.br
 
 <div align="center">
 
