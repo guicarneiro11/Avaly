@@ -52,14 +52,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.TextField
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginUiState
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginScreenViewModel
 import com.guicarneirodev.goniometro.presentation.factory.LoginViewModelFactory
 import com.guicarneirodev.goniometro.R
-import com.guicarneirodev.goniometro.presentation.ui.components.BackButton
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
