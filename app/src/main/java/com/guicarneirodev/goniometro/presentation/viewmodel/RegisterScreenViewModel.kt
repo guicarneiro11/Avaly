@@ -2,7 +2,7 @@ package com.guicarneirodev.goniometro.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guicarneirodev.goniometro.data.repository.RegisterRepository
+import com.guicarneirodev.goniometro.domain.repository.RegisterRepository
 import com.guicarneirodev.goniometro.domain.validator.RegisterValidator
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow

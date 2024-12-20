@@ -5,6 +5,8 @@ import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
+import com.guicarneirodev.goniometro.domain.repository.AngleData
+import com.guicarneirodev.goniometro.domain.repository.ResultsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

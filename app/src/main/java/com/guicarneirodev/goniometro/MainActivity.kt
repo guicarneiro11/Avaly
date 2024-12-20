@@ -8,8 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
-import com.guicarneirodev.goniometro.data.repository.FirebaseRepository
-import com.guicarneirodev.goniometro.data.repository.LoginRepository
+import com.guicarneirodev.goniometro.domain.repository.FirebaseRepository
+import com.guicarneirodev.goniometro.domain.repository.LoginRepository
 import com.guicarneirodev.goniometro.presentation.ui.navigation.SetupNavGraph
 import kotlinx.coroutines.launch
 

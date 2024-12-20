@@ -2,7 +2,7 @@ package com.guicarneirodev.goniometro.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guicarneirodev.goniometro.data.repository.ResultsRepository
+import com.guicarneirodev.goniometro.domain.repository.ResultsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

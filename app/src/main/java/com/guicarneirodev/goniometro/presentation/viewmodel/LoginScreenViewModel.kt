@@ -2,8 +2,8 @@ package com.guicarneirodev.goniometro.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guicarneirodev.goniometro.data.repository.LoginRepository
-import com.guicarneirodev.goniometro.data.repository.LoginPreferencesRepository
+import com.guicarneirodev.goniometro.domain.repository.LoginRepository
+import com.guicarneirodev.goniometro.domain.repository.LoginPreferencesRepository
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ data class LoginUiState(
     val resetCodeSent: Boolean = false,
     val securityCode: String = "",
     val errorMessage: String? = null,
-    val navigateToMain: Boolean = false,
+    val navigateToSelection: Boolean = false,
     val isLoading: Boolean = false,
     val resetEmailSent: Boolean = false
 )
@@ -108,7 +108,7 @@ class LoginScreenViewModel(
                         saveCredentials()
                         _uiState.update {
                             it.copy(
-                                navigateToMain = true,
+                                navigateToSelection = true,
                                 isLoading = false
                             )
                         }
@@ -147,7 +147,7 @@ class LoginScreenViewModel(
                 onSuccess = {
                     saveCredentials()
                     _uiState.value = _uiState.value.copy(
-                        navigateToMain = true,
+                        navigateToSelection = true,
                         isLoading = false
                     )
                 },

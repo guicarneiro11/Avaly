@@ -40,7 +40,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
-import com.guicarneirodev.goniometro.data.repository.AngleData
+import com.guicarneirodev.goniometro.domain.repository.AngleData
 import com.guicarneirodev.goniometro.presentation.ui.components.BackButton
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf

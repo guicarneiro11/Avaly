@@ -1,7 +1,6 @@
 package com.guicarneirodev.goniometro.presentation.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -9,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
-import com.guicarneirodev.goniometro.data.repository.FirebaseRepository
+import com.guicarneirodev.goniometro.domain.repository.FirebaseRepository
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.HomeScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.login.LoginScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.main.MainScreen
@@ -17,8 +16,9 @@ import com.guicarneirodev.goniometro.presentation.viewmodel.PatientsScreenViewMo
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.PatientsScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.RegisterScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.ResultsScreen
-import com.guicarneirodev.goniometro.data.repository.FirestorePatientRepository
+import com.guicarneirodev.goniometro.domain.repository.FirestorePatientRepository
 import com.guicarneirodev.goniometro.data.service.RetrofitPdfService
+import com.guicarneirodev.goniometro.presentation.ui.screens.selection.SelectionScreen
 
 @Composable
 fun SetupNavGraph(
@@ -28,6 +28,7 @@ fun SetupNavGraph(
         composable("home") { HomeScreen(navController) }
         composable("login") { LoginScreen(navController) }
         composable("register") { RegisterScreen(navController) }
+        composable("selection") { SelectionScreen(navController) }
         composable("main") { MainScreen(navController) }
         composable(
             "patients/{userId}",

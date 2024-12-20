@@ -15,7 +15,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/angleprologo"
-        android:label="Angle Pro"
+        android:label="Avaly"
         android:roundIcon="@mipmap/angleprologo"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme"

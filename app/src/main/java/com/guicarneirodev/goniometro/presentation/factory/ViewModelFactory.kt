@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
-import com.guicarneirodev.goniometro.data.repository.FirebaseRepository
-import com.guicarneirodev.goniometro.data.repository.SharedPreferencesRepository
+import com.guicarneirodev.goniometro.domain.repository.FirebaseRepository
+import com.guicarneirodev.goniometro.domain.repository.SharedPreferencesRepository
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginScreenViewModel
 
 class LoginViewModelFactory(

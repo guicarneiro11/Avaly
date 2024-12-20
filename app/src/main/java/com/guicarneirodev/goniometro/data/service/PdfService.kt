@@ -1,7 +1,7 @@
 package com.guicarneirodev.goniometro.data.service
 
 import android.util.Log
-import com.guicarneirodev.goniometro.data.repository.LoginRepository
+import com.guicarneirodev.goniometro.domain.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit

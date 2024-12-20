@@ -2,7 +2,7 @@ package com.guicarneirodev.goniometro.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.guicarneirodev.goniometro.data.repository.PatientRepository
+import com.guicarneirodev.goniometro.domain.repository.PatientRepository
 import com.guicarneirodev.goniometro.data.service.PdfService
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.Patient
 import kotlinx.coroutines.flow.MutableStateFlow

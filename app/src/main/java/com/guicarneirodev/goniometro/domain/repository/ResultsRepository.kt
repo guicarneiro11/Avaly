@@ -1,4 +1,4 @@
-package com.guicarneirodev.goniometro.data.repository
+package com.guicarneirodev.goniometro.domain.repository
 
 import kotlinx.coroutines.flow.StateFlow
 

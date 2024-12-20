@@ -70,9 +70,9 @@ fun LoginScreen(navController: NavController) {
     val viewModel: LoginScreenViewModel = viewModel(factory = LoginViewModelFactory(context))
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uiState.navigateToMain) {
-        if (uiState.navigateToMain) {
-            navController.navigate("main") {
+    LaunchedEffect(uiState.navigateToSelection) {
+        if (uiState.navigateToSelection) {
+            navController.navigate("selection") {
                 popUpTo(navController.graph.startDestinationId) {
                     inclusive = true
                 }
@@ -93,10 +93,8 @@ fun LoginScreen(navController: NavController) {
                 )
             )
     ) {
-        // Elementos decorativos de fundo
         BackgroundDecorations()
 
-        // Conteúdo principal centralizado
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -109,14 +107,13 @@ fun LoginScreen(navController: NavController) {
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Cabeçalho
                 LoginHeader(
                     showResetPassword = uiState.showResetPassword,
                     onBackClick = {
                         if (uiState.showResetPassword) {
                             viewModel.onBackToLoginClick()
                         } else {
-                            navController.navigate("home") {
+                            navController.navigate("selection") {
                                 popUpTo(navController.graph.startDestinationId) {
                                     inclusive = true
                                 }
@@ -128,7 +125,6 @@ fun LoginScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Card principal com conteúdo
                 LoginCard(
                     uiState = uiState,
                     onEmailChange = viewModel::onEmailChange,
@@ -154,7 +150,6 @@ private fun LoginHeader(
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Botão voltar
         IconButton(
             onClick = onBackClick,
             modifier = Modifier.align(Alignment.CenterStart)
@@ -167,7 +162,6 @@ private fun LoginHeader(
             )
         }
 
-        // Título
         Text(
             text = if (showResetPassword) "Recuperar Senha" else "Login",
             color = Color.White,
@@ -263,7 +257,6 @@ fun LoginFields(
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Campo de email
         OutlinedTextField(
             value = email,
             onValueChange = onEmailChange,
@@ -282,7 +275,6 @@ fun LoginFields(
             shape = RoundedCornerShape(12.dp)
         )
 
-        // Campo de senha
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
@@ -322,7 +314,6 @@ fun LoginFields(
             shape = RoundedCornerShape(12.dp)
         )
 
-        // Checkboxes de lembrar
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -363,7 +354,6 @@ fun LoginFields(
             }
         }
 
-        // Botão de login com debounce
         var isClickable by remember { mutableStateOf(true) }
 
         Button(
@@ -395,7 +385,6 @@ fun LoginFields(
             )
         }
 
-        // Link para recuperar senha
         Text(
             text = "Esqueceu sua senha?",
             color = Color(0xFF1E88E5),

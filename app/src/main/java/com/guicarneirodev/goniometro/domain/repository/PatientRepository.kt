@@ -1,4 +1,4 @@
-package com.guicarneirodev.goniometro.data.repository
+package com.guicarneirodev.goniometro.domain.repository
 
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentSnapshot
