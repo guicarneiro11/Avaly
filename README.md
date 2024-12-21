@@ -11,12 +11,12 @@ Aplicativo profissional de goniometria digital para fisioterapeutas, oferecendo 
 ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
 
 <div align="center">
-    <img src="https://i.imgur.com/rB9wRz8.gif" width="300px" alt="Demonstração de Funcionalidade"/>
+    <img src="" width="300px" alt="Demonstração de Funcionalidade"/>
 </div>
 
 ## 📋 Sobre o Projeto
 
-O AnglePro revoluciona a forma como fisioterapeutas realizam avaliações goniométricas, substituindo instrumentos físicos por uma solução digital precisa e eficiente. Desenvolvido com foco na experiência do usuário e precisão clínica.
+O Avaly revoluciona a forma como fisioterapeutas realizam avaliações goniométricas, substituindo instrumentos físicos por uma solução digital precisa e eficiente. Desenvolvido com foco na experiência do usuário e precisão clínica.
 
 ## ⭐ Destaques
 
@@ -105,7 +105,7 @@ O AnglePro revoluciona a forma como fisioterapeutas realizam avaliações goniom
 **Guilherme Carneiro**
 - [LinkedIn](https://www.linkedin.com/in/guicarneiro1)
 - [GitHub](https://github.com/guicarneiro11)
-- Email: guicarneiro.dev@gmail.com
+- Email: contato@avaly.com.br
 
 <div align="center">
 
