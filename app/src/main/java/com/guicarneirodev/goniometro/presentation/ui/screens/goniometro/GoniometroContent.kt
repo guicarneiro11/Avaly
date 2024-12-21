@@ -132,15 +132,15 @@ fun GoniometroButton(
 fun BackgroundImage(currentImageUri: Uri?) {
     currentImageUri?.let {
         Image(
-        painter = rememberAsyncImagePainter(it),
-        contentDescription = "Foto selecionada",
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFF2B6EA8), Color(0xFF2B6EA8))
+            painter = rememberAsyncImagePainter(it),
+            contentDescription = "Foto selecionada",
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color(0xFF2B6EA8), Color(0xFF2B6EA8))
+                    )
                 )
-            )
         )
     }
 }

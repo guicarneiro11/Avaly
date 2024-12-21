@@ -24,7 +24,6 @@ import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.Bac
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.PreferencesSection
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.ToolCard
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.UserProfileSection
-import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -48,10 +47,8 @@ fun SelectionScreen(
                 )
             )
     ) {
-        // Background decorations
         BackgroundDecorations()
 
-        // Loading state
         if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
@@ -59,14 +56,12 @@ fun SelectionScreen(
             )
         }
 
-        // Main content
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // User profile section
             item {
                 uiState.userProfile?.let { profile ->
                     UserProfileSection(
@@ -77,7 +72,6 @@ fun SelectionScreen(
                 }
             }
 
-            // Tools section
             item {
                 Text(
                     text = "Ferramentas",
@@ -99,7 +93,6 @@ fun SelectionScreen(
                 )
             }
 
-            // Configuration section
             item {
                 PreferencesSection(
                     preferences = uiState.userPreferences,

@@ -11,7 +11,7 @@ class ToolsRepositoryImpl : ToolsRepository {
             name = "Goniômetro",
             description = "Meça ângulos articulares com precisão",
             isAvailable = true,
-            icon = R.drawable.angleup
+            icon = R.drawable.goniometro
         ),
         Tool(
             id = "posture_analysis",
