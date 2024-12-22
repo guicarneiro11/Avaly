@@ -24,7 +24,6 @@ fun BackgroundDecorations() {
             .blur(radius = 70.dp)
     )
 
-    // Círculo inferior esquerdo
     Box(
         modifier = Modifier
             .size(400.dp)

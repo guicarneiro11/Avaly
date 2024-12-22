@@ -24,7 +24,6 @@ fun LogoSection() {
             .size(96.dp)
             .padding(8.dp)
     ) {
-        // Quadrado base rotacionado
         Box(
             modifier = Modifier
                 .fillMaxSize()

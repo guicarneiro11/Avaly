@@ -27,19 +27,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationButtons(navController: NavController) {
-    // Estado para controlar o debounce
     var isClickable by remember { mutableStateOf(true) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Botão de Login com debounce
         Button(
             onClick = {
                 if (isClickable) {
                     isClickable = false
                     navController.navigate("login")
-                    // Reabilita o botão após 1 segundo
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(1000)
                         isClickable = true
@@ -65,13 +62,11 @@ fun NavigationButtons(navController: NavController) {
             )
         }
 
-        // Botão de Registro com debounce
         Button(
             onClick = {
                 if (isClickable) {
                     isClickable = false
                     navController.navigate("register")
-                    // Reabilita o botão após 1 segundo
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(1000)
                         isClickable = true

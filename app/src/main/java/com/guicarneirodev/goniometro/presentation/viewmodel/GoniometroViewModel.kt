@@ -6,6 +6,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
+import com.guicarneirodev.goniometro.domain.model.GoniometryState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class GoniometroScreenViewModel : ViewModel() {
     private val _lineStart = mutableStateOf(Offset.Zero)
@@ -25,6 +28,9 @@ class GoniometroScreenViewModel : ViewModel() {
 
     private val _currentImageUri = mutableStateOf<Uri?>(null)
     val currentImageUri: State<Uri?> = _currentImageUri
+
+    private val _uiState = MutableStateFlow<GoniometryState>(GoniometryState.Initial)
+    val uiState = _uiState.asStateFlow()
 
     fun setLineStart(offset: Offset) {
         _lineStart.value = offset
@@ -53,6 +59,11 @@ class GoniometroScreenViewModel : ViewModel() {
     }
 
     fun setCurrentImageUri(uri: Uri?) {
-        _currentImageUri.value = uri
+        _uiState.value = GoniometryState.Ready(
+            imageUri = uri,
+            isLineSet = false,
+            lines = emptyList(),
+            currentQuadrant = selectedAngleIndex.value
+        )
     }
 }

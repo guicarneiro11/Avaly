@@ -27,7 +27,7 @@ fun WelcomeText() {
             fontWeight = FontWeight.ExtraBold
         )
         Text(
-            text = "Sua goniometria em poucos cliques",
+            text = "Sua avaliação em poucos cliques",
             color = Color.White.copy(alpha = 0.8f),
             fontSize = 20.sp,
             fontWeight = FontWeight.Light
