@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import com.guicarneirodev.goniometro.domain.model.GoniometryState
-import com.guicarneirodev.goniometro.presentation.ui.components.calculateAllAngles
+import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components.calculateAllAngles
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

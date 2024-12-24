@@ -1,10 +1,9 @@
-package com.guicarneirodev.goniometro.presentation.ui.components
+package com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components
 
 import android.graphics.RectF
 import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
