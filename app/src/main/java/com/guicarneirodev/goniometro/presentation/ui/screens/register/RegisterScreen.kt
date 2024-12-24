@@ -46,10 +46,8 @@ fun RegisterScreen(navController: NavController) {
                 )
             )
     ) {
-        // Elementos decorativos de fundo
         BackgroundDecorations()
 
-        // Loading overlay
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier
@@ -64,7 +62,6 @@ fun RegisterScreen(navController: NavController) {
             }
         }
 
-        // Conteúdo principal centralizado
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,14 +74,12 @@ fun RegisterScreen(navController: NavController) {
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Cabeçalho
                 RegisterHeader(
                     onBackClick = { navController.popBackStack() }
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Card principal com campos
                 RegisterCard(
                     uiState = uiState,
                     onEmailChange = viewModel::updateEmail,

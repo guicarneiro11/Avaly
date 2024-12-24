@@ -14,8 +14,14 @@ class LoginViewModelFactory(
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginScreenViewModel::class.java)) {
-            val authRepository = FirebaseRepository(FirebaseAuth.getInstance(), FirebaseFunctions.getInstance())
-            val preferencesRepository = SharedPreferencesRepository(context.getSharedPreferences("login_prefs", Context.MODE_PRIVATE))
+            val authRepository =
+                FirebaseRepository(FirebaseAuth.getInstance(), FirebaseFunctions.getInstance())
+            val preferencesRepository = SharedPreferencesRepository(
+                context.getSharedPreferences(
+                    "login_prefs",
+                    Context.MODE_PRIVATE
+                )
+            )
             @Suppress("UNCHECKED_CAST")
             return LoginScreenViewModel(authRepository, preferencesRepository) as T
         }

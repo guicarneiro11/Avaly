@@ -35,7 +35,7 @@ fun RegisterHeader(onBackClick: () -> Unit) {
                 modifier = Modifier.size(28.dp)
             )
         }
-        
+
         Text(
             text = "Criar Conta",
             color = Color.White,

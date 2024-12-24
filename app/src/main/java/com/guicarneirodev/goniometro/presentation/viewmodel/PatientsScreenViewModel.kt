@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class PatientsScreenViewModel (
+class PatientsScreenViewModel(
     private val repository: PatientRepository,
     private val pdfService: PdfService
 ) : ViewModel() {
@@ -22,9 +22,15 @@ class PatientsScreenViewModel (
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    val filteredPatients: StateFlow<List<Patient>> = combine(_patients, _searchQuery) { patients, query ->
-        if (query.isBlank()) patients else patients.filter { it.name.contains(query, ignoreCase = true) }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val filteredPatients: StateFlow<List<Patient>> =
+        combine(_patients, _searchQuery) { patients, query ->
+            if (query.isBlank()) patients else patients.filter {
+                it.name.contains(
+                    query,
+                    ignoreCase = true
+                )
+            }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
         viewModelScope.launch {

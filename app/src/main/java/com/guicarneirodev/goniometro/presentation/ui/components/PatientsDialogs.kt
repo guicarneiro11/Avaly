@@ -68,7 +68,8 @@ fun EditPatientDialog(
                     val calendar = Calendar.getInstance(timeZone)
                     calendar.time = localDate
                     calendar.add(Calendar.DAY_OF_MONTH, 1) // Adiciona um dia à data
-                    editedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
+                    editedDate =
+                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
                     Text("Data selecionada: $editedDate", fontSize = 18.sp)
                 }
             }
@@ -160,7 +161,8 @@ fun AddPatientDialog(
                     val calendar = Calendar.getInstance(timeZone)
                     calendar.time = localDate
                     calendar.add(Calendar.DAY_OF_MONTH, 1) // Adiciona um dia à data
-                    formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
+                    formattedDate =
+                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(calendar.time)
                     Text("Data selecionada: $formattedDate", fontSize = 18.sp)
                 }
             }

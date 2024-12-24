@@ -80,7 +80,10 @@ class RegisterScreenViewModel : ViewModel() {
                     _uiState.update {
                         it.copy(
                             confirmPassword = confirmPassword,
-                            confirmPasswordError = registerValidator.passwordMatchError(_uiState.value.password, confirmPassword)
+                            confirmPasswordError = registerValidator.passwordMatchError(
+                                _uiState.value.password,
+                                confirmPassword
+                            )
                         )
                     }
                 }
@@ -129,12 +132,14 @@ class RegisterScreenViewModel : ViewModel() {
 
         if (currentState.emailError.isEmpty() &&
             currentState.passwordError.isEmpty() &&
-            currentState.confirmPasswordError.isEmpty()) {
+            currentState.confirmPasswordError.isEmpty()
+        ) {
 
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
 
             try {
-                val result = registerRepositoryImpl.registerUser(currentState.email, currentState.password)
+                val result =
+                    registerRepositoryImpl.registerUser(currentState.email, currentState.password)
                 result.fold(
                     onSuccess = {
                         _uiState.update { it.copy(isLoading = false) }

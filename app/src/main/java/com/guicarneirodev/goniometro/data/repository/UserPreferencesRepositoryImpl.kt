@@ -19,9 +19,8 @@ class UserPreferencesRepositoryImpl(
     context: Context
 ) : UserPreferencesRepository {
 
-    private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
-        produceFile = { context.preferencesDataStoreFile("user_preferences") }
-    )
+    private val dataStore: DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(produceFile = { context.preferencesDataStoreFile("user_preferences") })
 
     companion object {
         private val LANGUAGE = stringPreferencesKey("language")
@@ -36,13 +35,11 @@ class UserPreferencesRepositoryImpl(
                     Language.valueOf(preferences[LANGUAGE] ?: Language.PORTUGUESE.name)
                 } catch (e: Exception) {
                     Language.PORTUGUESE
-                },
-                theme = try {
+                }, theme = try {
                     Theme.valueOf(preferences[THEME] ?: Theme.SYSTEM.name)
                 } catch (e: Exception) {
                     Theme.SYSTEM
-                },
-                userType = try {
+                }, userType = try {
                     UserType.valueOf(preferences[USER_TYPE] ?: UserType.STUDENT.name)
                 } catch (e: Exception) {
                     UserType.STUDENT

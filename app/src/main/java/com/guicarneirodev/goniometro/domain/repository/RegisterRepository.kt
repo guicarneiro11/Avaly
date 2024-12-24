@@ -9,7 +9,8 @@ class RegisterRepository {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     suspend fun registerUser(email: String, password: String): Result<Unit> = withContext(
-        Dispatchers.IO) {
+        Dispatchers.IO
+    ) {
         try {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             Result.success(Unit)

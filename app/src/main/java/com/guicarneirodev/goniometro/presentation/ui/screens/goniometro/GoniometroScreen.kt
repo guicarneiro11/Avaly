@@ -1,16 +1,18 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.goniometro
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
+import android.util.Log
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,9 +36,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -50,13 +50,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -64,7 +66,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.google.firebase.auth.FirebaseAuth
 import com.guicarneirodev.goniometro.BuildConfig
@@ -77,22 +79,64 @@ import com.guicarneirodev.goniometro.utils.createImageFile
 fun GoniometroScreen(navController: NavController) {
     val viewModel: GoniometroScreenViewModel = viewModel()
     val configuration = LocalConfiguration.current
-    var orientation by remember { mutableIntStateOf(Configuration.ORIENTATION_PORTRAIT) }
+    val context = LocalContext.current
 
-    DisposableEffect(configuration) {
-        onDispose {
-            orientation = configuration.orientation
+    val importLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                Log.d("GoniometryScreen", "Imagem importada: $it")
+                viewModel.setCurrentImageUri(it)
+            }
+        }
+
+    val file = remember { context.createImageFile() }
+    val captureUri = remember {
+        FileProvider.getUriForFile(
+            context, "${BuildConfig.APPLICATION_ID}.provider", file
+        ).also { Log.d("GoniometryScreen", "URI de captura criado: $it") }
+    }
+
+    val captureLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                Log.d("GoniometryScreen", "Foto capturada com sucesso: $captureUri")
+                viewModel.setCurrentImageUri(captureUri)
+            } else {
+                Log.e("GoniometryScreen", "Falha ao capturar foto")
+            }
+        }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            captureLauncher.launch(captureUri)
+        } else {
+            Toast.makeText(context, "Permissão de câmera negada", Toast.LENGTH_SHORT).show()
         }
     }
 
-    Scaffold(
-        topBar = {
-            ModernTopBar(
-                viewModel = viewModel,
-                navController = navController
-            )
-        }
-    ) { paddingValues ->
+    var orientation by remember { mutableIntStateOf(configuration.orientation) }
+
+    DisposableEffect(configuration) {
+        orientation = configuration.orientation
+        onDispose { }
+    }
+
+    Scaffold(topBar = {
+        ModernTopBar(viewModel = viewModel,
+            navController = navController,
+            onImportImage = { importLauncher.launch("image/*") },
+            onCaptureImage = {
+                val permissionCheckResult =
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                    captureLauncher.launch(captureUri)
+                } else {
+                    permissionLauncher.launch(Manifest.permission.CAMERA)
+                }
+            })
+    }) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -100,8 +144,7 @@ fun GoniometroScreen(navController: NavController) {
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFF1E88E5),
-                            Color(0xFF4FC3F7)
+                            Color(0xFF1E88E5), Color(0xFF4FC3F7)
                         )
                     )
                 )
@@ -118,53 +161,70 @@ fun GoniometroScreen(navController: NavController) {
 
 @Composable
 private fun PortraitLayout(viewModel: GoniometroScreenViewModel) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        ImageWithGoniometer(viewModel)
+    val currentImageUri by viewModel.currentImageUri
+    val isLineSet by viewModel.isLineSet
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
         ) {
-            // Área para o botão "Realizar Goniometria"
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Painel de controle na parte inferior
-            ControlPanel(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .background(
-                        color = Color.White.copy(alpha = 0.95f),
-                        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                        color = Color(0xFF1E88E5).copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(12.dp)
                     )
-                    .padding(16.dp),
-                viewModel = viewModel
             )
+
+            BackgroundImage(
+                currentImageUri = currentImageUri, modifier = Modifier.fillMaxSize()
+            )
+
+            if (isLineSet) {
+                GoniometroCanvas(lineStart = viewModel.lineStart.value,
+                    lineEnd = viewModel.lineEnd.value,
+                    lines = viewModel.lines.value,
+                    selectedAngleIndex = viewModel.selectedAngleIndex.value,
+                    onLineStartChange = viewModel::setLineStart,
+                    onLineEndChange = viewModel::setLineEnd,
+                    onAddLine = viewModel::addLine,
+                    onAngleChange = { angle ->
+                        viewModel.updateCurrentAngle(angle)
+                    })
+            }
         }
+
+        ControlPanel(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = Color.White.copy(alpha = 0.95f),
+                    shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                )
+                .padding(16.dp), viewModel = viewModel
+        )
     }
 }
 
 @Composable
 fun ControlPanel(
-    modifier: Modifier = Modifier,
-    viewModel: GoniometroScreenViewModel
+    modifier: Modifier = Modifier, viewModel: GoniometroScreenViewModel
 ) {
     Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Botão principal com animação
-        AnimatedMeasurementButton(
-            isLineSet = viewModel.isLineSet.value,
-            onClick = {
-                if (viewModel.isLineSet.value) {
-                    viewModel.clearLines()
-                }
-                viewModel.toggleLineSet()
+        AnimatedMeasurementButton(isLineSet = viewModel.isLineSet.value, onClick = {
+            if (viewModel.isLineSet.value) {
+                viewModel.clearLines()
             }
-        )
+            viewModel.toggleLineSet()
+        })
 
-        // Seletor de quadrante
         QuadrantSelector(
             selectedQuadrant = viewModel.selectedAngleIndex.value,
             onQuadrantSelected = viewModel::setSelectedAngleIndex
@@ -176,34 +236,32 @@ fun ControlPanel(
 @Composable
 fun ModernTopBar(
     viewModel: GoniometroScreenViewModel,
-    navController: NavController
+    navController: NavController,
+    onImportImage: () -> Unit,
+    onCaptureImage: () -> Unit
 ) {
-    val angleOptions = listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
+    val angleOptions =
+        listOf("Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto")
     var angleDropdownExpanded by remember { mutableStateOf(false) }
     var menuDropdownExpanded by remember { mutableStateOf(false) }
+    val currentAngle by viewModel.currentAngle.collectAsState()
 
-    TopAppBar(
-        title = { },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White.copy(alpha = 0.95f),
-            actionIconContentColor = Color(0xFF1E88E5)
-        ),
-        actions = {
-            Box(
+    TopAppBar(title = { }, colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = Color.White.copy(alpha = 0.95f),
+        actionIconContentColor = Color(0xFF1E88E5)
+    ), actions = {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Menu Principal
-                    IconButton(
-                        onClick = { menuDropdownExpanded = true },
-                        modifier = Modifier.size(48.dp)
-                    ) {
+                // Menu Button à esquerda
+                Box(modifier = Modifier.size(48.dp)) {
+                    IconButton(onClick = { menuDropdownExpanded = true }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Menu",
@@ -211,143 +269,161 @@ fun ModernTopBar(
                             tint = Color(0xFF1E88E5)
                         )
                     }
+                }
 
-                    // Dropdown Menu Moderno
-                    DropdownMenu(
-                        expanded = menuDropdownExpanded,
-                        onDismissRequest = { menuDropdownExpanded = false },
-                        modifier = Modifier
-                            .background(
-                                color = Color.White,
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .width(280.dp)
-                    ) {
-                        ModernMenuItems(
-                            viewModel = viewModel,
-                            navController = navController,
-                            onDismiss = { menuDropdownExpanded = false }
-                        )
-                    }
-
-                    AngleDropdownMenu(
-                        expanded = angleDropdownExpanded,
-                        onDismissRequest = { angleDropdownExpanded = false },
-                        angleOptions = angleOptions,
-                        onSelectedAngleIndexChange = viewModel::setSelectedAngleIndex
-                    )
+                // Angle Display fixo à direita
+                Box(
+                    modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd
+                ) {
+                    AngleDisplay(currentAngle)
                 }
             }
+
+            // DropdownMenu separado do Row principal
+            DropdownMenu(
+                expanded = menuDropdownExpanded,
+                onDismissRequest = { menuDropdownExpanded = false },
+                modifier = Modifier
+                    .background(
+                        color = Color.White, shape = RoundedCornerShape(12.dp)
+                    )
+                    .width(280.dp)
+            ) {
+                ModernMenuItems(navController = navController,
+                    onDismiss = { menuDropdownExpanded = false },
+                    onImportImage = {
+                        onImportImage()
+                        menuDropdownExpanded = false
+                    },
+                    onCaptureImage = {
+                        onCaptureImage()
+                        menuDropdownExpanded = false
+                    })
+            }
+
+            if (angleDropdownExpanded) {
+                AngleDropdownMenu(
+                    expanded = angleDropdownExpanded,
+                    onDismissRequest = { angleDropdownExpanded = false },
+                    angleOptions = angleOptions,
+                    onSelectedAngleIndexChange = viewModel::setSelectedAngleIndex
+                )
+            }
         }
-    )
+    })
 }
 
 @Composable
-private fun ModernMenuItems(
-    viewModel: GoniometroScreenViewModel,
-    navController: NavController,
-    onDismiss: () -> Unit
+fun AngleDropdownMenu(
+    expanded: Boolean,
+    onDismissRequest: () -> Unit,
+    angleOptions: List<String>,
+    onSelectedAngleIndexChange: (Int) -> Unit
 ) {
-    val context = LocalContext.current
+    DropdownMenu(
+        expanded = expanded, onDismissRequest = onDismissRequest
+    ) {
+        angleOptions.forEachIndexed { index, title ->
+            DropdownMenuItem(onClick = {
+                onSelectedAngleIndexChange(index)
+                onDismissRequest()
+            }) {
+                Text(title)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun DropdownMenuItem(
+    onClick: () -> Unit, content: @Composable () -> Unit
+) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(8.dp)
+        .background(Color.White, shape = RoundedCornerShape(2.dp))
+        .pointerInteropFilter {
+            when (it.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    onClick()
+                }
+            }
+            true
+        }) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            content()
+        }
+    }
+}
+
+@Composable
+fun AngleDisplay(angle: Double?) {
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .background(
+                color = Color.White, shape = RoundedCornerShape(8.dp)
+            )
+            .padding(8.dp)
+    ) {
+        Text(text = "Ângulo encontrado: ${angle?.let { String.format("%.1f°", it) } ?: "--°"}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF1E88E5))
+    }
+}
+
+@Composable
+fun ModernMenuItems(
+    navController: NavController,
+    onDismiss: () -> Unit,
+    onImportImage: () -> Unit,
+    onCaptureImage: () -> Unit
+) {
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
     val userId = currentUser?.uid ?: ""
 
-    // Launcher para importar imagem
-    val importLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        viewModel.setCurrentImageUri(uri)
-    }
-
-    // Launcher para captura de foto
-    val file = context.createImageFile()
-    val captureUri = FileProvider.getUriForFile(
-        context,
-        BuildConfig.APPLICATION_ID + ".provider",
-        file
-    )
-
-    val captureLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success) {
-            viewModel.setCurrentImageUri(captureUri)
-            onDismiss()
-        }
-    }
-
-    // Permission launcher para câmera
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            captureLauncher.launch(captureUri)
-        } else {
-            Toast.makeText(context, "Permissão negada", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    ModernMenuItem(
-        icon = painterResource(id = R.drawable.clinical_notes),
+    ModernMenuItem(icon = painterResource(id = R.drawable.clinical_notes),
         text = "Pacientes",
         onClick = {
             navController.navigate("patients/$userId")
             onDismiss()
-        }
-    )
+        })
 
     ModernMenuItem(
         icon = painterResource(id = R.drawable.photo_library),
         text = "Importar Foto",
-        onClick = {
-            importLauncher.launch("image/*")
-            onDismiss()
-        }
+        onClick = onImportImage
     )
 
     ModernMenuItem(
         icon = painterResource(id = R.drawable.addphoto),
         text = "Capturar Foto",
-        onClick = {
-            val permissionCheckResult = ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.CAMERA
-            )
-            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                captureLauncher.launch(captureUri)
-            } else {
-                permissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-        }
+        onClick = onCaptureImage
     )
 
-    ModernMenuItem(
-        icon = painterResource(id = R.drawable.help),
-        text = "Ajuda",
-        onClick = {
-            // Implementar ajuda
-            onDismiss()
-        }
-    )
+    ModernMenuItem(icon = painterResource(id = R.drawable.help), text = "Ajuda", onClick = {
+        // Implementar ajuda
+        onDismiss()
+    })
 
-    ModernMenuItem(
-        icon = painterResource(id = R.drawable.logout),
-        text = "Logout",
-        onClick = {
-            navController.navigate("login") {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
-            }
-            onDismiss()
+    ModernMenuItem(icon = painterResource(id = R.drawable.logout), text = "Logout", onClick = {
+        navController.navigate("login") {
+            popUpTo(navController.graph.startDestinationId) { inclusive = true }
         }
-    )
+        onDismiss()
+    })
 }
 
 @Composable
 private fun ModernMenuItem(
-    icon: Painter,
-    text: String,
-    onClick: () -> Unit
+    icon: Painter, text: String, onClick: () -> Unit
 ) {
     Surface(
         onClick = onClick,
@@ -358,8 +434,7 @@ private fun ModernMenuItem(
         color = Color.White
     ) {
         Row(
-            modifier = Modifier
-                .padding(12.dp),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -383,10 +458,8 @@ private fun ModernMenuItem(
 @Composable
 fun LandscapeLayout(viewModel: GoniometroScreenViewModel) {
     Row(
-        modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.Start
+        modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start
     ) {
-        // Área da imagem com goniômetro (ocupando maior parte da tela)
         Box(
             modifier = Modifier
                 .weight(0.8f)
@@ -395,7 +468,6 @@ fun LandscapeLayout(viewModel: GoniometroScreenViewModel) {
             ImageWithGoniometer(viewModel)
         }
 
-        // Painel de controle lateral
         ControlPanel(
             modifier = Modifier
                 .weight(0.2f)
@@ -403,8 +475,7 @@ fun LandscapeLayout(viewModel: GoniometroScreenViewModel) {
                 .background(
                     color = Color.White.copy(alpha = 0.95f)
                 )
-                .padding(16.dp),
-            viewModel = viewModel
+                .padding(16.dp), viewModel = viewModel
         )
     }
 }
@@ -415,49 +486,64 @@ fun ImageWithGoniometer(viewModel: GoniometroScreenViewModel) {
     val isLineSet by viewModel.isLineSet
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Background com a imagem
         currentImageUri?.let {
-            Image(
-                painter = rememberAsyncImagePainter(it),
-                contentDescription = "Foto selecionada",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(Color(0xFF2B6EA8), Color(0xFF2B6EA8))
-                        )
-                    )
-            )
+            Log.d("ImageWithGoniometer", "Tentando carregar imagem: $it")
+            BackgroundImage(currentImageUri)
         }
 
-        // Box para o GoniometroCanvas
         Box(
-            contentAlignment = Alignment.TopCenter,
-            modifier = Modifier.fillMaxSize()
+            contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()
         ) {
             if (isLineSet) {
-                GoniometroCanvas(
-                    lineStart = viewModel.lineStart.value,
+                GoniometroCanvas(lineStart = viewModel.lineStart.value,
                     lineEnd = viewModel.lineEnd.value,
                     lines = viewModel.lines.value,
                     selectedAngleIndex = viewModel.selectedAngleIndex.value,
                     onLineStartChange = viewModel::setLineStart,
                     onLineEndChange = viewModel::setLineEnd,
-                    onAddLine = viewModel::addLine
-                )
+                    onAddLine = viewModel::addLine,
+                    onAngleChange = { angle ->
+                        viewModel.updateCurrentAngle(angle)
+                    })
             }
         }
     }
 }
 
 @Composable
+fun BackgroundImage(currentImageUri: Uri?, modifier: Modifier = Modifier) {
+    currentImageUri?.let {
+        Box(modifier = modifier) {
+            Image(
+                painter = rememberAsyncImagePainter(model = it, onState = { state ->
+                    when (state) {
+                        is AsyncImagePainter.State.Success -> Log.d(
+                            "BackgroundImage",
+                            "Imagem carregada com sucesso"
+                        )
+
+                        is AsyncImagePainter.State.Error -> Log.e(
+                            "BackgroundImage",
+                            "Erro ao carregar imagem: ${state.result.throwable}"
+                        )
+
+                        else -> {}
+                    }
+                }),
+                contentDescription = "Foto selecionada",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+        }
+    }
+}
+
+@Composable
 fun AnimatedMeasurementButton(
-    isLineSet: Boolean,
-    onClick: () -> Unit
+    isLineSet: Boolean, onClick: () -> Unit
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (isLineSet) Color(0xFFE57373) else Color(0xFF1E88E5),
-        label = "buttonColor"
+        targetValue = if (isLineSet) Color(0xFFE57373) else Color(0xFF1E88E5), label = "buttonColor"
     )
 
     Button(
@@ -481,22 +567,17 @@ fun AnimatedMeasurementButton(
 
 @Composable
 fun QuadrantSelector(
-    selectedQuadrant: Int,
-    onQuadrantSelected: (Int) -> Unit
+    selectedQuadrant: Int, onQuadrantSelected: (Int) -> Unit
 ) {
     val quadrants = listOf(
-        "Ângulo Direto",
-        "Ângulo Oposto",
-        "Ângulo Suplementar",
-        "Suplementar Oposto"
+        "Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto"
     )
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color(0xFFF5F5F5),
-                shape = RoundedCornerShape(12.dp)
+                color = Color(0xFFF5F5F5), shape = RoundedCornerShape(12.dp)
             )
             .padding(8.dp)
     ) {
@@ -508,20 +589,16 @@ fun QuadrantSelector(
         )
 
         quadrants.forEachIndexed { index, title ->
-            QuadrantOption(
-                title = title,
+            QuadrantOption(title = title,
                 isSelected = index == selectedQuadrant,
-                onClick = { onQuadrantSelected(index) }
-            )
+                onClick = { onQuadrantSelected(index) })
         }
     }
 }
 
 @Composable
 fun QuadrantOption(
-    title: String,
-    isSelected: Boolean,
-    onClick: () -> Unit
+    title: String, isSelected: Boolean, onClick: () -> Unit
 ) {
     Surface(
         onClick = onClick,

@@ -40,7 +40,11 @@ fun SetupNavGraph(
             val userId = backStackEntry.arguments?.getString("userId")
                 ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
             val patientViewModel = getPatientViewModel(userId)
-            PatientsScreen(viewModel = patientViewModel, navController = navController, userId = userId)
+            PatientsScreen(
+                viewModel = patientViewModel,
+                navController = navController,
+                userId = userId
+            )
         }
         composable(
             "results/{userId}/{patientId}",

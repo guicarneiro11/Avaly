@@ -142,7 +142,8 @@ class LoginScreenViewModel(
         )
 
         try {
-            val result = authRepository.signInWithEmail(_uiState.value.email, _uiState.value.password)
+            val result =
+                authRepository.signInWithEmail(_uiState.value.email, _uiState.value.password)
             result.fold(
                 onSuccess = {
                     saveCredentials()
@@ -241,7 +242,8 @@ class LoginScreenViewModel(
         )
 
         try {
-            val result = authRepository.verifySecurityCode(_uiState.value.email, _uiState.value.securityCode)
+            val result =
+                authRepository.verifySecurityCode(_uiState.value.email, _uiState.value.securityCode)
             result.fold(
                 onSuccess = { isValid ->
                     if (isValid) {

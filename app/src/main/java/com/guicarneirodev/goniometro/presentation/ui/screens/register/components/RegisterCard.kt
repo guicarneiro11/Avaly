@@ -53,7 +53,6 @@ fun RegisterCard(
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Email field
             OutlinedTextField(
                 value = uiState.email,
                 onValueChange = onEmailChange,
@@ -68,7 +67,6 @@ fun RegisterCard(
                 enabled = !uiState.isLoading
             )
 
-            // Password field
             var passwordVisibility by remember { mutableStateOf(false) }
             OutlinedTextField(
                 value = uiState.password,
@@ -107,7 +105,6 @@ fun RegisterCard(
                 enabled = !uiState.isLoading
             )
 
-            // Confirm Password field
             OutlinedTextField(
                 value = uiState.confirmPassword,
                 onValueChange = onConfirmPasswordChange,
@@ -145,7 +142,6 @@ fun RegisterCard(
                 enabled = !uiState.isLoading
             )
 
-            // Error message
             if (uiState.errorMessage.isNotEmpty()) {
                 Text(
                     text = uiState.errorMessage,
@@ -156,7 +152,6 @@ fun RegisterCard(
                 )
             }
 
-            // Register button
             Button(
                 onClick = onRegisterClick,
                 modifier = Modifier

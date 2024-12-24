@@ -87,8 +87,7 @@ fun LoginScreen(navController: NavController) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF1E88E5),
-                        Color(0xFF4FC3F7)
+                        Color(0xFF1E88E5), Color(0xFF4FC3F7)
                     )
                 )
             )
@@ -98,8 +97,7 @@ fun LoginScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
-            contentAlignment = Alignment.Center
+                .padding(24.dp), contentAlignment = Alignment.Center
         ) {
             Column(
                 modifier = Modifier
@@ -107,21 +105,18 @@ fun LoginScreen(navController: NavController) {
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LoginHeader(
-                    showResetPassword = uiState.showResetPassword,
-                    onBackClick = {
-                        if (uiState.showResetPassword) {
-                            viewModel.onBackToLoginClick()
-                        } else {
-                            navController.navigate("selection") {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = true
-                                }
-                                launchSingleTop = true
+                LoginHeader(showResetPassword = uiState.showResetPassword, onBackClick = {
+                    if (uiState.showResetPassword) {
+                        viewModel.onBackToLoginClick()
+                    } else {
+                        navController.navigate("selection") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
                             }
+                            launchSingleTop = true
                         }
                     }
-                )
+                })
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -144,15 +139,13 @@ fun LoginScreen(navController: NavController) {
 
 @Composable
 private fun LoginHeader(
-    showResetPassword: Boolean,
-    onBackClick: () -> Unit
+    showResetPassword: Boolean, onBackClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
         IconButton(
-            onClick = onBackClick,
-            modifier = Modifier.align(Alignment.CenterStart)
+            onClick = onBackClick, modifier = Modifier.align(Alignment.CenterStart)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.voltar),
@@ -269,8 +262,7 @@ fun LoginFields(
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
+                keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
             ),
             shape = RoundedCornerShape(12.dp)
         )
@@ -286,28 +278,19 @@ fun LoginFields(
                 cursorColor = Color(0xFF1E88E5)
             ),
             singleLine = true,
-            visualTransformation = if (passwordVisibility)
-                VisualTransformation.None
-            else
-                PasswordVisualTransformation(),
+            visualTransformation = if (passwordVisibility) VisualTransformation.None
+            else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
+                keyboardType = KeyboardType.Password, imeAction = ImeAction.Done
             ),
             trailingIcon = {
                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                     Icon(
                         painter = painterResource(
-                            id = if (passwordVisibility)
-                                R.drawable.pass_on
-                            else
-                                R.drawable.pass_off
-                        ),
-                        contentDescription = if (passwordVisibility)
-                            "Esconder Senha"
-                        else
-                            "Mostrar Senha",
-                        tint = Color(0xFF1E88E5)
+                            id = if (passwordVisibility) R.drawable.pass_on
+                            else R.drawable.pass_off
+                        ), contentDescription = if (passwordVisibility) "Esconder Senha"
+                        else "Mostrar Senha", tint = Color(0xFF1E88E5)
                     )
                 }
             },
@@ -331,8 +314,7 @@ fun LoginFields(
                     )
                 )
                 Text(
-                    "Lembrar Email",
-                    fontSize = 14.sp
+                    "Lembrar Email", fontSize = 14.sp
                 )
             }
 
@@ -348,8 +330,7 @@ fun LoginFields(
                     )
                 )
                 Text(
-                    "Lembrar Senha",
-                    fontSize = 14.sp
+                    "Lembrar Senha", fontSize = 14.sp
                 )
             }
         }
@@ -379,9 +360,7 @@ fun LoginFields(
             enabled = isClickable
         ) {
             Text(
-                text = "Entrar",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                text = "Entrar", fontSize = 18.sp, fontWeight = FontWeight.Bold
             )
         }
 
@@ -434,8 +413,7 @@ private fun ResetPasswordFields(
                     ),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Done
+                        keyboardType = KeyboardType.Email, imeAction = ImeAction.Done
                     ),
                     shape = RoundedCornerShape(12.dp)
                 )
@@ -453,14 +431,11 @@ private fun ResetPasswordFields(
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            color = Color.White,
-                            modifier = Modifier.size(24.dp)
+                            color = Color.White, modifier = Modifier.size(24.dp)
                         )
                     } else {
                         Text(
-                            text = "Enviar Código",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            text = "Enviar Código", fontSize = 18.sp, fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -498,8 +473,7 @@ private fun ResetPasswordFields(
                     ),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
+                        keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
                     ),
                     shape = RoundedCornerShape(12.dp)
                 )
@@ -517,8 +491,7 @@ private fun ResetPasswordFields(
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            color = Color.White,
-                            modifier = Modifier.size(24.dp)
+                            color = Color.White, modifier = Modifier.size(24.dp)
                         )
                     } else {
                         Text(

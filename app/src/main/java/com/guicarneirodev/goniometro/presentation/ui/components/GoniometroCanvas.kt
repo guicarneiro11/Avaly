@@ -33,12 +33,12 @@ fun GoniometroCanvas(
     selectedAngleIndex: Int,
     onLineStartChange: (Offset) -> Unit,
     onLineEndChange: (Offset) -> Unit,
-    onAddLine: (Pair<Offset, Offset>) -> Unit
+    onAddLine: (Pair<Offset, Offset>) -> Unit,
+    onAngleChange: (Double) -> Unit
 ) {
     Canvas(
         modifier = Modifier
             .fillMaxSize()
-            .padding(40.dp)
             .pointerInteropFilter { motionEvent ->
                 handleCanvasTouch(
                     motionEvent,
@@ -67,10 +67,16 @@ fun GoniometroCanvas(
                 end = lineEnd,
                 strokeWidth = 44f
             )
-        }
 
-        if (lines.size == 2) {
-            drawAngle(lines, selectedAngleIndex)
+            if (lines.size == 1) {
+                val currentAngle = calculateAllAngles(
+                    lines[0].first,
+                    lines[0].second,
+                    lineStart,
+                    lineEnd
+                )[selectedAngleIndex]
+                onAngleChange(currentAngle)
+            }
         }
     }
 }
@@ -98,11 +104,13 @@ fun handleCanvasTouch(
                 }
             }
         }
+
         MotionEvent.ACTION_MOVE -> {
             if (lines.size < 2) {
                 onLineEndChange(currentPosition)
             }
         }
+
         MotionEvent.ACTION_UP -> {
             if (lines.size < 2) {
                 onAddLine(Pair(lineStart, lineEnd))

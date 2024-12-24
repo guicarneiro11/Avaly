@@ -48,7 +48,10 @@ class RegisterValidatorTest {
 
     @Test
     fun passwordMatchErrorReturnsErrorMessageWhenPasswordsDontMatch() {
-        assertEquals("As senhas não coincidem.", registerValidator.passwordMatchError("password1", "password2"))
+        assertEquals(
+            "As senhas não coincidem.",
+            registerValidator.passwordMatchError("password1", "password2")
+        )
     }
 
     @Test
@@ -58,11 +61,26 @@ class RegisterValidatorTest {
 
     @Test
     fun getPasswordErrorReturnsAppropriateErrorMessages() {
-        assertEquals("A senha deve ter pelo menos 6 caracteres.", registerValidator.getPasswordError("Abc1!"))
-        assertEquals("A senha deve conter pelo menos uma letra minúscula.", registerValidator.getPasswordError("ABC123!"))
-        assertEquals("A senha deve conter pelo menos uma letra maiúscula.", registerValidator.getPasswordError("abc123!"))
-        assertEquals("A senha deve conter pelo menos um número.", registerValidator.getPasswordError("Abcdef!"))
-        assertEquals("A senha deve conter pelo menos um caractere especial.", registerValidator.getPasswordError("Abcdef123"))
+        assertEquals(
+            "A senha deve ter pelo menos 6 caracteres.",
+            registerValidator.getPasswordError("Abc1!")
+        )
+        assertEquals(
+            "A senha deve conter pelo menos uma letra minúscula.",
+            registerValidator.getPasswordError("ABC123!")
+        )
+        assertEquals(
+            "A senha deve conter pelo menos uma letra maiúscula.",
+            registerValidator.getPasswordError("abc123!")
+        )
+        assertEquals(
+            "A senha deve conter pelo menos um número.",
+            registerValidator.getPasswordError("Abcdef!")
+        )
+        assertEquals(
+            "A senha deve conter pelo menos um caractere especial.",
+            registerValidator.getPasswordError("Abcdef123")
+        )
         assertEquals("", registerValidator.getPasswordError("ValidP@ss1"))
     }
 }

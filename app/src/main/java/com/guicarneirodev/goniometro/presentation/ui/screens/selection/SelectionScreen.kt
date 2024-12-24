@@ -32,7 +32,7 @@ import org.koin.core.parameter.parametersOf
 fun SelectionScreen(
     navController: NavController
 ) {
-    val viewModel : SelectionViewModel = koinViewModel { parametersOf(navController) }
+    val viewModel: SelectionViewModel = koinViewModel { parametersOf(navController) }
     val uiState by viewModel.uiState.collectAsState()
 
     Box(

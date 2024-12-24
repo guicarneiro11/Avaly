@@ -52,10 +52,12 @@ class ResultsRepositoryImpl(
     }
 
     override suspend fun updateAngle(docId: String, newName: String, newValue: String) {
-        resultsCollection.document(docId).update(mapOf(
-            "name" to newName,
-            "value" to newValue
-        )).await()
+        resultsCollection.document(docId).update(
+            mapOf(
+                "name" to newName,
+                "value" to newValue
+            )
+        ).await()
     }
 
     override suspend fun deleteAngle(docId: String) {
