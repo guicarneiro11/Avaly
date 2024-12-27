@@ -16,10 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.guicarneirodev.goniometro.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -55,7 +57,7 @@ fun NavigationButtons(navController: NavController) {
             enabled = isClickable
         ) {
             Text(
-                text = "Fazer Login",
+                text = stringResource(R.string.login),
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
@@ -84,7 +86,7 @@ fun NavigationButtons(navController: NavController) {
             enabled = isClickable
         ) {
             Text(
-                text = "Criar Conta",
+                text = stringResource(R.string.create_account),
                 color = Color(0xFF1E88E5),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold

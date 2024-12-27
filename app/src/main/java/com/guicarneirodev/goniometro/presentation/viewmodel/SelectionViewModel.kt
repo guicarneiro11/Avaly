@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.guicarneirodev.goniometro.utils.LocaleHelper
 
 data class SelectionUiState(
     val tools: List<Tool> = emptyList(),
@@ -25,6 +26,7 @@ data class SelectionUiState(
 )
 
 class SelectionViewModel(
+    private val localeHelper: LocaleHelper,
     private val getAvailableToolsUseCase: GetAvailableToolsUseCase,
     private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
     private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase
@@ -71,10 +73,12 @@ class SelectionViewModel(
 
     fun updateLanguage(language: Language) {
         viewModelScope.launch {
-            val currentPreferences = _uiState.value.userPreferences
-            val newPreferences = currentPreferences.copy(language = language)
-            saveUserPreferencesUseCase(newPreferences)
-            _uiState.update { it.copy(userPreferences = newPreferences) }
+            if (localeHelper.updateLocale(language)) {
+                val currentPreferences = _uiState.value.userPreferences
+                val newPreferences = currentPreferences.copy(language = language)
+                saveUserPreferencesUseCase(newPreferences)
+                _uiState.update { it.copy(userPreferences = newPreferences) }
+            }
         }
     }
 }

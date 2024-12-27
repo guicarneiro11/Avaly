@@ -1,6 +1,53 @@
 <resources>
-    <string name="app_name">Goniometro</string>
-    <string name="chapter_title">Chapter Title</string>
-    <string name="desc">Desc</string>
-    <string name="back_button_text">Voltar</string>
+    // Strings in Portuguese HomeScreen
+    <string name="login">Fazer Login</string>
+    <string name="create_account">Criar Conta</string>
+    <string name="welcome_to">Bem-vindo ao</string>
+    <string name="app_name_slogan">Avaly</string>
+    <string name="app_description">Sua avaliação em poucos cliques</string>
+
+    // Strings in Portuguese LoginScreen
+    <string name="reset_password">Recuperar Senha</string>
+    <string name="security_code">Código de Segurança</string>
+    <string name="send_code">Enviar Código</string>
+    <string name="verify_code">Verificar Código</string>
+    <string name="recovery_email_sent">Email de recuperação enviado com sucesso!</string>
+    <string name="remember_email">Lembrar Email</string>
+    <string name="remember_password">Lembrar Senha</string>
+    <string name="enter">Entrar</string>
+    <string name="forgot_password">Esqueceu sua senha?</string>
+
+    // Strings in Portuguese RegisterScreen
+    <string name="back">Voltar</string>
+    <string name="create_account_header">Criar Conta</string>
+    <string name="email">Email</string>
+    <string name="password">Senha</string>
+    <string name="confirm_password">Confirmar Senha</string>
+    <string name="hide_password">Esconder Senha</string>
+    <string name="show_password">Mostrar Senha</string>
+    <string name="create_account_button">Criar conta</string>
+
+    // Strings in Portuguese SelectionScreen
+    <string name="configuracoes">Configurações</string>
+    <string name="idioma">Idioma</string>
+    <string name="versao_app">Versão do Aplicativo</string>
+    <string name="ferramentas">Ferramentas</string>
+    <string name="em_breve">Em breve</string>
+    <string name="estudante">Estudante</string>
+    <string name="profissional">Profissional</string>
+    <string name="mudar_idioma">Mudar idioma</string>
+    <string name="confirmar_mudanca_idioma">Tem certeza que deseja mudar o idioma do aplicativo?</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="tools">Ferramentas</string>
+    <string name="goniometer">Goniômetro</string>
+    <string name="goniometer_desc">Meça ângulos articulares com precisão</string>
+    <string name="posture_analysis">Análise Postural</string>
+    <string name="posture_desc">Avalie a postura do paciente</string>
+    <string name="range_motion">Amplitude de Movimento</string>
+    <string name="range_motion_desc">Avalie ADM com referências visuais</string>
+    <string name="muscle_strength">Força Muscular</string>
+    <string name="muscle_desc">Registre avaliações de força</string>
+    <string name="coming_soon">Em breve</string>
+    <string name="app_version">Versão do Aplicativo</string>
 </resources>

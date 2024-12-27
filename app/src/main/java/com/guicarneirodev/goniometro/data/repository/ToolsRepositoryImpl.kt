@@ -8,29 +8,29 @@ class ToolsRepositoryImpl : ToolsRepository {
     override suspend fun getAvailableTools(): List<Tool> = listOf(
         Tool(
             id = "goniometer",
-            name = "Goniômetro",
-            description = "Meça ângulos articulares com precisão",
+            nameResId = R.string.goniometer,
+            descriptionResId = R.string.goniometer_desc,
             isAvailable = true,
             icon = R.drawable.goniometro
         ),
         Tool(
             id = "posture_analysis",
-            name = "Análise Postural",
-            description = "Avalie a postura do paciente",
+            nameResId = R.string.posture_analysis,
+            descriptionResId = R.string.posture_desc,
             isAvailable = false,
             icon = R.drawable.next_plan
         ),
         Tool(
             id = "range_motion",
-            name = "Amplitude de Movimento",
-            description = "Avalie ADM com referências visuais",
+            nameResId = R.string.range_motion,
+            descriptionResId = R.string.range_motion_desc,
             isAvailable = false,
             icon = R.drawable.next_plan
         ),
         Tool(
             id = "muscle_strength",
-            name = "Força Muscular",
-            description = "Registre avaliações de força",
+            nameResId = R.string.muscle_strength,
+            descriptionResId = R.string.muscle_desc,
             isAvailable = false,
             icon = R.drawable.next_plan
         )

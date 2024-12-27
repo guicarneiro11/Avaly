@@ -1,8 +1,8 @@
-package com.guicarneirodev.goniometro.presentation.ui.screens.register.components
+package com.guicarneirodev.goniometro.presentation.ui.screens.login.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -11,23 +11,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.res.stringResource
 
 @Composable
-fun RegisterHeader(onBackClick: () -> Unit) {
+fun LoginHeader(
+    showResetPassword: Boolean, onBackClick: () -> Unit
+) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
         IconButton(
-            onClick = onBackClick,
-            modifier = Modifier.align(Alignment.CenterStart)
+            onClick = onBackClick, modifier = Modifier.align(Alignment.CenterStart)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.voltar),
@@ -38,7 +36,10 @@ fun RegisterHeader(onBackClick: () -> Unit) {
         }
 
         Text(
-            text = stringResource(R.string.create_account_header),
+            text = if (showResetPassword)
+                stringResource(R.string.reset_password)
+            else
+                stringResource(R.string.login),
             color = Color.White,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,

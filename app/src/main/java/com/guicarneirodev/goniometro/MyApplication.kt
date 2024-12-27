@@ -11,6 +11,7 @@ import com.guicarneirodev.goniometro.domain.usecase.GetUserPreferencesUseCase
 import com.guicarneirodev.goniometro.domain.usecase.SaveUserPreferencesUseCase
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel
+import com.guicarneirodev.goniometro.utils.LocaleHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
@@ -45,6 +46,7 @@ val appModule = module {
 }
 
 val selectionModule = module {
+    single { LocaleHelper(get()) }
     single<ToolsRepository> { ToolsRepositoryImpl() }
     single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get()) }
 
@@ -52,5 +54,5 @@ val selectionModule = module {
     factory { GetUserPreferencesUseCase(get()) }
     factory { SaveUserPreferencesUseCase(get()) }
 
-    viewModel { SelectionViewModel(get(), get(), get()) }
+    viewModel { SelectionViewModel(get(), get(), get(), get()) }
 }

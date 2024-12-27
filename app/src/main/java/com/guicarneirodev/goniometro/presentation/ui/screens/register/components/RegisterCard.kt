@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -56,7 +57,7 @@ fun RegisterCard(
             OutlinedTextField(
                 value = uiState.email,
                 onValueChange = onEmailChange,
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.email)) },
                 isError = uiState.emailError.isNotEmpty(),
                 supportingText = {
                     if (uiState.emailError.isNotEmpty()) {
@@ -71,7 +72,7 @@ fun RegisterCard(
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = onPasswordChange,
-                label = { Text("Senha") },
+                label = { Text(stringResource(R.string.password)) },
                 isError = uiState.passwordError.isNotEmpty(),
                 supportingText = {
                     if (uiState.passwordError.isNotEmpty()) {
@@ -95,9 +96,9 @@ fun RegisterCard(
                                     R.drawable.pass_off
                             ),
                             contentDescription = if (passwordVisibility)
-                                "Esconder Senha"
+                                stringResource(R.string.hide_password)
                             else
-                                "Mostrar Senha"
+                                stringResource(R.string.show_password)
                         )
                     }
                 },
@@ -108,7 +109,7 @@ fun RegisterCard(
             OutlinedTextField(
                 value = uiState.confirmPassword,
                 onValueChange = onConfirmPasswordChange,
-                label = { Text("Confirmar Senha") },
+                label = { Text( stringResource(R.string.confirm_password)) },
                 isError = uiState.confirmPasswordError.isNotEmpty(),
                 supportingText = {
                     if (uiState.confirmPasswordError.isNotEmpty()) {
@@ -132,9 +133,9 @@ fun RegisterCard(
                                     R.drawable.pass_off
                             ),
                             contentDescription = if (passwordVisibility)
-                                "Esconder Senha"
+                                stringResource(R.string.hide_password)
                             else
-                                "Mostrar Senha"
+                                stringResource(R.string.show_password)
                         )
                     }
                 },
@@ -171,7 +172,7 @@ fun RegisterCard(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    "Criar conta",
+                    stringResource(R.string.create_account_button),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

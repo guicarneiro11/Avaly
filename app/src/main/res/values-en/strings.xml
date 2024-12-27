@@ -1,0 +1,53 @@
+<resources>
+    // Strings in English HomeScreen
+    <string name="login">Login</string>
+    <string name="create_account">Create Account</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="app_name_slogan">Avaly</string>
+    <string name="app_description">Your evaluation in a few clicks</string>
+
+    // Strings in English LoginScreen
+    <string name="reset_password">Reset Password</string>
+    <string name="security_code">Security Code</string>
+    <string name="send_code">Send Code</string>
+    <string name="verify_code">Verify Code</string>
+    <string name="recovery_email_sent">Recovery email sent successfully!</string>
+    <string name="remember_email">Remember Email</string>
+    <string name="remember_password">Remember Password</string>
+    <string name="enter">Enter</string>
+    <string name="forgot_password">Forgot your password?</string>
+
+    // Strings in English RegisterScreen
+    <string name="back">Back</string>
+    <string name="create_account_header">Create Account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="show_password">Show Password</string>
+    <string name="create_account_button">Create account</string>
+
+    // Strings in English SelectionScreen
+    <string name="configuracoes">Settings</string>
+    <string name="idioma">Language</string>
+    <string name="versao_app">App Version</string>
+    <string name="ferramentas">Tools</string>
+    <string name="em_breve">Coming soon</string>
+    <string name="estudante">Student</string>
+    <string name="profissional">Professional</string>
+    <string name="mudar_idioma">Change language</string>
+    <string name="confirmar_mudanca_idioma">Are you sure you want to change the app language?</string>
+    <string name="confirmar">Confirm</string>
+    <string name="cancelar">Cancel</string>
+    <string name="tools">Tools</string>
+    <string name="goniometer">Goniometer</string>
+    <string name="goniometer_desc">Measure joint angles precisely</string>
+    <string name="posture_analysis">Postural Analysis</string>
+    <string name="posture_desc">Evaluate patient posture</string>
+    <string name="range_motion">Range of Motion</string>
+    <string name="range_motion_desc">Evaluate ROM with visual references</string>
+    <string name="muscle_strength">Muscle Strength</string>
+    <string name="muscle_desc">Record strength evaluations</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="app_version">App Version</string>
+</resources>
