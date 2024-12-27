@@ -1,24 +1,40 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.patients
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.runtime.*
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
+import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.AddPatientDialog
+import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.EditPatientDialog
+import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.SendPdfDialog
+import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.PatientCard
 import com.guicarneirodev.goniometro.presentation.viewmodel.PatientsScreenViewModel
-import com.guicarneirodev.goniometro.presentation.ui.components.EditPatientDialog
-import com.guicarneirodev.goniometro.presentation.ui.components.PatientAppBar
-import com.guicarneirodev.goniometro.presentation.ui.components.PatientItem
-import com.guicarneirodev.goniometro.presentation.ui.components.SendPdfDialog
 
 data class Patient(
     val id: String,
@@ -26,6 +42,7 @@ data class Patient(
     val evaluationDate: String
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatientsScreen(
     viewModel: PatientsScreenViewModel,
@@ -34,45 +51,81 @@ fun PatientsScreen(
 ) {
     val patients by viewModel.filteredPatients.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
-
     var showEditDialog by remember { mutableStateOf(false) }
     var currentlyEditingPatient by remember { mutableStateOf<Patient?>(null) }
-
     var showEmailDialog by remember { mutableStateOf(false) }
-    var emailToSend by remember { mutableStateOf("") }
     var currentPatientId by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
-            PatientAppBar(
-                navController = navController,
-                onAddPatient = { name, date -> viewModel.addPatient(name, date) },
-                searchQuery = searchQuery,
-                onSearchQueryChange = viewModel::setSearchQuery
+            TopAppBar(
+                title = { Text("Pacientes", color = Color(0xFF1E88E5)) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White.copy(alpha = 0.95f)
+                ),
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Voltar",
+                            tint = Color(0xFF1E88E5)
+                        )
+                    }
+                },
+                actions = {
+                    var showAddDialog by remember { mutableStateOf(false) }
+                    IconButton(onClick = { showAddDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Adicionar",
+                            tint = Color(0xFF1E88E5)
+                        )
+                    }
+                    if (showAddDialog) {
+                        AddPatientDialog(
+                            onDismiss = { showAddDialog = false },
+                            onAdd = { name, date ->
+                                viewModel.addPatient(name, date)
+                                showAddDialog = false
+                            }
+                        )
+                    }
+                }
             )
-        }
-    ) { innerPadding ->
-        Box(
+        },
+        containerColor = Color(0xFF1E88E5)
+    ) { padding ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(padding)
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(Color(0xFFCBE3FF), Color(0xFFCBE3FF))
+                        colors = listOf(Color(0xFF1E88E5), Color(0xFF4FC3F7))
                     )
                 )
         ) {
-            LazyColumn {
+            SearchField(
+                value = searchQuery,
+                onValueChange = viewModel::setSearchQuery,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+
+            LazyColumn(
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
                 items(patients) { patient ->
-                    PatientItem(
+                    PatientCard(
                         patient = patient,
                         onEdit = {
                             currentlyEditingPatient = it
                             showEditDialog = true
                         },
                         onDelete = viewModel::deletePatient,
-                        onSendPdf = { patientId ->
-                            currentPatientId = patientId
+                        onSendPdf = {
+                            currentPatientId = it
                             showEmailDialog = true
                         },
                         onNavigateToResults = { patientId ->
@@ -85,26 +138,32 @@ fun PatientsScreen(
     }
 
     if (showEditDialog) {
-        EditPatientDialog(
-            patient = currentlyEditingPatient!!,
-            onDismiss = { showEditDialog = false },
-            onSave = { updatedPatient ->
-                viewModel.updatePatient(updatedPatient)
-                showEditDialog = false
-            }
-        )
+        currentlyEditingPatient?.let { patient ->
+            EditPatientDialog(
+                patient = patient,
+                onDismiss = {
+                    showEditDialog = false
+                    currentlyEditingPatient = null
+                },
+                onSave = { updatedPatient ->
+                    viewModel.updatePatient(updatedPatient)
+                    showEditDialog = false
+                    currentlyEditingPatient = null
+                }
+            )
+        }
     }
 
     if (showEmailDialog) {
         SendPdfDialog(
             onDismiss = {
                 showEmailDialog = false
-                emailToSend = ""
+                currentPatientId = ""
             },
             onSend = { email ->
                 viewModel.sendPdfToEmail(userId, currentPatientId, email)
                 showEmailDialog = false
-                emailToSend = ""
+                currentPatientId = ""
             }
         )
     }
