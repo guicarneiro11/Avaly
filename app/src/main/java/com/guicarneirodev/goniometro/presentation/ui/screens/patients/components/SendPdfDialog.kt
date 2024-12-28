@@ -21,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.guicarneirodev.goniometro.R
 
 @Composable
 fun SendPdfDialog(
@@ -42,7 +44,7 @@ fun SendPdfDialog(
         containerColor = Color.White,
         title = {
             Text(
-                "Enviar PDF",
+                stringResource(R.string.send_pdf),
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color(0xFF1E88E5),
                 fontWeight = FontWeight.Bold
@@ -56,7 +58,7 @@ fun SendPdfDialog(
                         email = it
                         isValidEmail = android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
                     },
-                    label = { Text("Email") },
+                    label = { Text (stringResource(R.string.email) ) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = !isValidEmail && email.isNotEmpty(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -68,7 +70,7 @@ fun SendPdfDialog(
                 )
                 if (!isValidEmail && email.isNotEmpty()) {
                     Text(
-                        "Email inválido",
+                        stringResource(R.string.invalid_email),
                         color = Color(0xFFE57373),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(start = 8.dp, top = 4.dp)
@@ -85,7 +87,7 @@ fun SendPdfDialog(
                     disabledContainerColor = Color(0xFF1E88E5).copy(alpha = 0.5f)
                 )
             ) {
-                Text("Enviar")
+                Text( stringResource(R.string.send) )
             }
         },
         dismissButton = {
@@ -96,7 +98,7 @@ fun SendPdfDialog(
                 ),
                 border = BorderStroke(1.dp, Color(0xFF1E88E5))
             ) {
-                Text("Cancelar")
+                Text( stringResource(R.string.cancel) )
             }
         }
     )

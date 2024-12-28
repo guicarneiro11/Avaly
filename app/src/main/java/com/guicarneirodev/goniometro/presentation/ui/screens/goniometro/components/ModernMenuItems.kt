@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -44,7 +45,7 @@ fun ModernMenuItems(
     }
 
     ModernMenuItem(icon = painterResource(id = R.drawable.clinical_notes),
-        text = "Pacientes",
+        text = stringResource(R.string.patients),
         onClick = {
             navController.navigate("patients/$userId")
             onDismiss()
@@ -52,19 +53,19 @@ fun ModernMenuItems(
 
     ModernMenuItem(
         icon = painterResource(id = R.drawable.photo_library),
-        text = "Importar Foto",
+        text = stringResource(R.string.import_photo),
         onClick = onImportImage
     )
 
     ModernMenuItem(
         icon = painterResource(id = R.drawable.addphoto),
-        text = "Capturar Foto",
+        text = stringResource(R.string.capture_photo),
         onClick = onCaptureImage
     )
 
     ModernMenuItem(
         icon = painterResource(id = R.drawable.help),
-        text = "Ajuda",
+        text = stringResource(R.string.help),
         onClick = {
             dialogOpen = true
         }
@@ -73,7 +74,7 @@ fun ModernMenuItems(
         InstructionsDialog(onDismiss = { dialogOpen = false })
     }
 
-    ModernMenuItem(icon = painterResource(id = R.drawable.logout), text = "Logout", onClick = {
+    ModernMenuItem(icon = painterResource(id = R.drawable.logout), text = stringResource(R.string.logout), onClick = {
         navController.navigate("login") {
             popUpTo(navController.graph.startDestinationId) { inclusive = true }
         }

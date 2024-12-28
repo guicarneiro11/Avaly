@@ -21,8 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.Patient
 
 @Composable
@@ -43,7 +45,7 @@ fun EditPatientDialog(
         containerColor = Color.White,
         title = {
             Text(
-                "Editar Paciente",
+                stringResource(R.string.edit_patient),
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color(0xFF1E88E5),
                 fontWeight = FontWeight.Bold
@@ -56,7 +58,7 @@ fun EditPatientDialog(
                 OutlinedTextField(
                     value = editedName,
                     onValueChange = { editedName = it },
-                    label = { Text("Nome do Paciente") },
+                    label = { Text( stringResource(R.string.patient_name) ) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF1E88E5),
@@ -81,7 +83,7 @@ fun EditPatientDialog(
                     containerColor = Color(0xFF1E88E5)
                 )
             ) {
-                Text("Salvar")
+                Text( stringResource(R.string.save) )
             }
         },
         dismissButton = {
@@ -92,7 +94,7 @@ fun EditPatientDialog(
                 ),
                 border = BorderStroke(1.dp, Color(0xFF1E88E5))
             ) {
-                Text("Cancelar")
+                Text( stringResource(R.string.cancel) )
             }
         }
     )

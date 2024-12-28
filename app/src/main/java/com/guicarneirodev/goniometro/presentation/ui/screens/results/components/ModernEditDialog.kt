@@ -21,8 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.domain.repository.AngleData
 import com.guicarneirodev.goniometro.utils.formatAngleValue
 
@@ -44,7 +46,7 @@ fun ModernEditDialog(
         containerColor = Color.White,
         title = {
             Text(
-                text = "Editar Goniometria",
+                text = stringResource(R.string.edit_goniometry),
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color(0xFF1E88E5),
                 fontWeight = FontWeight.Bold
@@ -60,7 +62,7 @@ fun ModernEditDialog(
                 OutlinedTextField(
                     value = editName,
                     onValueChange = { editName = it },
-                    label = { Text("Nome da articulação") },
+                    label = { Text( stringResource(R.string.articulation_name) ) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF1E88E5),
@@ -75,7 +77,7 @@ fun ModernEditDialog(
                     onValueChange = { newValue ->
                         editValue = formatAngleValue(newValue)
                     },
-                    label = { Text("Valor encontrado") },
+                    label = { Text( stringResource(R.string.value_found) ) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF1E88E5),
@@ -99,7 +101,7 @@ fun ModernEditDialog(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    "Salvar",
+                    stringResource(R.string.save),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
@@ -116,7 +118,7 @@ fun ModernEditDialog(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    "Cancelar",
+                    stringResource(R.string.cancel),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium

@@ -12,9 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import com.guicarneirodev.goniometro.R
 
 @Composable
 fun DatePicker(
@@ -45,8 +47,8 @@ fun DatePicker(
                 }
             }
         },
-        label = { Text("Data da Avaliação") },
-        placeholder = { Text("DD/MM/AAAA") },
+        label = { Text( stringResource(R.string.evaluation_date) ) },
+        placeholder = { Text( stringResource(R.string.date_placeholder) ) },
         modifier = Modifier.fillMaxWidth(),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color(0xFF1E88E5),

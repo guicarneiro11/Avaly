@@ -27,8 +27,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.AddPatientDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.EditPatientDialog
@@ -59,7 +61,7 @@ fun PatientsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Pacientes", color = Color(0xFF1E88E5)) },
+                title = { Text( stringResource(R.string.patients), color = Color(0xFF1E88E5) ) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White.copy(alpha = 0.95f)
                 ),
@@ -67,7 +69,7 @@ fun PatientsScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Voltar",
+                            contentDescription = stringResource(R.string.back),
                             tint = Color(0xFF1E88E5)
                         )
                     }
@@ -77,7 +79,7 @@ fun PatientsScreen(
                     IconButton(onClick = { showAddDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Adicionar",
+                            contentDescription = stringResource(R.string.add_action),
                             tint = Color(0xFF1E88E5)
                         )
                     }

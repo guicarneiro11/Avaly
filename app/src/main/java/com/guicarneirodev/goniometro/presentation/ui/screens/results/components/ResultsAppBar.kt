@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
 
@@ -27,7 +28,7 @@ fun ResultsAppBar(
     var showAddDialog by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text("Resultados", color = Color(0xFF1E88E5)) },
+        title = { Text( stringResource(R.string.results), color = Color(0xFF1E88E5) ) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.White.copy(alpha = 0.95f)
         ),
@@ -35,7 +36,7 @@ fun ResultsAppBar(
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Voltar",
+                    contentDescription = stringResource(R.string.back),
                     tint = Color(0xFF1E88E5)
                 )
             }
@@ -46,7 +47,7 @@ fun ResultsAppBar(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.add),
-                    contentDescription = "Adicionar",
+                    contentDescription = stringResource(R.string.add_action),
                     tint = Color(0xFF1E88E5)
                 )
             }

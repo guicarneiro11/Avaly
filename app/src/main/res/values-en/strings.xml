@@ -50,4 +50,58 @@
     <string name="muscle_desc">Record strength evaluations</string>
     <string name="coming_soon">Coming soon</string>
     <string name="app_version">App Version</string>
+
+    // Strings in English GoniometroScreen
+    <string name="start_goniometry">Perform Goniometry</string>
+    <string name="restart_goniometry">Restart Goniometry</string>
+    <string name="quadrant">Quadrant</string>
+    <string name="direct_angle">Direct Angle</string>
+    <string name="opposite_angle">Opposite Angle</string>
+    <string name="supplementary_angle">Supplementary Angle</string>
+    <string name="opposite_supplementary">Opposite Supplementary</string>
+    <string name="instructions">Instructions</string>
+    <string name="close">Close</string>
+    <string name="patients">Patients</string>
+    <string name="import_photo">Import Photo</string>
+    <string name="capture_photo">Capture Photo</string>
+    <string name="help">Help</string>
+    <string name="logout">Logout</string>
+    <string name="angle_found">Angle found: %1$s°</string>
+    <string name="angle_placeholder">--°</string>
+    <string name="tip_1">Tip 1: Choose between \"Import Photo\" or \"Take Photo\".</string>
+    <string name="tip_2">Tip 2: Remember to choose a photo that is facing the joint to be measured, to avoid possible errors and increase goniometry accuracy.</string>
+    <string name="tip_3">Tip 3: Click on \"Perform Goniometry\".</string>
+    <string name="tip_4">Tip 4: Position your finger where the joint \"Axis\" would be located, then drag it towards the \"Fixed Arm of the goniometer\" reference.</string>
+    <string name="tip_5">Tip 5: After that, click on the reference position of the \"Moving Arm of the goniometer\".</string>
+    <string name="tip_6">Tip 6: This will give you the angle formed between the two arms of the Goniometer.</string>
+    <string name="tip_7">Tip 7: You can change the angle reference in \"Change Quadrant\", depending on the plane and joint being measured.</string>
+    <string name="tip_8">Tip 8: If the goniometry was not done correctly, you can click on \"Restart Goniometry\" to try again.</string>
+    <string name="tip_9">Tip 9: You can save your results in the \"Goniometry\" option (This feature is still under development and improvements will be made in the future).</string>
+    <string name="tip_10">Tip 10: The app\'s goniometer uses a real goniometer as a reference, including its arms, axis, and quadrants.</string>
+    <string name="tip_11">Tip 11: It is recommended to use \"Book: Fundamentals of Musculoskeletal Assessment Techniques by Marcia E. Epler, M. Lynn Palmer\" as a reference for any goniometry performed, both in the app and with a physical goniometer.</string>
+    <string name="observation">Note: The app is not intended to replace the physical goniometer, but rather serve as an alternative tool for physiotherapists. Therefore, it may present inaccuracies in this initial stage of development, and all feedback will be welcome to improve its operation.</string>
+
+    // Strings in English PatientsScreen
+    <string name="add_patient">Add Patient</string>
+    <string name="patient_name">Patient Name</string>
+    <string name="evaluation_date">Evaluation Date</string>
+    <string name="date_placeholder">DD/MM/YYYY</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit_patient">Edit Patient</string>
+    <string name="save">Save</string>
+    <string name="send_pdf">Send PDF</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="send">Send</string>
+    <string name="add_action">Add</string>
+    <string name="pdf">PDF</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
+    // Strings in English ResultsScreen
+    <string name="results">Results</string>
+    <string name="edit_goniometry">Edit Goniometry</string>
+    <string name="add_goniometry">Add Goniometry</string>
+    <string name="articulation_name">Joint name</string>
+    <string name="value_found">Value found</string>
 </resources>

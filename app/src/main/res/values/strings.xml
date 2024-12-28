@@ -50,4 +50,58 @@
     <string name="muscle_desc">Registre avaliações de força</string>
     <string name="coming_soon">Em breve</string>
     <string name="app_version">Versão do Aplicativo</string>
+
+    // Strings in Portuguese GoniometroScreen
+    <string name="start_goniometry">Realizar Goniometria</string>
+    <string name="restart_goniometry">Reiniciar Goniometria</string>
+    <string name="quadrant">Quadrante</string>
+    <string name="direct_angle">Ângulo Direto</string>
+    <string name="opposite_angle">Ângulo Oposto</string>
+    <string name="supplementary_angle">Ângulo Suplementar</string>
+    <string name="opposite_supplementary">Suplementar Oposto</string>
+    <string name="instructions">Instruções</string>
+    <string name="close">Fechar</string>
+    <string name="patients">Pacientes</string>
+    <string name="import_photo">Importar Foto</string>
+    <string name="capture_photo">Capturar Foto</string>
+    <string name="help">Ajuda</string>
+    <string name="logout">Sair</string>
+    <string name="angle_found">Ângulo encontrado: %1$s°</string>
+    <string name="angle_placeholder">--°</string>
+    <string name="tip_1">Dica 1: Escolha entre \"Importar Foto\" ou \"Tirar Foto\".</string>
+    <string name="tip_2">Dica 2: Lembre-se de escolher um foto que esteja de frente para a articulação a ser medida, para evitar possíveis erros e aumentar a precisão da goniometria</string>
+    <string name="tip_3">Dica 3: Clique em \"Realizar Goniometria\".</string>
+    <string name="tip_4">Dica 4: Posicione seu dedo onde seria localizado o \"Eixo\" da articulação e, em seguida, arraste-o em direção à referência do \"Braço fixo do goniômetro\".</string>
+    <string name="tip_5">Dica 5: Após isso, clique na posição de referência do \"Braço móvel do goniômetro\".</string>
+    <string name="tip_6">Dica 6: Com isso você terá o ângulo formado entre os dois braços do Goniômetro.</string>
+    <string name="tip_7">Dica 7: Você pode alterar a referência do ângulo em \"Alterar Quadrante\", dependendo do plano e articulação que estão sendo mensurados.</string>
+    <string name="tip_8">Dica 8: Caso a goniometria não tenha sido feita corretamente, você pode clicar em \"Reiniciar Goniometria\" para tentar novamente.</string>
+    <string name="tip_9">Dica 9: Você pode salvar os seus resultados na opção \"Goniometrias\" (Esta ferramenta ainda está em desenvolvimento e haverá melhorias no futuro).</string>
+    <string name="tip_10">Dica 10: O goniômetro do aplicativo utiliza como referência um goniometro real, tanto em seus braços, eixo e seus quadrantes.</string>
+    <string name="tip_11">Dica 11: Recomenda-se usar como referência o \"Livro: Fundamentos das Técnicas de Avaliação Musculoesquelética por Marcia E. Epler, M. Lynn Palmer\" em qualquer goniometria realizada, tanto no aplicativo quanto em um goniômetro físico.</string>
+    <string name="observation">Observação: O aplicativo não tem como objetivo substituir o goniômetro físico, apenas servir como uma ferramenta alternativa para os fisioterapeutas. Portanto, ele pode apresentar imprecisões nesta etapa inicial de desenvolvimento, e toda crítica será bem-vinda para melhorar o seu funcionamento.</string>
+
+    // Strings in Portuguese PatientsScreen
+    <string name="add_patient">Adicionar Paciente</string>
+    <string name="patient_name">Nome do Paciente</string>
+    <string name="evaluation_date">Data da Avaliação</string>
+    <string name="date_placeholder">DD/MM/AAAA</string>
+    <string name="add">Adicionar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="edit_patient">Editar Paciente</string>
+    <string name="save">Salvar</string>
+    <string name="send_pdf">Enviar PDF</string>
+    <string name="invalid_email">Email inválido</string>
+    <string name="send">Enviar</string>
+    <string name="add_action">Adicionar</string>
+    <string name="pdf">PDF</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Deletar</string>
+
+    // Strings in Portuguese ResultsScreen
+    <string name="results">Resultados</string>
+    <string name="edit_goniometry">Editar Goniometria</string>
+    <string name="add_goniometry">Adicionar Goniometria</string>
+    <string name="articulation_name">Nome da articulação</string>
+    <string name="value_found">Valor encontrado</string>
 </resources>

@@ -16,25 +16,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.guicarneirodev.goniometro.R
 
 @Composable
 fun InstructionList() {
     val instructions = listOf(
-        "Dica 1: Escolha entre \"Importar Foto\" ou \"Tirar Foto\".",
-        "Dica 2: Lembre-se de escolher um foto que esteja de frente para a articulação a ser medida, para evitar possíveis erros e aumentar a precisão da goniometria",
-        "Dica 3: Clique em \"Realizar Goniometria\".",
-        "Dica 4: Posicione seu dedo onde seria localizado o \"Eixo\" da articulação e, em seguida, arraste-o em direção à referência do \"Braço fixo do goniômetro\".",
-        "Dica 5: Após isso, clique na posição de referência do \"Braço móvel do goniômetro\".",
-        "Dica 6: Com isso você terá o ângulo formado entre os dois braços do Goniômetro.",
-        "Dica 7: Você pode alterar a referência do ângulo em \"Alterar Quadrante\", dependendo do plano e articulação que estão sendo mensurados.",
-        "Dica 8: Caso a goniometria não tenha sido feita corretamente, você pode clicar em \"Reiniciar Goniometria\" para tentar novamente.",
-        "Dica 9: Você pode salvar os seus resultados na opção \"Goniometrias\" (Esta ferramenta ainda está em desenvolvimento e haverá melhorias no futuro).",
-        "Dica 10: O goniômetro do aplicativo utiliza como referência um goniometro real, tanto em seus braços, eixo e seus quadrantes.",
-        "Dica 11: Recomenda-se usar como referência o \"Livro: Fundamentos das Técnicas de Avaliação Musculoesquelética por Marcia E. Epler, M. Lynn Palmer\" em qualquer goniometria realizada, tanto no aplicativo quanto em um goniômetro físico.",
-        "Observação: O aplicativo não tem como objetivo substituir o goniômetro físico, apenas servir como uma ferramenta alternativa para os fisioterapeutas. Portanto, ele pode apresentar imprecisões nesta etapa inicial de desenvolvimento, e toda crítica será bem-vinda para melhorar o seu funcionamento."
+        stringResource(R.string.tip_1),
+        stringResource(R.string.tip_2),
+        stringResource(R.string.tip_3),
+        stringResource(R.string.tip_4),
+        stringResource(R.string.tip_5),
+        stringResource(R.string.tip_6),
+        stringResource(R.string.tip_7),
+        stringResource(R.string.tip_8),
+        stringResource(R.string.tip_9),
+        stringResource(R.string.tip_10),
+        stringResource(R.string.tip_11),
+        stringResource(R.string.observation)
     )
     LazyColumn(
         modifier = Modifier
@@ -74,7 +76,7 @@ fun InstructionsDialog(onDismiss: () -> Unit) {
             .padding(16.dp),
         title = {
             Text(
-                text = "Instruções",
+                text = stringResource(R.string.instructions),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color(0xFF1E88E5),
                 fontWeight = FontWeight.Bold
@@ -87,7 +89,7 @@ fun InstructionsDialog(onDismiss: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5)),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Fechar")
+                Text( stringResource(R.string.close) )
             }
         },
         containerColor = Color.White,

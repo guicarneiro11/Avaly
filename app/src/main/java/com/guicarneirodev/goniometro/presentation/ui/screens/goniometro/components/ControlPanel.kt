@@ -19,9 +19,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
 
 @Composable
@@ -67,7 +69,10 @@ fun AnimatedMeasurementButton(
         shape = RoundedCornerShape(16.dp)
     ) {
         Text(
-            text = if (isLineSet) "Reiniciar Goniometria" else "Realizar Goniometria",
+            text = if (isLineSet)
+                stringResource(R.string.restart_goniometry)
+            else
+                stringResource(R.string.start_goniometry),
             style = if (isLandscape)
                 MaterialTheme.typography.bodyLarge
             else
@@ -85,7 +90,10 @@ fun QuadrantSelector(
     selectedQuadrant: Int, onQuadrantSelected: (Int) -> Unit
 ) {
     val quadrants = listOf(
-        "Ângulo Direto", "Ângulo Oposto", "Ângulo Suplementar", "Suplementar Oposto"
+        stringResource(R.string.direct_angle),
+        stringResource(R.string.opposite_angle),
+        stringResource(R.string.supplementary_angle),
+        stringResource(R.string.opposite_supplementary)
     )
 
     Column(
@@ -97,7 +105,7 @@ fun QuadrantSelector(
             .padding(8.dp)
     ) {
         Text(
-            text = "Quadrante",
+            text = stringResource(R.string.quadrant),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 8.dp)

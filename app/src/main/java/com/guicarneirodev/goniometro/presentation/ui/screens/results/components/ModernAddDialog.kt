@@ -21,8 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.utils.formatAngleValue
 
 @Composable
@@ -42,7 +44,7 @@ fun ModernAddDialog(
         containerColor = Color.White,
         title = {
             Text(
-                text = "Adicionar Goniometria",
+                text = stringResource(R.string.add_goniometry),
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color(0xFF1E88E5),
                 fontWeight = FontWeight.Bold
@@ -58,7 +60,7 @@ fun ModernAddDialog(
                 OutlinedTextField(
                     value = articulationName,
                     onValueChange = { articulationName = it },
-                    label = { Text("Nome da articulação") },
+                    label = { Text( stringResource(R.string.articulation_name) ) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF1E88E5),
@@ -73,7 +75,7 @@ fun ModernAddDialog(
                     onValueChange = { newValue ->
                         angleValue = formatAngleValue(newValue)
                     },
-                    label = { Text("Valor encontrado") },
+                    label = { Text( stringResource(R.string.value_found) ) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF1E88E5),
@@ -97,7 +99,7 @@ fun ModernAddDialog(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    "Adicionar",
+                    stringResource(R.string.add),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
@@ -114,7 +116,7 @@ fun ModernAddDialog(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    "Cancelar",
+                    stringResource(R.string.cancel),
                     modifier = Modifier.padding(horizontal = 16.dp),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium

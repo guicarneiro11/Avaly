@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
@@ -79,7 +80,7 @@ fun AngleCard(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.edit),
-                        contentDescription = "Editar",
+                        contentDescription = stringResource(R.string.edit),
                         tint = Color(0xFF1E88E5)
                     )
                 }
@@ -95,7 +96,7 @@ fun AngleCard(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.delete),
-                        contentDescription = "Excluir",
+                        contentDescription = stringResource(R.string.delete),
                         tint = Color(0xFFE57373)
                     )
                 }

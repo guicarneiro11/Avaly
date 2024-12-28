@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.Patient
@@ -68,22 +69,22 @@ fun PatientCard(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ActionIconButton(
                         icon = R.drawable.reportpdf,
-                        description = "PDF",
+                        description = stringResource(R.string.pdf),
                         onClick = { onSendPdf(patient.id) }
                     )
                     ActionIconButton(
                         icon = R.drawable.edit,
-                        description = "Editar",
+                        description = stringResource(R.string.edit),
                         onClick = { onEdit(patient) }
                     )
                     ActionIconButton(
                         icon = R.drawable.delete,
-                        description = "Deletar",
+                        description = stringResource(R.string.delete),
                         onClick = { onDelete(patient.id) }
                     )
                     ActionIconButton(
                         icon = R.drawable.arrow,
-                        description = "Resultados",
+                        description = stringResource(R.string.results),
                         onClick = { onNavigateToResults(patient.id) }
                     )
                 }

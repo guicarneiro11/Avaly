@@ -1,5 +1,6 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components
 
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,9 +34,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -164,6 +167,7 @@ fun DropdownMenuItem(
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun AngleDisplay(angle: Double?) {
     Box(
@@ -174,7 +178,10 @@ fun AngleDisplay(angle: Double?) {
             )
             .padding(8.dp)
     ) {
-        Text(text = "Ângulo encontrado: ${angle?.let { String.format("%.1f°", it) } ?: "--°"}",
+        Text(text = stringResource(
+            R.string.angle_found,
+            angle?.let { String.format("%.1f", it) } ?: stringResource(R.string.angle_placeholder)
+        ),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium,
             color = Color(0xFF1E88E5))
