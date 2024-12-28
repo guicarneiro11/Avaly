@@ -104,4 +104,7 @@
     <string name="add_goniometry">Add Goniometry</string>
     <string name="articulation_name">Joint name</string>
     <string name="value_found">Value found</string>
+
+    // Strings in English SearchField
+    <string name="search_hint">Search</string>
 </resources>

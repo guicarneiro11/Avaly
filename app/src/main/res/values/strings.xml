@@ -104,4 +104,7 @@
     <string name="add_goniometry">Adicionar Goniometria</string>
     <string name="articulation_name">Nome da articulação</string>
     <string name="value_found">Valor encontrado</string>
+
+    // Strings in Portuguese SearchField
+    <string name="search_hint">Buscar</string>
 </resources>
