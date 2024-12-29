@@ -50,6 +50,11 @@
     <string name="muscle_desc">Registre avaliações de força</string>
     <string name="coming_soon">Em breve</string>
     <string name="app_version">Versão do Aplicativo</string>
+    <string name="tipo_usuario">Tipo de Usuário</string>
+    <string name="erro">Erro</string>
+    <string name="ok">OK</string>
+    <string name="confirmar_logout">Sair</string>
+    <string name="confirmar_logout_mensagem">Tem certeza que deseja sair do aplicativo?</string>
 
     // Strings in Portuguese GoniometroScreen
     <string name="start_goniometry">Realizar Goniometria</string>

@@ -9,6 +9,7 @@ import com.guicarneirodev.goniometro.domain.model.UserProfile
 import com.guicarneirodev.goniometro.domain.model.UserType
 import com.guicarneirodev.goniometro.domain.usecase.GetAvailableToolsUseCase
 import com.guicarneirodev.goniometro.domain.usecase.GetUserPreferencesUseCase
+import com.guicarneirodev.goniometro.domain.usecase.LogoutUseCase
 import com.guicarneirodev.goniometro.domain.usecase.SaveUserPreferencesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +30,8 @@ class SelectionViewModel(
     private val localeHelper: LocaleHelper,
     private val getAvailableToolsUseCase: GetAvailableToolsUseCase,
     private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
-    private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase
+    private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SelectionUiState())
     val uiState: StateFlow<SelectionUiState> = _uiState.asStateFlow()
@@ -78,6 +80,16 @@ class SelectionViewModel(
                 val newPreferences = currentPreferences.copy(language = language)
                 saveUserPreferencesUseCase(newPreferences)
                 _uiState.update { it.copy(userPreferences = newPreferences) }
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            try {
+                logoutUseCase()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(errorMessage = e.message) }
             }
         }
     }

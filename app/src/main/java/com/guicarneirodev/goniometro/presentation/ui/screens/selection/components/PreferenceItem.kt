@@ -1,5 +1,6 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.selection.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,12 +21,20 @@ import androidx.compose.foundation.layout.size
 
 @Composable
 fun PreferenceItem(
+    modifier: Modifier = Modifier,
     title: String,
     icon: Int,
-    content: @Composable () -> Unit
+    onClick: (() -> Unit)? = null,
+    content: (@Composable () -> Unit)? = null
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.then(
+            if (onClick != null && content == null) {
+                Modifier.clickable(onClick = onClick)
+            } else {
+                Modifier
+            }
+        ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
@@ -45,8 +54,10 @@ fun PreferenceItem(
                 color = Color.Black
             )
         }
-        Box(modifier = Modifier.padding(start = 32.dp)) {
-            content()
+        content?.let { content ->
+            Box(modifier = Modifier.padding(start = 32.dp)) {
+                content()
+            }
         }
     }
 }

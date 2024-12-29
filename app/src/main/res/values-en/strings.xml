@@ -50,6 +50,11 @@
     <string name="muscle_desc">Record strength evaluations</string>
     <string name="coming_soon">Coming soon</string>
     <string name="app_version">App Version</string>
+    <string name="tipo_usuario">User Type</string>
+    <string name="erro">Error</string>
+    <string name="ok">OK</string>
+    <string name="confirmar_logout">Sign Out</string>
+    <string name="confirmar_logout_mensagem">Are you sure you want to sign out?</string>
 
     // Strings in English GoniometroScreen
     <string name="start_goniometry">Perform Goniometry</string>

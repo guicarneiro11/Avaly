@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.domain.model.UserProfile
 import com.guicarneirodev.goniometro.domain.model.UserType
 
@@ -55,13 +57,13 @@ fun UserProfileSection(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 UserTypeChip(
-                    text = "Estudante",
+                    text = stringResource(R.string.estudante),
                     selected = userType == UserType.STUDENT,
                     onClick = { onUserTypeChange(UserType.STUDENT) }
                 )
 
                 UserTypeChip(
-                    text = "Profissional",
+                    text = stringResource(R.string.profissional),
                     selected = userType == UserType.PROFESSIONAL,
                     onClick = { onUserTypeChange(UserType.PROFESSIONAL) }
                 )

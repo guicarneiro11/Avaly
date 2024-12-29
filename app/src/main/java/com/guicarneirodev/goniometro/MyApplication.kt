@@ -8,6 +8,7 @@ import com.guicarneirodev.goniometro.domain.repository.ToolsRepository
 import com.guicarneirodev.goniometro.domain.repository.UserPreferencesRepository
 import com.guicarneirodev.goniometro.domain.usecase.GetAvailableToolsUseCase
 import com.guicarneirodev.goniometro.domain.usecase.GetUserPreferencesUseCase
+import com.guicarneirodev.goniometro.domain.usecase.LogoutUseCase
 import com.guicarneirodev.goniometro.domain.usecase.SaveUserPreferencesUseCase
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel
@@ -53,6 +54,7 @@ val selectionModule = module {
     factory { GetAvailableToolsUseCase(get()) }
     factory { GetUserPreferencesUseCase(get()) }
     factory { SaveUserPreferencesUseCase(get()) }
+    factory { LogoutUseCase(get()) }
 
-    viewModel { SelectionViewModel(get(), get(), get(), get()) }
+    viewModel { SelectionViewModel(get(), get(), get(), get(), get()) }
 }

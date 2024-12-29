@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,7 +27,6 @@ import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.PreferencesSection
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.ToolCard
-import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.UserProfileSection
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -65,16 +66,6 @@ fun SelectionScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                uiState.userProfile?.let { profile ->
-                    UserProfileSection(
-                        userProfile = profile,
-                        userType = uiState.userPreferences.userType,
-                        onUserTypeChange = viewModel::updateUserType
-                    )
-                }
-            }
-
-            item {
                 Text(
                     text = stringResource(R.string.tools),
                     fontSize = 20.sp,
@@ -98,9 +89,25 @@ fun SelectionScreen(
             item {
                 PreferencesSection(
                     preferences = uiState.userPreferences,
-                    onLanguageChange = viewModel::updateLanguage
+                    onLanguageChange = viewModel::updateLanguage,
+                    onUserTypeChange = viewModel::updateUserType,
+                    userProfile = uiState.userProfile,
+                    navController = navController
                 )
             }
+        }
+
+        uiState.errorMessage?.let { error ->
+            AlertDialog(
+                onDismissRequest = { /* limpar erro */ },
+                title = { Text(stringResource(R.string.erro)) },
+                text = { Text(error) },
+                confirmButton = {
+                    TextButton(onClick = { /* limpar erro */ }) {
+                        Text(stringResource(R.string.ok))
+                    }
+                }
+            )
         }
     }
 }
