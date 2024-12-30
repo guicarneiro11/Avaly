@@ -40,7 +40,7 @@ fun ToolCard(
             containerColor = if (tool.isAvailable)
                 Color.White.copy(alpha = 0.95f)
             else
-                Color.Gray.copy(alpha = 0.5f)
+                Color(0xFF788C9E).copy(alpha = 0.75f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
@@ -57,7 +57,7 @@ fun ToolCard(
                 modifier = Modifier
                     .size(48.dp)
                     .padding(end = 16.dp),
-                tint = if (tool.isAvailable) Color(0xFF1E88E5) else Color.Gray
+                tint = if (tool.isAvailable) Color(0xFF1E88E5) else Color.White.copy(alpha = 0.5f)
             )
 
             Column(
@@ -67,20 +67,20 @@ fun ToolCard(
                     text = stringResource(tool.nameResId),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (tool.isAvailable) Color.Black else Color.Gray
+                    color = if (tool.isAvailable) Color.Black else Color.White.copy(alpha = 0.5f)
                 )
 
                 Text(
                     text = stringResource(tool.descriptionResId),
                     fontSize = 14.sp,
-                    color = if (tool.isAvailable) Color.Gray else Color.Gray.copy(alpha = 0.7f)
+                    color = if (tool.isAvailable) Color.Gray else Color.White.copy(alpha = 0.5f)
                 )
 
                 if (!tool.isAvailable) {
                     Text(
                         text = stringResource(R.string.coming_soon),
                         fontSize = 12.sp,
-                        color = Color(0xFF1E88E5),
+                        color = Color.White.copy(alpha = 0.5f),
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(top = 4.dp)
                     )

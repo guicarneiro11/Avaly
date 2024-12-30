@@ -1,7 +1,6 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.register
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.layout.size
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterScreenViewModel
-import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
+import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterHeader
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterCard
 

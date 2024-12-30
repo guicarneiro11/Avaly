@@ -1,4 +1,4 @@
-package com.guicarneirodev.goniometro.presentation.ui.screens.home.components
+package com.guicarneirodev.goniometro.presentation.ui.reusable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -15,22 +15,22 @@ class ToolsRepositoryImpl : ToolsRepository {
         ),
         Tool(
             id = "posture_analysis",
-            nameResId = R.string.posture_analysis,
-            descriptionResId = R.string.posture_desc,
+            nameResId = R.string.symmetrograph,
+            descriptionResId = R.string.symmetrograph_desc,
             isAvailable = false,
-            icon = R.drawable.next_plan
+            icon = R.drawable.body
         ),
         Tool(
             id = "range_motion",
-            nameResId = R.string.range_motion,
-            descriptionResId = R.string.range_motion_desc,
+            nameResId = R.string.tmj_tools,
+            descriptionResId = R.string.tmj_tools_desc,
             isAvailable = false,
-            icon = R.drawable.next_plan
+            icon = R.drawable.hearing
         ),
         Tool(
             id = "muscle_strength",
-            nameResId = R.string.muscle_strength,
-            descriptionResId = R.string.muscle_desc,
+            nameResId = R.string.other_tools,
+            descriptionResId = R.string.other_tools_desc,
             isAvailable = false,
             icon = R.drawable.next_plan
         )

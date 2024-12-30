@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
-import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
+import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.PreferencesSection
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.ToolCard
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.presentation.factory.LoginViewModelFactory
-import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
+import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.login.components.LoginCard
 import com.guicarneirodev.goniometro.presentation.ui.screens.login.components.LoginHeader
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginScreenViewModel
@@ -71,7 +71,7 @@ fun LoginScreen(navController: NavController) {
                     if (uiState.showResetPassword) {
                         viewModel.onBackToLoginClick()
                     } else {
-                        navController.navigate("selection") {
+                        navController.navigate("home") {
                             popUpTo(navController.graph.startDestinationId) {
                                 inclusive = true
                             }

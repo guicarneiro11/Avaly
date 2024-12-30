@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.presentation.viewmodel.HomeScreenViewModel
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.DraggableContent
-import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.BackgroundDecorations
+import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.HomeContent
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.LogoSection
 
