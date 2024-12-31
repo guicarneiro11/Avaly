@@ -35,7 +35,8 @@
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version"
                 android:resource="@xml/path_provider" />
         </provider>
     </application>
