@@ -14,6 +14,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.http.Header
+import java.util.concurrent.TimeUnit
 
 @Serializable
 data class EmailRequestDTO(
@@ -35,6 +36,9 @@ object RetrofitInstance {
     val retrofit: Retrofit by lazy {
         val client = OkHttpClient.Builder()
             .addInterceptor(LoggingInterceptor())
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
         Retrofit.Builder()
@@ -67,17 +71,25 @@ class RetrofitPdfService(private val loginRepository: LoginRepository) : PdfServ
     override suspend fun sendPdfToEmail(userId: String, patientId: String, email: String): Result<Unit> {
         return withContext(Dispatchers.IO) {
             try {
+                Log.d("PdfService", "Sending PDF - PatientId: $patientId, Email: $email")
                 val token = loginRepository.getIdToken().getOrThrow()
+                Log.d("PdfService", "Token obtained: ${token.take(10)}...")
+
                 val response = api.sendPdfToEmail(
                     patientId = patientId,
                     authToken = "Bearer $token",
                     emailRequest = EmailRequestDTO(email)
                 )
 
+                Log.d("PdfService", "Response code: ${response.code()}")
+                if (!response.isSuccessful) {
+                    Log.e("PdfService", "Error body: ${response.errorBody()?.string()}")
+                }
+
                 if (response.isSuccessful) Result.success(Unit)
                 else Result.failure(Exception("Failed: ${response.code()}"))
-
             } catch (e: Exception) {
+                Log.e("PdfService", "Error sending PDF", e)
                 Result.failure(e)
             }
         }
