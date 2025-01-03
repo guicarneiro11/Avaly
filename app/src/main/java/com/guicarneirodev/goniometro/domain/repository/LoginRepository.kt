@@ -15,8 +15,7 @@ interface LoginRepository {
 }
 
 class FirebaseRepository(
-    private val firebaseAuth: FirebaseAuth,
-    private val firebaseFunctions: FirebaseFunctions
+    private val firebaseAuth: FirebaseAuth, private val firebaseFunctions: FirebaseFunctions
 ) : LoginRepository {
     override suspend fun signInWithEmail(email: String, password: String): Result<Unit> =
         withContext(Dispatchers.IO) {
@@ -28,15 +27,14 @@ class FirebaseRepository(
             }
         }
 
-    override suspend fun resetPassword(email: String): Result<Unit> =
-        withContext(Dispatchers.IO) {
-            try {
-                firebaseAuth.sendPasswordResetEmail(email).await()
-                Result.success(Unit)
-            } catch (e: Exception) {
-                Result.failure(e)
-            }
+    override suspend fun resetPassword(email: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
 
     override suspend fun sendSecurityCode(email: String): Result<Unit> =
         withContext(Dispatchers.IO) {
@@ -63,17 +61,16 @@ class FirebaseRepository(
             }
         }
 
-    override suspend fun getIdToken(): Result<String> =
-        withContext(Dispatchers.IO) {
-            try {
-                val token = firebaseAuth.currentUser?.getIdToken(false)?.await()?.token
-                if (token != null) {
-                    Result.success(token)
-                } else {
-                    Result.failure(Exception("Failed to get token"))
-                }
-            } catch (e: Exception) {
-                Result.failure(e)
+    override suspend fun getIdToken(): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val token = firebaseAuth.currentUser?.getIdToken(false)?.await()?.token
+            if (token != null) {
+                Result.success(token)
+            } else {
+                Result.failure(Exception("Failed to get token"))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
 }
