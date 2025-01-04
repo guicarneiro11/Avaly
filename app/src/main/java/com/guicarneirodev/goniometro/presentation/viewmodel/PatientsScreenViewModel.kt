@@ -1,11 +1,11 @@
 package com.guicarneirodev.goniometro.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.guicarneirodev.goniometro.domain.repository.PatientRepository
 import com.guicarneirodev.goniometro.data.service.PdfService
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.Patient
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,10 +14,21 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+sealed class UiState {
+    data object Idle : UiState()
+    data object Loading : UiState()
+    data class Success(val message: String) : UiState()
+    data class Error(val message: String) : UiState()
+}
+
 class PatientsScreenViewModel(
     private val repository: PatientRepository,
     private val pdfService: PdfService
 ) : ViewModel() {
+
+    private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
     private val _patients = MutableStateFlow<List<Patient>>(emptyList())
 
     private val _searchQuery = MutableStateFlow("")
@@ -65,7 +76,15 @@ class PatientsScreenViewModel(
 
     fun sendPdfToEmail(userId: String, patientId: String, email: String) {
         viewModelScope.launch {
-            pdfService.sendPdfToEmail(userId, patientId, email)
+            _uiState.value = UiState.Loading
+            try {
+                pdfService.sendPdfToEmail(userId, patientId, email)
+                _uiState.value = UiState.Success("PDF enviado com sucesso para $email")
+                delay(3000)
+                _uiState.value = UiState.Idle
+            } catch (e: Exception) {
+                _uiState.value = UiState.Error("Erro ao enviar PDF: ${e.message}")
+            }
         }
     }
 }

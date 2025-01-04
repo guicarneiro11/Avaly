@@ -1,6 +1,5 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.patients.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,13 +7,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,17 +28,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.presentation.viewmodel.UiState
 
 @Composable
 fun SendPdfDialog(
     onDismiss: () -> Unit,
-    onSend: (String) -> Unit
+    onSend: (String) -> Unit,
+    uiState: UiState
 ) {
     var email by remember { mutableStateOf("") }
     var isValidEmail by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UiState.Loading -> isLoading = true
+            is UiState.Success -> {
+                isLoading = false
+                onDismiss()
+            }
+            is UiState.Error -> isLoading = false
+            else -> isLoading = false
+        }
+    }
 
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!isLoading) onDismiss() },
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
@@ -58,47 +75,59 @@ fun SendPdfDialog(
                         email = it
                         isValidEmail = android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
                     },
-                    label = { Text (stringResource(R.string.email) ) },
+                    enabled = !isLoading,
+                    label = { Text(stringResource(R.string.email)) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = !isValidEmail && email.isNotEmpty(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF1E88E5),
-                        focusedLabelColor = Color(0xFF1E88E5),
-                        errorBorderColor = Color(0xFFE57373)
-                    )
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
-                if (!isValidEmail && email.isNotEmpty()) {
-                    Text(
-                        stringResource(R.string.invalid_email),
-                        color = Color(0xFFE57373),
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+
+                if (isLoading) {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        color = Color(0xFF1E88E5)
                     )
+                }
+
+                when (uiState) {
+                    is UiState.Error -> {
+                        Text(
+                            uiState.message,
+                            color = Color.Red,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                    else -> {}
                 }
             }
         },
         confirmButton = {
             Button(
                 onClick = { if (isValidEmail && email.isNotBlank()) onSend(email) },
-                enabled = isValidEmail && email.isNotBlank(),
+                enabled = isValidEmail && email.isNotBlank() && !isLoading,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1E88E5),
-                    disabledContainerColor = Color(0xFF1E88E5).copy(alpha = 0.5f)
+                    containerColor = Color(0xFF1E88E5)
                 )
             ) {
-                Text( stringResource(R.string.send) )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(stringResource(R.string.send))
+                }
             }
         },
         dismissButton = {
             OutlinedButton(
                 onClick = onDismiss,
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFF1E88E5)
-                ),
-                border = BorderStroke(1.dp, Color(0xFF1E88E5))
+                enabled = !isLoading
             ) {
-                Text( stringResource(R.string.cancel) )
+                Text(stringResource(R.string.cancel))
             }
         }
     )

@@ -15,10 +15,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +40,7 @@ import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.SendPdfDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.PatientCard
 import com.guicarneirodev.goniometro.presentation.viewmodel.PatientsScreenViewModel
+import com.guicarneirodev.goniometro.presentation.viewmodel.UiState
 
 data class Patient(
     val id: String,
@@ -51,8 +55,10 @@ fun PatientsScreen(
     navController: NavController,
     userId: String
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
     val patients by viewModel.filteredPatients.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     var showEditDialog by remember { mutableStateOf(false) }
     var currentlyEditingPatient by remember { mutableStateOf<Patient?>(null) }
     var showEmailDialog by remember { mutableStateOf(false) }
@@ -137,6 +143,23 @@ fun PatientsScreen(
                 }
             }
         }
+        LaunchedEffect(uiState) {
+            when (uiState) {
+                is UiState.Success -> {
+                    snackbarHostState.showSnackbar(
+                        message = (uiState as UiState.Success).message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+                is UiState.Error -> {
+                    snackbarHostState.showSnackbar(
+                        message = (uiState as UiState.Error).message,
+                        duration = SnackbarDuration.Long
+                    )
+                }
+                else -> {}
+            }
+        }
     }
 
     if (showEditDialog) {
@@ -164,9 +187,8 @@ fun PatientsScreen(
             },
             onSend = { email ->
                 viewModel.sendPdfToEmail(userId, currentPatientId, email)
-                showEmailDialog = false
-                currentPatientId = ""
-            }
+            },
+            uiState = uiState
         )
     }
 }
