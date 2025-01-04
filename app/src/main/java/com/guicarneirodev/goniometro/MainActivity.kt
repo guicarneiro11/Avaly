@@ -24,8 +24,7 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
     private val loginRepository: LoginRepository by lazy {
         FirebaseRepository(
-            FirebaseAuth.getInstance(),
-            FirebaseFunctions.getInstance()
+            FirebaseAuth.getInstance(), FirebaseFunctions.getInstance()
         )
     }
 
@@ -52,10 +51,12 @@ class MainActivity : ComponentActivity() {
         observeLanguageChanges()
 
         lifecycleScope.launch {
-            loginRepository.getIdToken().onSuccess { token ->
-                Log.d("AuthToken", "Bearer $token")
-            }.onFailure { error ->
-                Log.e("AuthToken", "Error getting token", error)
+            loginRepository.signInWithEmail("jva.kts@gmail.com", "Thklabr641642!").onSuccess {
+                loginRepository.getIdToken().onSuccess { token ->
+                    Log.d("AuthToken", "Bearer $token")
+                }.onFailure { error ->
+                    Log.e("AuthToken", "Error getting token", error)
+                }
             }
         }
 

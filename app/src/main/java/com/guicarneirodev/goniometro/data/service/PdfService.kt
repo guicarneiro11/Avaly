@@ -31,7 +31,7 @@ interface SendPdfApi {
 }
 
 object RetrofitInstance {
-    private const val BASE_URL = "http://18.231.217.128:8080/"
+    private const val BASE_URL = "http://52.67.118.48:8080/"
 
     val retrofit: Retrofit by lazy {
         val client = OkHttpClient.Builder()
