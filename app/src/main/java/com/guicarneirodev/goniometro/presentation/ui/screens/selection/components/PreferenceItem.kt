@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.size
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun PreferenceItem(
@@ -44,14 +46,14 @@ fun PreferenceItem(
             Icon(
                 painter = painterResource(id = icon),
                 contentDescription = null,
-                tint = Color(0xFF1E88E5),
+                tint = AccentBlue,
                 modifier = Modifier.size(24.dp)
             )
             Text(
                 text = title,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color.Black
+                color = SecondaryDark
             )
         }
         content?.let { content ->

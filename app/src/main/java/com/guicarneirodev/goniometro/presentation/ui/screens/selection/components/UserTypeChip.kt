@@ -16,6 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun UserTypeChip(
@@ -29,10 +32,10 @@ fun UserTypeChip(
             .height(32.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        color = if (selected) Color(0xFF1E88E5) else Color.LightGray.copy(alpha = 0.3f),
+        color = if (selected) AccentBlue else SecondaryDark.copy(alpha = 0.1f),
         border = BorderStroke(
             width = 1.dp,
-            color = if (selected) Color(0xFF1E88E5) else Color.LightGray
+            color = if (selected) AccentBlue else SecondaryDark.copy(alpha = 0.3f)
         )
     ) {
         Row(
@@ -42,7 +45,7 @@ fun UserTypeChip(
         ) {
             Text(
                 text = text,
-                color = if (selected) Color.White else Color.Gray,
+                color = if (selected) PrimaryLight else SecondaryDark.copy(alpha = 0.6f),
                 fontSize = 14.sp,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
             )

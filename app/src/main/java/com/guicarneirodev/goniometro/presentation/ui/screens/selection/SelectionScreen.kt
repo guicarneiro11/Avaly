@@ -28,6 +28,8 @@ import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorati
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.PreferencesSection
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.ToolCard
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -41,21 +43,14 @@ fun SelectionScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF1E88E5),
-                        Color(0xFF4FC3F7)
-                    )
-                )
-            )
+            .background(SecondaryDark)
     ) {
         BackgroundDecorations()
 
         if (uiState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center),
-                color = Color.White
+                color = PrimaryLight
             )
         }
 
@@ -70,7 +65,7 @@ fun SelectionScreen(
                     text = stringResource(R.string.tools),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = PrimaryLight,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }

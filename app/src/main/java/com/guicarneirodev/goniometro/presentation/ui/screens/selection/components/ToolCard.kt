@@ -24,6 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.domain.model.Tool
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun ToolCard(
@@ -38,9 +41,9 @@ fun ToolCard(
             .clickable(enabled = tool.isAvailable, onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = if (tool.isAvailable)
-                Color.White.copy(alpha = 0.95f)
+                PrimaryLight.copy(alpha = 0.95f)
             else
-                Color(0xFF788C9E).copy(alpha = 0.75f)
+                SecondaryDark.copy(alpha = 0.75f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
@@ -57,7 +60,7 @@ fun ToolCard(
                 modifier = Modifier
                     .size(48.dp)
                     .padding(end = 16.dp),
-                tint = if (tool.isAvailable) Color(0xFF1E88E5) else Color.White.copy(alpha = 0.5f)
+                tint = if (tool.isAvailable) AccentBlue else PrimaryLight.copy(alpha = 0.5f)
             )
 
             Column(
@@ -67,20 +70,23 @@ fun ToolCard(
                     text = stringResource(tool.nameResId),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = if (tool.isAvailable) Color.Black else Color.White.copy(alpha = 0.5f)
+                    color = if (tool.isAvailable) SecondaryDark else PrimaryLight.copy(alpha = 0.5f)
                 )
 
                 Text(
                     text = stringResource(tool.descriptionResId),
                     fontSize = 14.sp,
-                    color = if (tool.isAvailable) Color.Gray else Color.White.copy(alpha = 0.5f)
+                    color = if (tool.isAvailable)
+                        SecondaryDark.copy(alpha = 0.6f)
+                    else
+                        PrimaryLight.copy(alpha = 0.5f)
                 )
 
                 if (!tool.isAvailable) {
                     Text(
                         text = stringResource(R.string.coming_soon),
                         fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.5f),
+                        color = PrimaryLight.copy(alpha = 0.5f),
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(top = 4.dp)
                     )
