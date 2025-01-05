@@ -16,21 +16,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun LoginHeader(
-    showResetPassword: Boolean, onBackClick: () -> Unit
+    showResetPassword: Boolean,
+    onBackClick: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
         IconButton(
-            onClick = onBackClick, modifier = Modifier.align(Alignment.CenterStart)
+            onClick = onBackClick,
+            modifier = Modifier.align(Alignment.CenterStart)
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.voltar),
                 contentDescription = stringResource(R.string.back),
-                tint = Color.White,
+                tint = PrimaryLight,
                 modifier = Modifier.size(28.dp)
             )
         }
@@ -40,7 +43,7 @@ fun LoginHeader(
                 stringResource(R.string.reset_password)
             else
                 stringResource(R.string.login),
-            color = Color.White,
+            color = PrimaryLight,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Center)

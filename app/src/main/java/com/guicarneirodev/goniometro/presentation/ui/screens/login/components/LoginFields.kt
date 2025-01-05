@@ -36,6 +36,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -65,13 +68,16 @@ fun LoginFields(
             label = { Text(stringResource(R.string.email)) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1E88E5),
-                focusedLabelColor = Color(0xFF1E88E5),
-                cursorColor = Color(0xFF1E88E5)
+                focusedBorderColor = AccentBlue,
+                focusedLabelColor = AccentBlue,
+                cursorColor = AccentBlue,
+                unfocusedBorderColor = SecondaryDark.copy(alpha = 0.5f),
+                unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email, imeAction = ImeAction.Next
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
             ),
             shape = RoundedCornerShape(12.dp)
         )
@@ -79,18 +85,21 @@ fun LoginFields(
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
-            label = { Text( stringResource(R.string.password)) },
+            label = { Text(stringResource(R.string.password)) },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1E88E5),
-                focusedLabelColor = Color(0xFF1E88E5),
-                cursorColor = Color(0xFF1E88E5)
+                focusedBorderColor = AccentBlue,
+                focusedLabelColor = AccentBlue,
+                cursorColor = AccentBlue,
+                unfocusedBorderColor = SecondaryDark.copy(alpha = 0.5f),
+                unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
             ),
             singleLine = true,
             visualTransformation = if (passwordVisibility) VisualTransformation.None
             else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password, imeAction = ImeAction.Done
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
             ),
             trailingIcon = {
                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
@@ -98,8 +107,12 @@ fun LoginFields(
                         painter = painterResource(
                             id = if (passwordVisibility) R.drawable.pass_on
                             else R.drawable.pass_off
-                        ), contentDescription = if (passwordVisibility) stringResource(R.string.hide_password)
-                        else stringResource(R.string.show_password), tint = Color(0xFF1E88E5)
+                        ),
+                        contentDescription = if (passwordVisibility)
+                            stringResource(R.string.hide_password)
+                        else
+                            stringResource(R.string.show_password),
+                        tint = AccentBlue
                     )
                 }
             },
@@ -119,11 +132,14 @@ fun LoginFields(
                     checked = rememberEmail,
                     onCheckedChange = onRememberEmailChange,
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Color(0xFF1E88E5)
+                        checkedColor = AccentBlue,
+                        uncheckedColor = SecondaryDark.copy(alpha = 0.5f)
                     )
                 )
                 Text(
-                    stringResource(R.string.remember_email), fontSize = 14.sp
+                    stringResource(R.string.remember_email),
+                    fontSize = 14.sp,
+                    color = SecondaryDark
                 )
             }
 
@@ -135,11 +151,14 @@ fun LoginFields(
                     checked = rememberPassword,
                     onCheckedChange = onRememberPasswordChange,
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Color(0xFF1E88E5)
+                        checkedColor = AccentBlue,
+                        uncheckedColor = SecondaryDark.copy(alpha = 0.5f)
                     )
                 )
                 Text(
-                    stringResource(R.string.remember_password), fontSize = 14.sp
+                    stringResource(R.string.remember_password),
+                    fontSize = 14.sp,
+                    color = SecondaryDark
                 )
             }
         }
@@ -161,20 +180,23 @@ fun LoginFields(
                 .fillMaxWidth()
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1E88E5),
-                disabledContainerColor = Color(0xFF1E88E5).copy(alpha = 0.5f)
+                containerColor = AccentBlue,
+                disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
             ),
             shape = RoundedCornerShape(12.dp),
             enabled = isClickable
         ) {
             Text(
-                text = stringResource(R.string.enter), fontSize = 18.sp, fontWeight = FontWeight.Bold
+                text = stringResource(R.string.enter),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = PrimaryLight
             )
         }
 
         Text(
             text = stringResource(R.string.forgot_password),
-            color = Color(0xFF1E88E5),
+            color = AccentBlue,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier

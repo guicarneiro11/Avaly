@@ -15,6 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginUiState
+import com.guicarneirodev.goniometro.ui.theme.ErrorRed
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun LoginCard(
@@ -32,7 +34,7 @@ fun LoginCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.95f)
+            containerColor = PrimaryLight.copy(alpha = 0.95f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
@@ -73,7 +75,7 @@ fun LoginCard(
             uiState.errorMessage?.let {
                 Text(
                     text = it,
-                    color = Color.Red,
+                    color = ErrorRed,
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()

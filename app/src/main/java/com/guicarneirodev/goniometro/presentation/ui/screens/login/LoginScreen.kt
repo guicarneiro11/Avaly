@@ -25,6 +25,7 @@ import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorati
 import com.guicarneirodev.goniometro.presentation.ui.screens.login.components.LoginCard
 import com.guicarneirodev.goniometro.presentation.ui.screens.login.components.LoginHeader
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginScreenViewModel
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -46,20 +47,15 @@ fun LoginScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF1E88E5), Color(0xFF4FC3F7)
-                    )
-                )
-            )
+            .background(SecondaryDark)
     ) {
         BackgroundDecorations()
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp), contentAlignment = Alignment.Center
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 modifier = Modifier
@@ -67,18 +63,21 @@ fun LoginScreen(navController: NavController) {
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                LoginHeader(showResetPassword = uiState.showResetPassword, onBackClick = {
-                    if (uiState.showResetPassword) {
-                        viewModel.onBackToLoginClick()
-                    } else {
-                        navController.navigate("home") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
+                LoginHeader(
+                    showResetPassword = uiState.showResetPassword,
+                    onBackClick = {
+                        if (uiState.showResetPassword) {
+                            viewModel.onBackToLoginClick()
+                        } else {
+                            navController.navigate("home") {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
                             }
-                            launchSingleTop = true
                         }
                     }
-                })
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 

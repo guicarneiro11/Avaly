@@ -29,6 +29,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
+import com.guicarneirodev.goniometro.ui.theme.SuccessGreen
 
 @Composable
 fun ResetPasswordFields(
@@ -60,13 +64,18 @@ fun ResetPasswordFields(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isLoading,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF1E88E5),
-                        focusedLabelColor = Color(0xFF1E88E5),
-                        cursorColor = Color(0xFF1E88E5)
+                        focusedBorderColor = AccentBlue,
+                        focusedLabelColor = AccentBlue,
+                        cursorColor = AccentBlue,
+                        unfocusedBorderColor = SecondaryDark.copy(alpha = 0.5f),
+                        unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f),
+                        disabledBorderColor = SecondaryDark.copy(alpha = 0.3f),
+                        disabledLabelColor = SecondaryDark.copy(alpha = 0.5f)
                     ),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email, imeAction = ImeAction.Done
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Done
                     ),
                     shape = RoundedCornerShape(12.dp)
                 )
@@ -77,18 +86,23 @@ fun ResetPasswordFields(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1E88E5)
+                        containerColor = AccentBlue,
+                        disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
                     ),
                     shape = RoundedCornerShape(12.dp),
                     enabled = !isLoading
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            color = Color.White, modifier = Modifier.size(24.dp)
+                            color = PrimaryLight,
+                            modifier = Modifier.size(24.dp)
                         )
                     } else {
                         Text(
-                            text = stringResource(R.string.send_code), fontSize = 18.sp, fontWeight = FontWeight.Bold
+                            text = stringResource(R.string.send_code),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = PrimaryLight
                         )
                     }
                 }
@@ -96,7 +110,7 @@ fun ResetPasswordFields(
                 if (resetEmailSent) {
                     Text(
                         text = stringResource(R.string.recovery_email_sent),
-                        color = Color(0xFF4CAF50),
+                        color = SuccessGreen,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -116,17 +130,22 @@ fun ResetPasswordFields(
                 OutlinedTextField(
                     value = securityCode,
                     onValueChange = onSecurityCodeChange,
-                    label = { Text( stringResource(R.string.security_code) ) },
+                    label = { Text(stringResource(R.string.security_code)) },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !isLoading,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF1E88E5),
-                        focusedLabelColor = Color(0xFF1E88E5),
-                        cursorColor = Color(0xFF1E88E5)
+                        focusedBorderColor = AccentBlue,
+                        focusedLabelColor = AccentBlue,
+                        cursorColor = AccentBlue,
+                        unfocusedBorderColor = SecondaryDark.copy(alpha = 0.5f),
+                        unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f),
+                        disabledBorderColor = SecondaryDark.copy(alpha = 0.3f),
+                        disabledLabelColor = SecondaryDark.copy(alpha = 0.5f)
                     ),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number, imeAction = ImeAction.Done
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
                     ),
                     shape = RoundedCornerShape(12.dp)
                 )
@@ -137,20 +156,23 @@ fun ResetPasswordFields(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1E88E5)
+                        containerColor = AccentBlue,
+                        disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
                     ),
                     shape = RoundedCornerShape(12.dp),
                     enabled = !isLoading
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            color = Color.White, modifier = Modifier.size(24.dp)
+                            color = PrimaryLight,
+                            modifier = Modifier.size(24.dp)
                         )
                     } else {
                         Text(
                             text = stringResource(R.string.verify_code),
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = PrimaryLight
                         )
                     }
                 }
