@@ -24,6 +24,8 @@ import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterScreenViewMo
 import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterHeader
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterCard
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -33,14 +35,7 @@ fun RegisterScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF1E88E5),
-                        Color(0xFF4FC3F7)
-                    )
-                )
-            )
+            .background(SecondaryDark) // Cor base (30%)
     ) {
         BackgroundDecorations()
 
@@ -48,11 +43,11 @@ fun RegisterScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.4f)),
+                    .background(SecondaryDark.copy(alpha = 0.7f)),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    color = Color.White,
+                    color = AccentBlue,
                     modifier = Modifier.size(48.dp)
                 )
             }

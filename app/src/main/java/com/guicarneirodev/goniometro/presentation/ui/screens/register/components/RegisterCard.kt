@@ -13,6 +13,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterUiState
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun RegisterCard(
@@ -43,7 +47,7 @@ fun RegisterCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.95f)
+            containerColor = PrimaryLight.copy(alpha = 0.95f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
@@ -59,9 +63,15 @@ fun RegisterCard(
                 onValueChange = onEmailChange,
                 label = { Text(stringResource(R.string.email)) },
                 isError = uiState.emailError.isNotEmpty(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = AccentBlue,
+                    focusedLabelColor = AccentBlue,
+                    unfocusedBorderColor = SecondaryDark.copy(alpha = 0.5f),
+                    unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
+                ),
                 supportingText = {
                     if (uiState.emailError.isNotEmpty()) {
-                        Text(uiState.emailError)
+                        Text(uiState.emailError, color = Color.Red)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -70,6 +80,12 @@ fun RegisterCard(
 
             var passwordVisibility by remember { mutableStateOf(false) }
             OutlinedTextField(
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = AccentBlue,
+                    focusedLabelColor = AccentBlue,
+                    unfocusedBorderColor = SecondaryDark.copy(alpha = 0.5f),
+                    unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
+                ),
                 value = uiState.password,
                 onValueChange = onPasswordChange,
                 label = { Text(stringResource(R.string.password)) },
@@ -107,6 +123,12 @@ fun RegisterCard(
             )
 
             OutlinedTextField(
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = AccentBlue,
+                    focusedLabelColor = AccentBlue,
+                    unfocusedBorderColor = SecondaryDark.copy(alpha = 0.5f),
+                    unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
+                ),
                 value = uiState.confirmPassword,
                 onValueChange = onConfirmPasswordChange,
                 label = { Text( stringResource(R.string.confirm_password)) },
@@ -166,13 +188,14 @@ fun RegisterCard(
                         uiState.passwordError.isEmpty() &&
                         uiState.confirmPasswordError.isEmpty(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1E88E5),
-                    disabledContainerColor = Color(0xFF1E88E5).copy(alpha = 0.5f)
+                    containerColor = AccentBlue,
+                    disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
                     stringResource(R.string.create_account_button),
+                    color = PrimaryLight,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

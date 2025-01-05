@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.res.stringResource
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun RegisterHeader(onBackClick: () -> Unit) {
@@ -32,14 +33,14 @@ fun RegisterHeader(onBackClick: () -> Unit) {
             Icon(
                 painter = painterResource(id = R.drawable.voltar),
                 contentDescription = stringResource(R.string.back),
-                tint = Color.White,
+                tint = PrimaryLight,
                 modifier = Modifier.size(28.dp)
             )
         }
 
         Text(
             text = stringResource(R.string.create_account_header),
-            color = Color.White,
+            color = PrimaryLight,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Center)
