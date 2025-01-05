@@ -17,3 +17,6 @@ val AccentBlue = Color(0xFF5372FE)
 val PrimaryLightAlpha = PrimaryLight.copy(alpha = 0.1f)
 val SecondaryDarkAlpha = SecondaryDark.copy(alpha = 0.8f)
 val AccentBlueAlpha = AccentBlue.copy(alpha = 0.9f)
+
+val SuccessGreen = Color(0xFF4CAF50)
+val ErrorRed = Color(0xFFE53935)

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterUiState
 import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.ErrorRed
 import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
@@ -71,7 +72,7 @@ fun RegisterCard(
                 ),
                 supportingText = {
                     if (uiState.emailError.isNotEmpty()) {
-                        Text(uiState.emailError, color = Color.Red)
+                        Text(uiState.emailError, color = ErrorRed)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -92,7 +93,7 @@ fun RegisterCard(
                 isError = uiState.passwordError.isNotEmpty(),
                 supportingText = {
                     if (uiState.passwordError.isNotEmpty()) {
-                        Text(uiState.passwordError)
+                        Text(uiState.passwordError, color = ErrorRed)
                     }
                 },
                 visualTransformation = if (passwordVisibility)
@@ -135,7 +136,7 @@ fun RegisterCard(
                 isError = uiState.confirmPasswordError.isNotEmpty(),
                 supportingText = {
                     if (uiState.confirmPasswordError.isNotEmpty()) {
-                        Text(uiState.confirmPasswordError)
+                        Text(uiState.confirmPasswordError, color = ErrorRed)
                     }
                 },
                 visualTransformation = if (passwordVisibility)
@@ -168,7 +169,7 @@ fun RegisterCard(
             if (uiState.errorMessage.isNotEmpty()) {
                 Text(
                     text = uiState.errorMessage,
-                    color = Color.Red,
+                    color = ErrorRed,
                     fontSize = 14.sp,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
