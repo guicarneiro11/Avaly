@@ -22,6 +22,7 @@ import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.Dra
 import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.HomeContent
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.LogoSection
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -31,14 +32,7 @@ fun HomeScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF1E88E5),
-                        Color(0xFF4FC3F7)
-                    )
-                )
-            )
+            .background(SecondaryDark)
     ) {
         BackgroundDecorations()
 
@@ -52,9 +46,7 @@ fun HomeScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(80.dp))
-
                 LogoSection()
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun WelcomeText() {
@@ -18,21 +19,21 @@ fun WelcomeText() {
     ) {
         Text(
             text = stringResource(R.string.welcome_to),
-            color = Color.White,
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold
+            color = PrimaryLight,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Medium
         )
         Text(
             text = stringResource(R.string.app_name_slogan),
-            color = Color.White.copy(alpha = 0.9f),
-            fontSize = 40.sp,
-            fontWeight = FontWeight.ExtraBold
+            color = PrimaryLight,
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Bold
         )
         Text(
             text = stringResource(R.string.app_description),
-            color = Color.White.copy(alpha = 0.8f),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Light
+            color = PrimaryLight.copy(alpha = 0.8f),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Normal
         )
     }
 }

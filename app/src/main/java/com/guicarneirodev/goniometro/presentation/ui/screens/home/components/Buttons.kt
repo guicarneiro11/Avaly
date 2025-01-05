@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -49,18 +51,18 @@ fun NavigationButtons(navController: NavController) {
                 .fillMaxWidth()
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White.copy(alpha = 0.2f),
-                disabledContainerColor = Color.White.copy(alpha = 0.1f)
+                containerColor = PrimaryLight.copy(alpha = 0.1f),
+                disabledContainerColor = PrimaryLight.copy(alpha = 0.05f)
             ),
-            shape = RoundedCornerShape(16.dp),
-            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, PrimaryLight.copy(alpha = 0.2f)),
             enabled = isClickable
         ) {
             Text(
                 text = stringResource(R.string.login),
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
+                color = PrimaryLight,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
             )
         }
 
@@ -79,17 +81,17 @@ fun NavigationButtons(navController: NavController) {
                 .fillMaxWidth()
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                disabledContainerColor = Color.White.copy(alpha = 0.7f)
+                containerColor = AccentBlue,
+                disabledContainerColor = AccentBlue.copy(alpha = 0.7f)
             ),
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(12.dp),
             enabled = isClickable
         ) {
             Text(
                 text = stringResource(R.string.create_account),
-                color = Color(0xFF1E88E5),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
+                color = PrimaryLight,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
             )
         }
     }
