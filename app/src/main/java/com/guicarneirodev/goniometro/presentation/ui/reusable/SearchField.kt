@@ -13,6 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun SearchField(
@@ -25,20 +28,23 @@ fun SearchField(
         onValueChange = onValueChange,
         modifier = modifier,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            focusedBorderColor = Color(0xFF1E88E5),
-            unfocusedBorderColor = Color.White
+            focusedContainerColor = PrimaryLight,
+            unfocusedContainerColor = PrimaryLight,
+            focusedBorderColor = AccentBlue,
+            unfocusedBorderColor = PrimaryLight,
+            focusedLeadingIconColor = AccentBlue,
+            unfocusedLeadingIconColor = AccentBlue.copy(alpha = 0.7f),
+            focusedPlaceholderColor = SecondaryDark.copy(alpha = 0.6f),
+            unfocusedPlaceholderColor = SecondaryDark.copy(alpha = 0.6f)
         ),
         shape = RoundedCornerShape(12.dp),
         placeholder = {
-            Text(stringResource(R.string.search_hint), color = Color.Gray)
+            Text(stringResource(R.string.search_hint))
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = stringResource(R.string.search_hint),
-                tint = Color(0xFF1E88E5)
+                contentDescription = stringResource(R.string.search_hint)
             )
         },
         singleLine = true

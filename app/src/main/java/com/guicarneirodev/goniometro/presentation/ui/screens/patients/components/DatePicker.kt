@@ -17,6 +17,8 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun DatePicker(
@@ -47,12 +49,14 @@ fun DatePicker(
                 }
             }
         },
-        label = { Text( stringResource(R.string.evaluation_date) ) },
-        placeholder = { Text( stringResource(R.string.date_placeholder) ) },
+        label = { Text(stringResource(R.string.evaluation_date)) },
+        placeholder = { Text(stringResource(R.string.date_placeholder)) },
         modifier = Modifier.fillMaxWidth(),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Color(0xFF1E88E5),
-            focusedLabelColor = Color(0xFF1E88E5)
+            focusedBorderColor = AccentBlue,
+            focusedLabelColor = AccentBlue,
+            unfocusedBorderColor = SecondaryDark.copy(alpha = 0.3f),
+            unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )

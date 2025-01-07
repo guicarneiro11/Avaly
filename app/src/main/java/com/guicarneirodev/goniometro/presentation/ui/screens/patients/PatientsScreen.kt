@@ -41,6 +41,9 @@ import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.PatientCard
 import com.guicarneirodev.goniometro.presentation.viewmodel.PatientsScreenViewModel
 import com.guicarneirodev.goniometro.presentation.viewmodel.UiState
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 data class Patient(
     val id: String,
@@ -67,16 +70,21 @@ fun PatientsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text( stringResource(R.string.patients), color = Color(0xFF1E88E5) ) },
+                title = {
+                    Text(
+                        stringResource(R.string.patients),
+                        color = AccentBlue
+                    )
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White.copy(alpha = 0.95f)
+                    containerColor = PrimaryLight.copy(alpha = 0.95f)
                 ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
-                            tint = Color(0xFF1E88E5)
+                            tint = AccentBlue
                         )
                     }
                 },
@@ -86,7 +94,7 @@ fun PatientsScreen(
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = stringResource(R.string.add_action),
-                            tint = Color(0xFF1E88E5)
+                            tint = AccentBlue
                         )
                     }
                     if (showAddDialog) {
@@ -101,17 +109,13 @@ fun PatientsScreen(
                 }
             )
         },
-        containerColor = Color(0xFF1E88E5)
+        containerColor = SecondaryDark
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color(0xFF1E88E5), Color(0xFF4FC3F7))
-                    )
-                )
+                .background(SecondaryDark)
         ) {
             SearchField(
                 value = searchQuery,
@@ -143,6 +147,7 @@ fun PatientsScreen(
                 }
             }
         }
+
         LaunchedEffect(uiState) {
             when (uiState) {
                 is UiState.Success -> {

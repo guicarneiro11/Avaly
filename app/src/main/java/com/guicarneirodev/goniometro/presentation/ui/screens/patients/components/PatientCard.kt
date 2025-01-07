@@ -25,6 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.Patient
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun PatientCard(
@@ -40,7 +43,7 @@ fun PatientCard(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .animateContentSize(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.95f)),
+        colors = CardDefaults.cardColors(containerColor = PrimaryLight.copy(alpha = 0.95f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -57,12 +60,12 @@ fun PatientCard(
                     Text(
                         text = patient.name,
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color(0xFF1E88E5)
+                        color = SecondaryDark
                     )
                     Text(
                         text = patient.evaluationDate,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF1E88E5).copy(alpha = 0.7f)
+                        color = SecondaryDark.copy(alpha = 0.7f)
                     )
                 }
 
@@ -105,14 +108,14 @@ fun ActionIconButton(
         modifier = modifier
             .size(40.dp)
             .background(
-                color = Color(0xFF1E88E5).copy(alpha = 0.1f),
+                color = AccentBlue.copy(alpha = 0.1f),
                 shape = CircleShape
             )
     ) {
         Icon(
             painter = painterResource(id = icon),
             contentDescription = description,
-            tint = Color(0xFF1E88E5),
+            tint = AccentBlue,
             modifier = Modifier.size(24.dp)
         )
     }

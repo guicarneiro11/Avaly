@@ -26,6 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.Patient
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun EditPatientDialog(
@@ -42,12 +45,12 @@ fun EditPatientDialog(
             .fillMaxWidth()
             .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
-        containerColor = Color.White,
+        containerColor = PrimaryLight,
         title = {
             Text(
                 stringResource(R.string.edit_patient),
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF1E88E5),
+                color = AccentBlue,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -58,11 +61,13 @@ fun EditPatientDialog(
                 OutlinedTextField(
                     value = editedName,
                     onValueChange = { editedName = it },
-                    label = { Text( stringResource(R.string.patient_name) ) },
+                    label = { Text(stringResource(R.string.patient_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF1E88E5),
-                        focusedLabelColor = Color(0xFF1E88E5)
+                        focusedBorderColor = AccentBlue,
+                        focusedLabelColor = AccentBlue,
+                        unfocusedBorderColor = SecondaryDark.copy(alpha = 0.3f),
+                        unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
                     )
                 )
 
@@ -80,21 +85,22 @@ fun EditPatientDialog(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1E88E5)
+                    containerColor = AccentBlue,
+                    contentColor = PrimaryLight
                 )
             ) {
-                Text( stringResource(R.string.save) )
+                Text(stringResource(R.string.save))
             }
         },
         dismissButton = {
             OutlinedButton(
                 onClick = onDismiss,
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFF1E88E5)
+                    contentColor = AccentBlue
                 ),
-                border = BorderStroke(1.dp, Color(0xFF1E88E5))
+                border = BorderStroke(1.dp, AccentBlue)
             ) {
-                Text( stringResource(R.string.cancel) )
+                Text(stringResource(R.string.cancel))
             }
         }
     )

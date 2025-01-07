@@ -1,5 +1,6 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.patients.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +31,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.UiState
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.ErrorRed
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun SendPdfDialog(
@@ -58,12 +64,12 @@ fun SendPdfDialog(
             .fillMaxWidth()
             .padding(16.dp),
         shape = RoundedCornerShape(16.dp),
-        containerColor = Color.White,
+        containerColor = PrimaryLight,
         title = {
             Text(
                 stringResource(R.string.send_pdf),
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF1E88E5),
+                color = AccentBlue,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -79,6 +85,14 @@ fun SendPdfDialog(
                     label = { Text(stringResource(R.string.email)) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = !isValidEmail && email.isNotEmpty(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = AccentBlue,
+                        focusedLabelColor = AccentBlue,
+                        unfocusedBorderColor = SecondaryDark.copy(alpha = 0.3f),
+                        unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f),
+                        errorBorderColor = ErrorRed,
+                        errorLabelColor = ErrorRed
+                    ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
 
@@ -87,7 +101,7 @@ fun SendPdfDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        color = Color(0xFF1E88E5)
+                        color = AccentBlue
                     )
                 }
 
@@ -95,7 +109,7 @@ fun SendPdfDialog(
                     is UiState.Error -> {
                         Text(
                             uiState.message,
-                            color = Color.Red,
+                            color = ErrorRed,
                             modifier = Modifier.padding(top = 8.dp)
                         )
                     }
@@ -108,13 +122,15 @@ fun SendPdfDialog(
                 onClick = { if (isValidEmail && email.isNotBlank()) onSend(email) },
                 enabled = isValidEmail && email.isNotBlank() && !isLoading,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1E88E5)
+                    containerColor = AccentBlue,
+                    contentColor = PrimaryLight,
+                    disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
                 )
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = Color.White,
+                        color = PrimaryLight,
                         strokeWidth = 2.dp
                     )
                 } else {
@@ -125,7 +141,12 @@ fun SendPdfDialog(
         dismissButton = {
             OutlinedButton(
                 onClick = onDismiss,
-                enabled = !isLoading
+                enabled = !isLoading,
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = AccentBlue,
+                    disabledContentColor = AccentBlue.copy(alpha = 0.5f)
+                ),
+                border = BorderStroke(1.dp, if (isLoading) AccentBlue.copy(alpha = 0.5f) else AccentBlue)
             ) {
                 Text(stringResource(R.string.cancel))
             }
