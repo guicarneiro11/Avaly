@@ -16,15 +16,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.domain.repository.AngleData
+import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.ModernEditDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.ResultsAppBar
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.ResultsList
-import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import org.koin.androidx.compose.koinViewModel

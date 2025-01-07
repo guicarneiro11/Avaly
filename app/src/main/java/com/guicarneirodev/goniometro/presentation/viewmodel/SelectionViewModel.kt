@@ -11,12 +11,12 @@ import com.guicarneirodev.goniometro.domain.usecase.GetAvailableToolsUseCase
 import com.guicarneirodev.goniometro.domain.usecase.GetUserPreferencesUseCase
 import com.guicarneirodev.goniometro.domain.usecase.LogoutUseCase
 import com.guicarneirodev.goniometro.domain.usecase.SaveUserPreferencesUseCase
+import com.guicarneirodev.goniometro.utils.LocaleHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.guicarneirodev.goniometro.utils.LocaleHelper
 
 data class SelectionUiState(
     val tools: List<Tool> = emptyList(),
@@ -80,16 +80,6 @@ class SelectionViewModel(
                 val newPreferences = currentPreferences.copy(language = language)
                 saveUserPreferencesUseCase(newPreferences)
                 _uiState.update { it.copy(userPreferences = newPreferences) }
-            }
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            try {
-                logoutUseCase()
-            } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = e.message) }
             }
         }
     }

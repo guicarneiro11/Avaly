@@ -12,16 +12,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.guicarneirodev.goniometro.presentation.viewmodel.HomeScreenViewModel
-import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.DraggableContent
 import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
+import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.DraggableContent
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.HomeContent
 import com.guicarneirodev.goniometro.presentation.ui.screens.home.components.LogoSection
+import com.guicarneirodev.goniometro.presentation.viewmodel.HomeScreenViewModel
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable

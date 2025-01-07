@@ -12,11 +12,4 @@ sealed class GoniometryState {
         val currentQuadrant: Int,
         val measurementValue: Double? = null
     ) : GoniometryState()
-
-    data class Measuring(
-        val imageUri: Uri?,
-        val lines: List<Pair<Offset, Offset>>,
-        val currentLine: Pair<Offset, Offset>,
-        val currentQuadrant: Int,
-    )
 }

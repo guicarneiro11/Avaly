@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
 
 class ResultsRepositoryImpl(
-    userId: String,
-    patientId: String
+    userId: String, patientId: String
 ) : ResultsRepository {
     private val db = Firebase.firestore
-    private val resultsCollection = db.collection("users").document(userId)
-        .collection("patients").document(patientId).collection("results")
+    private val resultsCollection =
+        db.collection("users").document(userId).collection("patients").document(patientId)
+            .collection("results")
 
     private val _angles = MutableStateFlow<List<AngleData>>(emptyList())
     override val angles: StateFlow<List<AngleData>> = _angles.asStateFlow()
@@ -44,9 +44,7 @@ class ResultsRepositoryImpl(
 
     override suspend fun addAngle(name: String, value: String) {
         val newAngle = hashMapOf(
-            "name" to name,
-            "value" to value,
-            "created" to FieldValue.serverTimestamp()
+            "name" to name, "value" to value, "created" to FieldValue.serverTimestamp()
         )
         resultsCollection.add(newAngle).await()
     }
@@ -54,8 +52,7 @@ class ResultsRepositoryImpl(
     override suspend fun updateAngle(docId: String, newName: String, newValue: String) {
         resultsCollection.document(docId).update(
             mapOf(
-                "name" to newName,
-                "value" to newValue
+                "name" to newName, "value" to newValue
             )
         ).await()
     }

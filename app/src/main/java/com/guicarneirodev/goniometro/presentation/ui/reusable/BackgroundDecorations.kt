@@ -6,17 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.ui.theme.AccentBlue
 import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
@@ -48,8 +44,7 @@ fun BackgroundDecorations() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        AccentBlue.copy(alpha = 0.1f),
-                        Color.Transparent
+                        AccentBlue.copy(alpha = 0.1f), Color.Transparent
                     )
                 )
             )

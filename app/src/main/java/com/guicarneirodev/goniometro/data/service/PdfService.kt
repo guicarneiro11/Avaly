@@ -34,18 +34,12 @@ object RetrofitInstance {
     private const val BASE_URL = "http://52.67.118.48:8080/"
 
     val retrofit: Retrofit by lazy {
-        val client = OkHttpClient.Builder()
-            .addInterceptor(LoggingInterceptor())
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
+        val client = OkHttpClient.Builder().addInterceptor(LoggingInterceptor())
+            .connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS).build()
 
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        Retrofit.Builder().baseUrl(BASE_URL).client(client)
+            .addConverterFactory(GsonConverterFactory.create()).build()
     }
 }
 
@@ -68,7 +62,9 @@ class LoggingInterceptor : Interceptor {
 class RetrofitPdfService(private val loginRepository: LoginRepository) : PdfService {
     private val api: SendPdfApi = RetrofitInstance.retrofit.create(SendPdfApi::class.java)
 
-    override suspend fun sendPdfToEmail(userId: String, patientId: String, email: String): Result<Unit> {
+    override suspend fun sendPdfToEmail(
+        userId: String, patientId: String, email: String
+    ): Result<Unit> {
         return withContext(Dispatchers.IO) {
             try {
                 Log.d("PdfService", "Sending PDF - PatientId: $patientId, Email: $email")

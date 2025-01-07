@@ -28,8 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,8 +35,8 @@ import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.AddPatientDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.EditPatientDialog
-import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.SendPdfDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.PatientCard
+import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.SendPdfDialog
 import com.guicarneirodev.goniometro.presentation.viewmodel.PatientsScreenViewModel
 import com.guicarneirodev.goniometro.presentation.viewmodel.UiState
 import com.guicarneirodev.goniometro.ui.theme.AccentBlue

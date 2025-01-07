@@ -8,22 +8,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.compose.foundation.layout.size
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterScreenViewModel
+import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
-import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterHeader
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterCard
+import com.guicarneirodev.goniometro.presentation.ui.screens.register.components.RegisterHeader
+import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterScreenViewModel
 import com.guicarneirodev.goniometro.ui.theme.AccentBlue
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
@@ -35,7 +33,7 @@ fun RegisterScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SecondaryDark) // Cor base (30%)
+            .background(SecondaryDark)
     ) {
         BackgroundDecorations()
 
