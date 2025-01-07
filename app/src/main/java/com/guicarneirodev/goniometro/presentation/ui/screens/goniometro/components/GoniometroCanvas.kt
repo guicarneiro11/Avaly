@@ -19,6 +19,9 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.dp
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import java.lang.Math.toDegrees
 import java.util.Locale
 import kotlin.math.atan2
@@ -52,7 +55,7 @@ fun GoniometroCanvas(
     ) {
         lines.forEach { (start, end) ->
             drawLine(
-                color = Color.Black,
+                color = AccentBlue,
                 start = start,
                 end = end,
                 strokeWidth = 44f
@@ -61,7 +64,7 @@ fun GoniometroCanvas(
 
         if (lineStart != Offset.Zero && lineEnd != Offset.Zero) {
             drawLine(
-                color = Color.Black,
+                color = AccentBlue,
                 start = lineStart,
                 end = lineEnd,
                 strokeWidth = 44f
@@ -153,14 +156,14 @@ fun DrawScope.drawAngleText(text: String, textOffset: Offset) {
     )
 
     drawRoundRect(
-        color = Color.White,
+        color = PrimaryLight,
         topLeft = Offset(textBounds.left, textBounds.top),
         size = Size(textBounds.width(), textBounds.height()),
         cornerRadius = CornerRadius(4f, 4f)
     )
 
     drawRoundRect(
-        color = Color.Black,
+        color = AccentBlue,
         topLeft = Offset(textBounds.left, textBounds.top),
         size = Size(textBounds.width(), textBounds.height()),
         cornerRadius = CornerRadius(4f, 4f),
@@ -168,7 +171,7 @@ fun DrawScope.drawAngleText(text: String, textOffset: Offset) {
     )
 
     drawIntoCanvas { canvas ->
-        paint.color = Color.Black.toArgb()
+        paint.color = SecondaryDark.toArgb()
         canvas.nativeCanvas.drawText(
             text,
             textOffset.x - textWidth / 2,

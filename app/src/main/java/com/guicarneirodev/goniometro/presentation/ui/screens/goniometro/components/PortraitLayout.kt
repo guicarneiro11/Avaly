@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun PortraitLayout(viewModel: GoniometroScreenViewModel) {
@@ -21,7 +23,8 @@ fun PortraitLayout(viewModel: GoniometroScreenViewModel) {
     val isLineSet by viewModel.isLineSet
 
     Column(
-        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
@@ -32,17 +35,19 @@ fun PortraitLayout(viewModel: GoniometroScreenViewModel) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = Color(0xFF1E88E5).copy(alpha = 0.1f),
+                        color = AccentBlue.copy(alpha = 0.1f),
                         shape = RoundedCornerShape(12.dp)
                     )
             )
 
             BackgroundImage(
-                currentImageUri = currentImageUri, modifier = Modifier.fillMaxSize()
+                currentImageUri = currentImageUri,
+                modifier = Modifier.fillMaxSize()
             )
 
             if (isLineSet) {
-                GoniometroCanvas(lineStart = viewModel.lineStart.value,
+                GoniometroCanvas(
+                    lineStart = viewModel.lineStart.value,
                     lineEnd = viewModel.lineEnd.value,
                     lines = viewModel.lines.value,
                     selectedAngleIndex = viewModel.selectedAngleIndex.value,
@@ -60,10 +65,11 @@ fun PortraitLayout(viewModel: GoniometroScreenViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = Color.White.copy(alpha = 0.95f),
+                    color = PrimaryLight.copy(alpha = 0.95f),
                     shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                 )
-                .padding(16.dp), viewModel = viewModel
+                .padding(16.dp),
+            viewModel = viewModel
         )
     }
 }

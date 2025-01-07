@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun InstructionList() {
@@ -43,7 +45,7 @@ fun InstructionList() {
             .fillMaxSize()
             .padding(16.dp)
             .background(
-                color = Color.White.copy(alpha = 0.95f),
+                color = PrimaryLight.copy(alpha = 0.95f),
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
@@ -53,14 +55,14 @@ fun InstructionList() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp),
-                color = Color(0xFF1E88E5),
+                color = AccentBlue,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
 
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 12.dp),
-                color = Color(0xFF1E88E5).copy(alpha = 0.1f)
+                color = AccentBlue.copy(alpha = 0.1f)
             )
         }
     }
@@ -78,7 +80,7 @@ fun InstructionsDialog(onDismiss: () -> Unit) {
             Text(
                 text = stringResource(R.string.instructions),
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color(0xFF1E88E5),
+                color = AccentBlue,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -86,13 +88,16 @@ fun InstructionsDialog(onDismiss: () -> Unit) {
         confirmButton = {
             Button(
                 onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = AccentBlue,
+                    contentColor = PrimaryLight
+                ),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text( stringResource(R.string.close) )
+                Text(stringResource(R.string.close))
             }
         },
-        containerColor = Color.White,
+        containerColor = PrimaryLight,
         shape = RoundedCornerShape(16.dp)
     )
 }

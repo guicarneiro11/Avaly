@@ -22,12 +22,10 @@ fun BackgroundImage(currentImageUri: Uri?, modifier: Modifier = Modifier) {
                             "BackgroundImage",
                             "Imagem carregada com sucesso"
                         )
-
                         is AsyncImagePainter.State.Error -> Log.e(
                             "BackgroundImage",
                             "Erro ao carregar imagem: ${state.result.throwable}"
                         )
-
                         else -> {}
                     }
                 }),

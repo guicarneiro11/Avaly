@@ -19,11 +19,13 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +42,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.GoniometroStyle
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,9 +61,11 @@ fun ModernTopBar(
     var menuDropdownExpanded by remember { mutableStateOf(false) }
     val currentAngle by viewModel.currentAngle.collectAsState()
 
-    TopAppBar(title = { }, colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = Color.White.copy(alpha = 0.95f),
-        actionIconContentColor = Color(0xFF1E88E5)
+    TopAppBar(
+        title = { },
+        colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = PrimaryLight.copy(alpha = 0.95f),
+        actionIconContentColor = AccentBlue
     ), actions = {
         Box(
             modifier = Modifier.fillMaxWidth()
@@ -74,15 +82,16 @@ fun ModernTopBar(
                             imageVector = Icons.Default.Menu,
                             contentDescription = "Menu",
                             modifier = Modifier.size(32.dp),
-                            tint = Color(0xFF1E88E5)
+                            tint = AccentBlue
                         )
                     }
                 }
 
                 Box(
-                    modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.CenterEnd
                 ) {
-                    AngleDisplay(currentAngle)
+                    AngleDisplay(viewModel.currentAngle.collectAsState().value)
                 }
             }
 
@@ -127,15 +136,34 @@ fun AngleDropdownMenu(
     onSelectedAngleIndexChange: (Int) -> Unit
 ) {
     DropdownMenu(
-        expanded = expanded, onDismissRequest = onDismissRequest
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        modifier = Modifier.background(
+            color = PrimaryLight,
+            shape = RoundedCornerShape(GoniometroStyle.SmallCornerRadius)
+        )
     ) {
         angleOptions.forEachIndexed { index, title ->
-            DropdownMenuItem(onClick = {
-                onSelectedAngleIndexChange(index)
-                onDismissRequest()
-            }) {
-                Text(title)
-            }
+            androidx.compose.material3.DropdownMenuItem(
+                text = {
+                    Text(
+                        text = title,
+                        color = SecondaryDark,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
+                onClick = {
+                    onSelectedAngleIndexChange(index)
+                    onDismissRequest()
+                },
+                modifier = Modifier.background(
+                    color = if (index % 2 == 0) {
+                        PrimaryLight
+                    } else {
+                        SecondaryDark.copy(alpha = 0.05f)
+                    }
+                )
+            )
         }
     }
 }
@@ -143,26 +171,40 @@ fun AngleDropdownMenu(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DropdownMenuItem(
-    onClick: () -> Unit, content: @Composable () -> Unit
+    onClick: () -> Unit,
+    content: @Composable () -> Unit
 ) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(8.dp)
-        .background(Color.White, shape = RoundedCornerShape(2.dp))
-        .pointerInteropFilter {
-            when (it.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    onClick()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(GoniometroStyle.SmallPadding)
+            .background(
+                color = PrimaryLight,
+                shape = RoundedCornerShape(GoniometroStyle.SmallCornerRadius)
+            )
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        onClick()
+                    }
                 }
+                true
             }
-            true
-        }) {
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier
+                .padding(
+                    horizontal = GoniometroStyle.DefaultPadding,
+                    vertical = GoniometroStyle.SmallPadding
+                )
         ) {
-            Spacer(modifier = Modifier.width(8.dp))
-            content()
+            Spacer(modifier = Modifier.width(GoniometroStyle.SmallPadding))
+            CompositionLocalProvider(
+                LocalContentColor provides SecondaryDark
+            ) {
+                content()
+            }
         }
     }
 }
@@ -174,16 +216,19 @@ fun AngleDisplay(angle: Double?) {
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .background(
-                color = Color.White, shape = RoundedCornerShape(8.dp)
+                color = PrimaryLight,
+                shape = RoundedCornerShape(8.dp)
             )
             .padding(8.dp)
     ) {
-        Text(text = stringResource(
-            R.string.angle_found,
-            angle?.let { String.format("%.1f", it) } ?: stringResource(R.string.angle_placeholder)
-        ),
+        Text(
+            text = stringResource(
+                R.string.angle_found,
+                angle?.let { String.format("%.1f", it) } ?: stringResource(R.string.angle_placeholder)
+            ),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF1E88E5))
+            color = AccentBlue
+        )
     }
 }

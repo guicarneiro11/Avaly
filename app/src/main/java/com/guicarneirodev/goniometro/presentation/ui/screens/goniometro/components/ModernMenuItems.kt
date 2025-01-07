@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun ModernMenuItems(
@@ -44,12 +46,14 @@ fun ModernMenuItems(
         InstructionsDialog(onDismiss = { dialogOpen = false })
     }
 
-    ModernMenuItem(icon = painterResource(id = R.drawable.clinical_notes),
+    ModernMenuItem(
+        icon = painterResource(id = R.drawable.clinical_notes),
         text = stringResource(R.string.patients),
         onClick = {
             navController.navigate("patients/$userId")
             onDismiss()
-        })
+        }
+    )
 
     ModernMenuItem(
         icon = painterResource(id = R.drawable.photo_library),
@@ -83,8 +87,10 @@ fun ModernMenuItems(
 }
 
 @Composable
-private fun ModernMenuItem(
-    icon: Painter, text: String, onClick: () -> Unit
+fun ModernMenuItem(
+    icon: Painter,
+    text: String,
+    onClick: () -> Unit
 ) {
     Surface(
         onClick = onClick,
@@ -92,7 +98,7 @@ private fun ModernMenuItem(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp),
         shape = RoundedCornerShape(8.dp),
-        color = Color.White
+        color = PrimaryLight
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -103,13 +109,13 @@ private fun ModernMenuItem(
                 painter = icon,
                 contentDescription = text,
                 modifier = Modifier.size(24.dp),
-                tint = Color(0xFF1E88E5)
+                tint = AccentBlue
             )
 
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color(0xFF1E88E5),
+                color = AccentBlue,
                 fontWeight = FontWeight.Medium
             )
         }

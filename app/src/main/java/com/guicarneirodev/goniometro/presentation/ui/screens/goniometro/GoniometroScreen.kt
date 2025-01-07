@@ -34,6 +34,7 @@ import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.componen
 import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components.PortraitLayout
 import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import com.guicarneirodev.goniometro.utils.createImageFile
 
 @Composable
@@ -84,31 +85,31 @@ fun GoniometroScreen(navController: NavController) {
         onDispose { }
     }
 
-    Scaffold(topBar = {
-        ModernTopBar(viewModel = viewModel,
-            navController = navController,
-            onImportImage = { importLauncher.launch("image/*") },
-            onCaptureImage = {
-                val permissionCheckResult =
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-                if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                    captureLauncher.launch(captureUri)
-                } else {
-                    permissionLauncher.launch(Manifest.permission.CAMERA)
+    Scaffold(
+        topBar = {
+            ModernTopBar(
+                viewModel = viewModel,
+                navController = navController,
+                onImportImage = { importLauncher.launch("image/*") },
+                onCaptureImage = {
+                    val permissionCheckResult = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    )
+                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                        captureLauncher.launch(captureUri)
+                    } else {
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
                 }
-            })
-    }) { paddingValues ->
+            )
+        }
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF1E88E5), Color(0xFF4FC3F7)
-                        )
-                    )
-                )
+                .background(SecondaryDark)
         ) {
             BackgroundDecorations()
 

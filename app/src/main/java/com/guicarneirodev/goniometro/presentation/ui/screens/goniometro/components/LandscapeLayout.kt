@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
 fun LandscapeLayout(viewModel: GoniometroScreenViewModel) {
@@ -32,7 +33,7 @@ fun LandscapeLayout(viewModel: GoniometroScreenViewModel) {
             modifier = Modifier
                 .weight(0.2f)
                 .fillMaxHeight()
-                .background(color = Color.White.copy(alpha = 0.95f))
+                .background(color = PrimaryLight.copy(alpha = 0.95f))
         ) {
             LazyColumn(
                 modifier = Modifier

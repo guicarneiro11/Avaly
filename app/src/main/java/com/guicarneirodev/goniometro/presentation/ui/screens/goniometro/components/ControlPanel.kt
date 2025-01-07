@@ -25,20 +25,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.ErrorRed
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun ControlPanel(
-    modifier: Modifier = Modifier, viewModel: GoniometroScreenViewModel
+    modifier: Modifier = Modifier,
+    viewModel: GoniometroScreenViewModel
 ) {
     Column(
-        modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        AnimatedMeasurementButton(isLineSet = viewModel.isLineSet.value, onClick = {
-            if (viewModel.isLineSet.value) {
-                viewModel.clearLines()
+        AnimatedMeasurementButton(
+            isLineSet = viewModel.isLineSet.value,
+            onClick = {
+                if (viewModel.isLineSet.value) {
+                    viewModel.clearLines()
+                }
+                viewModel.toggleLineSet()
             }
-            viewModel.toggleLineSet()
-        })
+        )
 
         QuadrantSelector(
             selectedQuadrant = viewModel.selectedAngleIndex.value,
@@ -56,7 +65,7 @@ fun AnimatedMeasurementButton(
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     val backgroundColor by animateColorAsState(
-        targetValue = if (isLineSet) Color(0xFFE57373) else Color(0xFF1E88E5),
+        targetValue = if (isLineSet) ErrorRed else AccentBlue,
         label = "buttonColor"
     )
 
@@ -78,7 +87,7 @@ fun AnimatedMeasurementButton(
             else
                 MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = PrimaryLight,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -87,7 +96,8 @@ fun AnimatedMeasurementButton(
 
 @Composable
 fun QuadrantSelector(
-    selectedQuadrant: Int, onQuadrantSelected: (Int) -> Unit
+    selectedQuadrant: Int,
+    onQuadrantSelected: (Int) -> Unit
 ) {
     val quadrants = listOf(
         stringResource(R.string.direct_angle),
@@ -100,7 +110,8 @@ fun QuadrantSelector(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color(0xFFF5F5F5), shape = RoundedCornerShape(12.dp)
+                color = SecondaryDark.copy(alpha = 0.05f),
+                shape = RoundedCornerShape(12.dp)
             )
             .padding(8.dp)
     ) {
@@ -108,20 +119,25 @@ fun QuadrantSelector(
             text = stringResource(R.string.quadrant),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Medium,
+            color = SecondaryDark,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
         quadrants.forEachIndexed { index, title ->
-            QuadrantOption(title = title,
+            QuadrantOption(
+                title = title,
                 isSelected = index == selectedQuadrant,
-                onClick = { onQuadrantSelected(index) })
+                onClick = { onQuadrantSelected(index) }
+            )
         }
     }
 }
 
 @Composable
 fun QuadrantOption(
-    title: String, isSelected: Boolean, onClick: () -> Unit
+    title: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
 ) {
     Surface(
         onClick = onClick,
@@ -129,13 +145,20 @@ fun QuadrantOption(
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         shape = RoundedCornerShape(8.dp),
-        color = if (isSelected) Color(0xFF1E88E5) else Color.White
+        color = if (isSelected)
+            AccentBlue
+        else
+            PrimaryLight
     ) {
         Text(
             text = title,
             modifier = Modifier.padding(12.dp),
             style = MaterialTheme.typography.bodyMedium,
-            color = if (isSelected) Color.White else Color(0xFF1E88E5)
+            color = if (isSelected)
+                PrimaryLight
+            else
+                SecondaryDark.copy(alpha = 0.7f),
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
         )
     }
 }
