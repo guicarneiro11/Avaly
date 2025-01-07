@@ -25,6 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import com.guicarneirodev.goniometro.utils.formatAngleValue
 
 @Composable
@@ -41,12 +44,12 @@ fun ModernAddDialog(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(16.dp),
-        containerColor = Color.White,
+        containerColor = PrimaryLight,
         title = {
             Text(
                 text = stringResource(R.string.add_goniometry),
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFF1E88E5),
+                color = AccentBlue,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -60,12 +63,14 @@ fun ModernAddDialog(
                 OutlinedTextField(
                     value = articulationName,
                     onValueChange = { articulationName = it },
-                    label = { Text( stringResource(R.string.articulation_name) ) },
+                    label = { Text(stringResource(R.string.articulation_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF1E88E5),
-                        focusedLabelColor = Color(0xFF1E88E5),
-                        cursorColor = Color(0xFF1E88E5)
+                        focusedBorderColor = AccentBlue,
+                        focusedLabelColor = AccentBlue,
+                        cursorColor = AccentBlue,
+                        unfocusedBorderColor = SecondaryDark.copy(alpha = 0.3f),
+                        unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
                     ),
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -75,12 +80,14 @@ fun ModernAddDialog(
                     onValueChange = { newValue ->
                         angleValue = formatAngleValue(newValue)
                     },
-                    label = { Text( stringResource(R.string.value_found) ) },
+                    label = { Text(stringResource(R.string.value_found)) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF1E88E5),
-                        focusedLabelColor = Color(0xFF1E88E5),
-                        cursorColor = Color(0xFF1E88E5)
+                        focusedBorderColor = AccentBlue,
+                        focusedLabelColor = AccentBlue,
+                        cursorColor = AccentBlue,
+                        unfocusedBorderColor = SecondaryDark.copy(alpha = 0.3f),
+                        unfocusedLabelColor = SecondaryDark.copy(alpha = 0.7f)
                     ),
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -94,7 +101,8 @@ fun ModernAddDialog(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1E88E5)
+                    containerColor = AccentBlue,
+                    contentColor = PrimaryLight
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
@@ -110,9 +118,9 @@ fun ModernAddDialog(
             OutlinedButton(
                 onClick = onDismiss,
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFF1E88E5)
+                    contentColor = AccentBlue
                 ),
-                border = BorderStroke(1.dp, Color(0xFF1E88E5)),
+                border = BorderStroke(1.dp, AccentBlue),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(

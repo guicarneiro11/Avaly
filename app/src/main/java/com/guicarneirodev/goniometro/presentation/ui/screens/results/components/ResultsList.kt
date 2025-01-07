@@ -1,6 +1,7 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.results.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -27,7 +28,8 @@ fun ResultsList(
     }
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(vertical = 8.dp)
     ) {
         items(filteredAngles, key = { it.id }) { angle ->
             AngleCard(

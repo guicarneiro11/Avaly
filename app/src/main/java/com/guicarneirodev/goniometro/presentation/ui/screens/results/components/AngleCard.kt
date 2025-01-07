@@ -26,6 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.domain.repository.AngleData
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.ErrorRed
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
 fun AngleCard(
@@ -39,7 +43,7 @@ fun AngleCard(
             .animateContentSize(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.95f)
+            containerColor = PrimaryLight.copy(alpha = 0.95f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -56,13 +60,13 @@ fun AngleCard(
                 Text(
                     text = angle.name,
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color(0xFF1E88E5)
+                    color = SecondaryDark
                 )
                 Text(
                     text = angle.value,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1E88E5)
+                    color = AccentBlue
                 )
             }
 
@@ -74,14 +78,14 @@ fun AngleCard(
                     modifier = Modifier
                         .size(40.dp)
                         .background(
-                            color = Color(0xFF1E88E5).copy(alpha = 0.1f),
+                            color = AccentBlue.copy(alpha = 0.1f),
                             shape = CircleShape
                         )
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.edit),
                         contentDescription = stringResource(R.string.edit),
-                        tint = Color(0xFF1E88E5)
+                        tint = AccentBlue
                     )
                 }
 
@@ -90,14 +94,14 @@ fun AngleCard(
                     modifier = Modifier
                         .size(40.dp)
                         .background(
-                            color = Color(0xFFE57373).copy(alpha = 0.1f),
+                            color = ErrorRed.copy(alpha = 0.1f),
                             shape = CircleShape
                         )
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.delete),
                         contentDescription = stringResource(R.string.delete),
-                        tint = Color(0xFFE57373)
+                        tint = ErrorRed
                     )
                 }
             }

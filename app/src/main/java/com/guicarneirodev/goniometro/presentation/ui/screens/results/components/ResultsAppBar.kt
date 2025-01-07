@@ -18,6 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.ui.theme.AccentBlue
+import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,16 +30,21 @@ fun ResultsAppBar(
     var showAddDialog by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text( stringResource(R.string.results), color = Color(0xFF1E88E5) ) },
+        title = {
+            Text(
+                stringResource(R.string.results),
+                color = AccentBlue
+            )
+        },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White.copy(alpha = 0.95f)
+            containerColor = PrimaryLight.copy(alpha = 0.95f)
         ),
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = stringResource(R.string.back),
-                    tint = Color(0xFF1E88E5)
+                    tint = AccentBlue
                 )
             }
         },
@@ -48,7 +55,7 @@ fun ResultsAppBar(
                 Icon(
                     painter = painterResource(id = R.drawable.add),
                     contentDescription = stringResource(R.string.add_action),
-                    tint = Color(0xFF1E88E5)
+                    tint = AccentBlue
                 )
             }
         }

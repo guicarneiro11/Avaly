@@ -26,6 +26,7 @@ import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.ResultsList
 import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
+import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -44,20 +45,13 @@ fun ResultsScreen(navController: NavController, userId: String, patientId: Strin
                 onAddAngle = viewModel::addAngle
             )
         },
-        containerColor = Color(0xFF1E88E5)
+        containerColor = SecondaryDark
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF1E88E5),
-                            Color(0xFF4FC3F7)
-                        )
-                    )
-                )
+                .background(SecondaryDark)
         ) {
             Column(
                 modifier = Modifier
