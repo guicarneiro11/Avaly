@@ -77,7 +77,7 @@ fun ModernMenuItems(
         InstructionsDialog(onDismiss = { dialogOpen = false })
     }
 
-    ModernMenuItem(icon = painterResource(id = R.drawable.logout), text = stringResource(R.string.logout), onClick = {
+    ModernMenuItem(icon = painterResource(id = R.drawable.logout), text = stringResource(R.string.exit), onClick = {
         navController.navigate("selection") {
             popUpTo(navController.graph.startDestinationId) { inclusive = true }
         }

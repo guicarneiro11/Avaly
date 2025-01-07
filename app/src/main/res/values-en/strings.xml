@@ -71,6 +71,7 @@
     <string name="capture_photo">Capture Photo</string>
     <string name="help">Help</string>
     <string name="logout">Logout</string>
+    <string name="exit">Exit</string>
     <string name="angle_found">Angle found: %1$s°</string>
     <string name="angle_placeholder">--°</string>
     <string name="tip_1">Tip 1: Choose between \"Import Photo\" or \"Take Photo\".</string>
