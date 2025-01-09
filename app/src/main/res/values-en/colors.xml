@@ -15,4 +15,7 @@
     <color name="my_on_primary_color">#FFFFFF</color>
     <color name="my_background_color">#FFFFFF</color>
     <color name="my_on_background_color">#000000</color>
+    <color name="primary_light">#FEFEFE</color>
+    <color name="secondary_dark">#171D24</color>
+    <color name="accent_blue">#5372FE</color>
 </resources>

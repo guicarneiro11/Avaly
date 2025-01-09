@@ -18,12 +18,12 @@
         android:label="Avaly"
         android:roundIcon="@mipmap/angleprologo"
         android:supportsRtl="true"
-        android:theme="@style/SplashTheme"
+        android:theme="@style/Theme.Avaly.Launch"
         tools:targetApi="tiramisu">
         <activity
             android:exported="true"
             android:name=".MainActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/Theme.Avaly.Launch">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

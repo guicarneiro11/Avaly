@@ -3,6 +3,10 @@ package com.guicarneirodev.goniometro.presentation.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,46 +25,7 @@ import com.guicarneirodev.goniometro.domain.repository.FirestorePatientRepositor
 import com.guicarneirodev.goniometro.data.service.RetrofitPdfService
 import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.GoniometroScreen
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.SelectionScreen
-
-@RequiresApi(Build.VERSION_CODES.P)
-@Composable
-fun SetupNavGraph(
-    navController: NavHostController
-) {
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController) }
-        composable("login") { LoginScreen(navController) }
-        composable("register") { RegisterScreen(navController) }
-        composable("selection") { SelectionScreen(navController) }
-        composable("main") { GoniometroScreen(navController) }
-        composable(
-            "patients/{userId}",
-            arguments = listOf(navArgument("userId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId")
-                ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
-            val patientViewModel = getPatientViewModel(userId)
-            PatientsScreen(
-                viewModel = patientViewModel,
-                navController = navController,
-                userId = userId
-            )
-        }
-        composable(
-            "results/{userId}/{patientId}",
-            arguments = listOf(
-                navArgument("userId") { type = NavType.StringType },
-                navArgument("patientId") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId")
-                ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
-            val patientId = backStackEntry.arguments?.getString("patientId")
-                ?: throw IllegalStateException("PatientID não encontrado na backStackEntry.")
-            ResultsScreen(navController = navController, userId, patientId)
-        }
-    }
-}
+import com.guicarneirodev.goniometro.presentation.ui.screens.splash.SplashScreen
 
 fun getPatientViewModel(userId: String): PatientsScreenViewModel {
     val patientRepository = FirestorePatientRepository(userId)
@@ -70,4 +35,50 @@ fun getPatientViewModel(userId: String): PatientsScreenViewModel {
     )
     val pdfService = RetrofitPdfService(loginRepository)
     return PatientsScreenViewModel(patientRepository, pdfService)
+}
+
+@RequiresApi(Build.VERSION_CODES.P)
+@Composable
+fun SetupNavGraph(
+    navController: NavHostController
+) {
+    var showSplash by remember { mutableStateOf(true) }
+
+    if (showSplash) {
+        SplashScreen(onSplashFinished = { showSplash = false })
+    } else {
+        NavHost(navController = navController, startDestination = "home") {
+            composable("home") { HomeScreen(navController) }
+            composable("login") { LoginScreen(navController) }
+            composable("register") { RegisterScreen(navController) }
+            composable("selection") { SelectionScreen(navController) }
+            composable("main") { GoniometroScreen(navController) }
+            composable(
+                "patients/{userId}",
+                arguments = listOf(navArgument("userId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val userId = backStackEntry.arguments?.getString("userId")
+                    ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
+                val patientViewModel = getPatientViewModel(userId)
+                PatientsScreen(
+                    viewModel = patientViewModel,
+                    navController = navController,
+                    userId = userId
+                )
+            }
+            composable(
+                "results/{userId}/{patientId}",
+                arguments = listOf(
+                    navArgument("userId") { type = NavType.StringType },
+                    navArgument("patientId") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val userId = backStackEntry.arguments?.getString("userId")
+                    ?: throw IllegalStateException("UserID não encontrado na backStackEntry.")
+                val patientId = backStackEntry.arguments?.getString("patientId")
+                    ?: throw IllegalStateException("PatientID não encontrado na backStackEntry.")
+                ResultsScreen(navController = navController, userId, patientId)
+            }
+        }
+    }
 }
