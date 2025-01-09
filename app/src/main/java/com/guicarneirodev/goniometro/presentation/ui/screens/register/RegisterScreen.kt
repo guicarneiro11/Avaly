@@ -1,6 +1,7 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.register
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,6 +39,40 @@ fun RegisterScreen(navController: NavController) {
     ) {
         BackgroundDecorations()
 
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 40.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    RegisterHeader(
+                        onBackClick = { navController.popBackStack() }
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    RegisterCard(
+                        uiState = uiState,
+                        onEmailChange = viewModel::updateEmail,
+                        onPasswordChange = viewModel::updatePassword,
+                        onConfirmPasswordChange = viewModel::updateConfirmPassword,
+                        onRegisterClick = {
+                            viewModel.registerUser(
+                                onSuccess = { navController.navigate("home") },
+                                onError = { /* Erro já mostrado no card */ }
+                            )
+                        }
+                    )
+                }
+            }
+        }
+
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier
@@ -47,39 +83,6 @@ fun RegisterScreen(navController: NavController) {
                 CircularProgressIndicator(
                     color = AccentBlue,
                     modifier = Modifier.size(48.dp)
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                RegisterHeader(
-                    onBackClick = { navController.popBackStack() }
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                RegisterCard(
-                    uiState = uiState,
-                    onEmailChange = viewModel::updateEmail,
-                    onPasswordChange = viewModel::updatePassword,
-                    onConfirmPasswordChange = viewModel::updateConfirmPassword,
-                    onRegisterClick = {
-                        viewModel.registerUser(
-                            onSuccess = { navController.navigate("home") },
-                            onError = { /* Erro já mostrado no card */ }
-                        )
-                    }
                 )
             }
         }
