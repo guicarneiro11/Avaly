@@ -1,16 +1,23 @@
 package com.guicarneirodev.goniometro.presentation.ui.screens.patients.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -23,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +42,8 @@ import com.guicarneirodev.goniometro.ui.theme.AccentBlue
 import com.guicarneirodev.goniometro.ui.theme.ErrorRed
 import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
+import com.guicarneirodev.goniometro.ui.theme.SuccessGreen
+import kotlinx.coroutines.delay
 
 @Composable
 fun SendPdfDialog(
@@ -44,16 +54,28 @@ fun SendPdfDialog(
     var email by remember { mutableStateOf("") }
     var isValidEmail by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(false) }
+    var showSuccess by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState) {
         when (uiState) {
-            is UiState.Loading -> isLoading = true
+            is UiState.Loading -> {
+                isLoading = true
+                showSuccess = false
+            }
             is UiState.Success -> {
                 isLoading = false
+                showSuccess = true
+                delay(2000)
                 onDismiss()
             }
-            is UiState.Error -> isLoading = false
-            else -> isLoading = false
+            is UiState.Error -> {
+                isLoading = false
+                showSuccess = false
+            }
+            else -> {
+                isLoading = false
+                showSuccess = false
+            }
         }
     }
 
@@ -80,7 +102,7 @@ fun SendPdfDialog(
                         email = it
                         isValidEmail = android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
                     },
-                    enabled = !isLoading,
+                    enabled = !isLoading && !showSuccess,
                     label = { Text(stringResource(R.string.email)) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = !isValidEmail && email.isNotEmpty(),
@@ -104,6 +126,30 @@ fun SendPdfDialog(
                     )
                 }
 
+                if (showSuccess) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = SuccessGreen,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.pdf_sent_successfully),
+                            color = SuccessGreen,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                }
+
                 when (uiState) {
                     is UiState.Error -> {
                         Text(
@@ -119,7 +165,7 @@ fun SendPdfDialog(
         confirmButton = {
             Button(
                 onClick = { if (isValidEmail && email.isNotBlank()) onSend(email) },
-                enabled = isValidEmail && email.isNotBlank() && !isLoading,
+                enabled = isValidEmail && email.isNotBlank() && !isLoading && !showSuccess,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = AccentBlue,
                     contentColor = PrimaryLight,

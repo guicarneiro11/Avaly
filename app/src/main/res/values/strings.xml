@@ -103,6 +103,7 @@
     <string name="pdf">PDF</string>
     <string name="edit">Editar</string>
     <string name="delete">Deletar</string>
+    <string name="pdf_sent_successfully">Relatório enviado com sucesso!</string>
 
     // Strings in Portuguese ResultsScreen
     <string name="results">Resultados</string>

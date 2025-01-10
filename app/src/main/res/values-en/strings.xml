@@ -103,6 +103,7 @@
     <string name="pdf">PDF</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="pdf_sent_successfully">Report sent successfully!</string>
 
     // Strings in English ResultsScreen
     <string name="results">Results</string>
