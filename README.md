@@ -84,9 +84,8 @@ O Avaly revoluciona a forma como fisioterapeutas realizam avaliações goniomét
 - [x] Integração com Firebase
 - [x] Sistema de relatórios PDF
 - [x] Backup em nuvem
-- [ ] Modo offline aprimorado
 - [ ] Novas ferramentas de medição
-- [ ] Interface em outros idiomas
+- [x] Interface em outros idiomas
 
 ## 🔧 Instalação
 
