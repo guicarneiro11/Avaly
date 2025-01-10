@@ -61,7 +61,7 @@ fun ResultsAppBar(
     )
 
     if (showAddDialog) {
-        ModernAddDialog(
+        AddDialog(
             onDismiss = { showAddDialog = false },
             onConfirm = { name, value ->
                 onAddAngle(name, value)

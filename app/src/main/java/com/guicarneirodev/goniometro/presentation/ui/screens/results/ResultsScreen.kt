@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.domain.repository.AngleData
 import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
-import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.ModernEditDialog
+import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.EditDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.ResultsAppBar
 import com.guicarneirodev.goniometro.presentation.ui.screens.results.components.ResultsList
 import com.guicarneirodev.goniometro.presentation.viewmodel.ResultsScreenViewModel
@@ -79,7 +79,7 @@ fun ResultsScreen(navController: NavController, userId: String, patientId: Strin
 
     if (showEditDialog) {
         currentlyEditing?.let { angle ->
-            ModernEditDialog(
+            EditDialog(
                 angle = angle,
                 onDismiss = {
                     showEditDialog = false

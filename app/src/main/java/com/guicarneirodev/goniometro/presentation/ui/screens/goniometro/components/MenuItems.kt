@@ -29,7 +29,7 @@ import com.guicarneirodev.goniometro.ui.theme.AccentBlue
 import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 
 @Composable
-fun ModernMenuItems(
+fun MenuItems(
     navController: NavController,
     onDismiss: () -> Unit,
     onImportImage: () -> Unit,
@@ -45,7 +45,7 @@ fun ModernMenuItems(
         InstructionsDialog(onDismiss = { dialogOpen = false })
     }
 
-    ModernMenuItem(
+    MenuItem(
         icon = painterResource(id = R.drawable.clinical_notes),
         text = stringResource(R.string.patients),
         onClick = {
@@ -54,19 +54,19 @@ fun ModernMenuItems(
         }
     )
 
-    ModernMenuItem(
+    MenuItem(
         icon = painterResource(id = R.drawable.photo_library),
         text = stringResource(R.string.import_photo),
         onClick = onImportImage
     )
 
-    ModernMenuItem(
+    MenuItem(
         icon = painterResource(id = R.drawable.addphoto),
         text = stringResource(R.string.capture_photo),
         onClick = onCaptureImage
     )
 
-    ModernMenuItem(
+    MenuItem(
         icon = painterResource(id = R.drawable.help),
         text = stringResource(R.string.help),
         onClick = {
@@ -77,7 +77,7 @@ fun ModernMenuItems(
         InstructionsDialog(onDismiss = { dialogOpen = false })
     }
 
-    ModernMenuItem(icon = painterResource(id = R.drawable.logout), text = stringResource(R.string.exit), onClick = {
+    MenuItem(icon = painterResource(id = R.drawable.logout), text = stringResource(R.string.exit), onClick = {
         navController.navigate("selection") {
             popUpTo(navController.graph.startDestinationId) { inclusive = true }
         }
@@ -86,7 +86,7 @@ fun ModernMenuItems(
 }
 
 @Composable
-fun ModernMenuItem(
+fun MenuItem(
     icon: Painter,
     text: String,
     onClick: () -> Unit

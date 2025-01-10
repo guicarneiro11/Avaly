@@ -29,7 +29,7 @@ import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.BuildConfig
 import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components.LandscapeLayout
-import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components.ModernTopBar
+import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components.TopBar
 import com.guicarneirodev.goniometro.presentation.ui.screens.goniometro.components.PortraitLayout
 import com.guicarneirodev.goniometro.presentation.viewmodel.GoniometroScreenViewModel
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
@@ -85,7 +85,7 @@ fun GoniometroScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            ModernTopBar(
+            TopBar(
                 viewModel = viewModel,
                 navController = navController,
                 onImportImage = { importLauncher.launch("image/*") },

@@ -30,7 +30,7 @@ import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import com.guicarneirodev.goniometro.utils.formatAngleValue
 
 @Composable
-fun ModernAddDialog(
+fun AddDialog(
     onDismiss: () -> Unit,
     onConfirm: (String, String) -> Unit
 ) {

@@ -42,7 +42,7 @@ import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ModernTopBar(
+fun TopBar(
     viewModel: GoniometroScreenViewModel,
     navController: NavController,
     onImportImage: () -> Unit,
@@ -96,7 +96,7 @@ fun ModernTopBar(
                     )
                     .width(280.dp)
             ) {
-                ModernMenuItems(navController = navController,
+                MenuItems(navController = navController,
                     onDismiss = { menuDropdownExpanded = false },
                     onImportImage = {
                         onImportImage()

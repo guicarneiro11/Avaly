@@ -31,7 +31,7 @@ import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import com.guicarneirodev.goniometro.utils.formatAngleValue
 
 @Composable
-fun ModernEditDialog(
+fun EditDialog(
     angle: AngleData,
     onDismiss: () -> Unit,
     onConfirm: (String, String) -> Unit
