@@ -58,14 +58,12 @@ class RegisterValidatorTest {
 
     @Test
     fun passwordValidator_NoNumbers_ReturnsFalse() {
-        // Senha com maiúscula, minúscula e caractere especial, mas sem número
         val passwordWithoutNumber = "NoNumbers!"
         assertFalse(
             "A senha '$passwordWithoutNumber' não contém números e deveria ser inválida",
             validator.isPasswordValid(passwordWithoutNumber)
         )
 
-        // Teste adicional com outra senha sem números
         val anotherPasswordWithoutNumber = "TesteSenha@"
         assertFalse(
             "A senha '$anotherPasswordWithoutNumber' não contém números e deveria ser inválida",
