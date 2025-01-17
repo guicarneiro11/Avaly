@@ -9,7 +9,6 @@ import com.guicarneirodev.goniometro.domain.model.UserProfile
 import com.guicarneirodev.goniometro.domain.model.UserType
 import com.guicarneirodev.goniometro.domain.usecase.GetAvailableToolsUseCase
 import com.guicarneirodev.goniometro.domain.usecase.GetUserPreferencesUseCase
-import com.guicarneirodev.goniometro.domain.usecase.LogoutUseCase
 import com.guicarneirodev.goniometro.domain.usecase.SaveUserPreferencesUseCase
 import com.guicarneirodev.goniometro.utils.LocaleHelper
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,8 +29,7 @@ class SelectionViewModel(
     private val localeHelper: LocaleHelper,
     private val getAvailableToolsUseCase: GetAvailableToolsUseCase,
     private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
-    private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SelectionUiState())
     val uiState: StateFlow<SelectionUiState> = _uiState.asStateFlow()

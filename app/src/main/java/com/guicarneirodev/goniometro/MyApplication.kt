@@ -56,5 +56,5 @@ val selectionModule = module {
     factory { SaveUserPreferencesUseCase(get()) }
     factory { LogoutUseCase(get()) }
 
-    viewModel { SelectionViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SelectionViewModel(get(), get(), get(), get()) }
 }
