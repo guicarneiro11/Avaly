@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,8 @@ fun NavigationButtons(navController: NavController) {
     var isClickable by remember { mutableStateOf(true) }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.testTag("navigation_buttons")
     ) {
         Button(
             onClick = {
@@ -48,7 +50,8 @@ fun NavigationButtons(navController: NavController) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(56.dp)
+                .testTag("login_button"),
             colors = ButtonDefaults.buttonColors(
                 containerColor = PrimaryLight.copy(alpha = 0.1f),
                 disabledContainerColor = PrimaryLight.copy(alpha = 0.05f)
@@ -78,7 +81,8 @@ fun NavigationButtons(navController: NavController) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(56.dp)
+                .testTag("register_button"),
             colors = ButtonDefaults.buttonColors(
                 containerColor = AccentBlue,
                 disabledContainerColor = AccentBlue.copy(alpha = 0.7f)
