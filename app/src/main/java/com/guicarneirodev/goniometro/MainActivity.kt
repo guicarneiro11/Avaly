@@ -50,16 +50,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         observeLanguageChanges()
 
-        lifecycleScope.launch {
-            loginRepository.signInWithEmail("jva.kts@gmail.com", "Thklabr641642!").onSuccess {
-                loginRepository.getIdToken().onSuccess { token ->
-                    Log.d("AuthToken", "Bearer $token")
-                }.onFailure { error ->
-                    Log.e("AuthToken", "Error getting token", error)
-                }
-            }
-        }
-
         setContent {
             val navController = rememberNavController()
             SetupNavGraph(navController = navController)
