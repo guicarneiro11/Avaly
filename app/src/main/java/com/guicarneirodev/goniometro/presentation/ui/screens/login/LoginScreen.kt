@@ -28,9 +28,12 @@ import com.guicarneirodev.goniometro.presentation.viewmodel.LoginScreenViewModel
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    val context = LocalContext.current
-    val viewModel: LoginScreenViewModel = viewModel(factory = LoginViewModelFactory(context))
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginScreenViewModel = viewModel(
+        factory = LoginViewModelFactory(LocalContext.current)
+    )
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState.navigateToSelection) {

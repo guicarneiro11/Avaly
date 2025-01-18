@@ -20,6 +20,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -60,7 +61,9 @@ fun ResetPasswordFields(
                     value = email,
                     onValueChange = onEmailChange,
                     label = { Text(stringResource(R.string.email)) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("reset_email_field"),
                     enabled = !isLoading,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = AccentBlue,
@@ -83,7 +86,8 @@ fun ResetPasswordFields(
                     onClick = onSendResetCodeClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
+                        .height(56.dp)
+                        .testTag("send_code_button"),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = AccentBlue,
                         disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
@@ -94,7 +98,9 @@ fun ResetPasswordFields(
                     if (isLoading) {
                         CircularProgressIndicator(
                             color = PrimaryLight,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier
+                                .size(24.dp)
+                                .testTag("loading_indicator")
                         )
                     } else {
                         Text(
@@ -153,7 +159,8 @@ fun ResetPasswordFields(
                     onClick = onVerifyResetCodeClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
+                        .height(56.dp)
+                        .testTag("verify_code_button"),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = AccentBlue,
                         disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
@@ -164,7 +171,9 @@ fun ResetPasswordFields(
                     if (isLoading) {
                         CircularProgressIndicator(
                             color = PrimaryLight,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier
+                                .size(24.dp)
+                                .testTag("loading_indicator")
                         )
                     } else {
                         Text(

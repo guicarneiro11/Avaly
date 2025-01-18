@@ -1,7 +1,8 @@
-package com.guicarneirodev.goniometro.presentation.viewmodel
+package com.guicarneirodev.goniometro.presentation.viewmodel.fake
 
 import androidx.lifecycle.viewModelScope
 import com.guicarneirodev.goniometro.domain.validator.RegisterValidator
+import com.guicarneirodev.goniometro.presentation.viewmodel.RegisterScreenViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update

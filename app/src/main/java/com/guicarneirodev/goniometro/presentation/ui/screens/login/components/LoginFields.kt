@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,13 +60,14 @@ fun LoginFields(
     var passwordVisibility by remember { mutableStateOf(false) }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.testTag("login_fields_container")
     ) {
         OutlinedTextField(
             value = email,
             onValueChange = onEmailChange,
             label = { Text(stringResource(R.string.email)) },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag("email_field"),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = AccentBlue,
                 focusedLabelColor = AccentBlue,
@@ -85,7 +87,7 @@ fun LoginFields(
             value = password,
             onValueChange = onPasswordChange,
             label = { Text(stringResource(R.string.password)) },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag("password_field"),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = AccentBlue,
                 focusedLabelColor = AccentBlue,
@@ -125,7 +127,8 @@ fun LoginFields(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.testTag("remember_options_container")
             ) {
                 Checkbox(
                     checked = rememberEmail,
@@ -133,7 +136,8 @@ fun LoginFields(
                     colors = CheckboxDefaults.colors(
                         checkedColor = AccentBlue,
                         uncheckedColor = SecondaryDark.copy(alpha = 0.5f)
-                    )
+                    ),
+                    modifier = Modifier.testTag("remember_email_checkbox")
                 )
                 Text(
                     stringResource(R.string.remember_email),
@@ -152,7 +156,8 @@ fun LoginFields(
                     colors = CheckboxDefaults.colors(
                         checkedColor = AccentBlue,
                         uncheckedColor = SecondaryDark.copy(alpha = 0.5f)
-                    )
+                    ),
+                    modifier = Modifier.testTag("remember_password_checkbox")
                 )
                 Text(
                     stringResource(R.string.remember_password),
@@ -177,7 +182,8 @@ fun LoginFields(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .height(56.dp)
+                .testTag("login_button"),
             colors = ButtonDefaults.buttonColors(
                 containerColor = AccentBlue,
                 disabledContainerColor = AccentBlue.copy(alpha = 0.5f)
@@ -199,6 +205,7 @@ fun LoginFields(
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier
+                .testTag("forgot_password_button")
                 .clickable(onClick = onResetPasswordClick)
                 .padding(vertical = 8.dp)
                 .align(Alignment.CenterHorizontally)

@@ -27,11 +27,11 @@ data class LoginUiState(
     val resetEmailSent: Boolean = false
 )
 
-class LoginScreenViewModel(
+open class LoginScreenViewModel(
     private val authRepository: LoginRepository,
     private val loginPreferencesRepository: LoginPreferencesRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(LoginUiState())
+    val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     private val _resetCodeActions = MutableSharedFlow<Unit>()

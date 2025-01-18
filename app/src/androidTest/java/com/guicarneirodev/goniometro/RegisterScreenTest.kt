@@ -5,7 +5,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guicarneirodev.goniometro.presentation.ui.screens.register.RegisterScreen
-import com.guicarneirodev.goniometro.presentation.viewmodel.FakeRegisterViewModel
+import com.guicarneirodev.goniometro.presentation.viewmodel.fake.FakeRegisterViewModel
 import io.mockk.*
 import io.mockk.impl.annotations.RelaxedMockK
 import org.junit.Before
