@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,10 +72,10 @@ fun RegisterCard(
                 ),
                 supportingText = {
                     if (uiState.emailError.isNotEmpty()) {
-                        Text(uiState.emailError, color = ErrorRed)
+                        Text(uiState.emailError, color = ErrorRed, modifier = Modifier.testTag("email_error"))
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("email_field"),
                 enabled = !uiState.isLoading
             )
 
@@ -118,7 +119,7 @@ fun RegisterCard(
                         )
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("password_field"),
                 enabled = !uiState.isLoading
             )
 
@@ -161,7 +162,7 @@ fun RegisterCard(
                         )
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("confirm_password_field"),
                 enabled = !uiState.isLoading
             )
 
@@ -179,7 +180,8 @@ fun RegisterCard(
                 onClick = onRegisterClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(56.dp)
+                    .testTag("register_button"),
                 enabled = !uiState.isLoading &&
                         uiState.email.isNotEmpty() &&
                         uiState.password.isNotEmpty() &&

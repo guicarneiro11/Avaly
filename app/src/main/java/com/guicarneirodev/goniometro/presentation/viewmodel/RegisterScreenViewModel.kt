@@ -24,12 +24,12 @@ data class RegisterUiState(
     val errorMessage: String = ""
 )
 
-class RegisterScreenViewModel : ViewModel() {
+open class RegisterScreenViewModel : ViewModel() {
     private val registerValidator = RegisterValidator()
     private val registerRepositoryImpl = RegisterRepository()
 
-    private val _uiState = MutableStateFlow(RegisterUiState())
-    val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
+    val _uiState = MutableStateFlow(RegisterUiState())
+    open val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
     private val _emailActions = MutableSharedFlow<String>()
     private val _passwordActions = MutableSharedFlow<String>()
@@ -98,28 +98,28 @@ class RegisterScreenViewModel : ViewModel() {
         }
     }
 
-    fun updateEmail(email: String) {
+    open fun updateEmail(email: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(email = email) } // Atualização instantânea para UX
-            _emailActions.emit(email) // Validação com debounce
+            _uiState.update { it.copy(email = email) }
+            _emailActions.emit(email)
         }
     }
 
-    fun updatePassword(password: String) {
+    open fun updatePassword(password: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(password = password) }
             _passwordActions.emit(password)
         }
     }
 
-    fun updateConfirmPassword(confirmPassword: String) {
+    open fun updateConfirmPassword(confirmPassword: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(confirmPassword = confirmPassword) }
             _confirmPasswordActions.emit(confirmPassword)
         }
     }
 
-    fun registerUser(onSuccess: () -> Unit, onError: (String) -> Unit) {
+    open fun registerUser(onSuccess: () -> Unit, onError: (String) -> Unit) {
         if (_uiState.value.isLoading) return
 
         viewModelScope.launch {

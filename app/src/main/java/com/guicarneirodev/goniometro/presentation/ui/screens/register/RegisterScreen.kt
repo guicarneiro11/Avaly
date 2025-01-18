@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -28,8 +29,7 @@ import com.guicarneirodev.goniometro.ui.theme.AccentBlue
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 
 @Composable
-fun RegisterScreen(navController: NavController) {
-    val viewModel: RegisterScreenViewModel = viewModel()
+fun RegisterScreen(navController: NavController, viewModel: RegisterScreenViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
     Box(
@@ -82,7 +82,9 @@ fun RegisterScreen(navController: NavController) {
             ) {
                 CircularProgressIndicator(
                     color = AccentBlue,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier
+                        .size(48.dp)
+                        .testTag("loading_indicator")
                 )
             }
         }
