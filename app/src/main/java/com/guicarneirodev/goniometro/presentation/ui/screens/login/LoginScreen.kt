@@ -30,23 +30,20 @@ import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: LoginScreenViewModel = viewModel(
-        factory = LoginViewModelFactory(LocalContext.current)
-    )
+    viewModel: LoginScreenViewModel = viewModel(factory = LoginViewModelFactory(LocalContext.current))
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState.navigateToSelection) {
         if (uiState.navigateToSelection) {
             navController.navigate("selection") {
-                popUpTo(navController.graph.startDestinationId) {
+                popUpTo("login") {
                     inclusive = true
                 }
                 launchSingleTop = true
             }
         }
     }
-
     Box(
         modifier = Modifier
             .fillMaxSize()

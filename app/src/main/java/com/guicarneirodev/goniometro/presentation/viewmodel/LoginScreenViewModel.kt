@@ -32,7 +32,7 @@ open class LoginScreenViewModel(
     private val loginPreferencesRepository: LoginPreferencesRepository
 ) : ViewModel() {
     val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    open val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     private val _resetCodeActions = MutableSharedFlow<Unit>()
     private val _verifyCodeActions = MutableSharedFlow<Unit>()
@@ -92,7 +92,7 @@ open class LoginScreenViewModel(
         _uiState.value = _uiState.value.copy(securityCode = code)
     }
 
-    fun onLoginClick() {
+    open fun onLoginClick() {
         if (_uiState.value.isLoading) return
 
         viewModelScope.launch {
@@ -143,7 +143,8 @@ open class LoginScreenViewModel(
 
         try {
             val result =
-                authRepository.signInWithEmail(_uiState.value.email, _uiState.value.password)
+                authRepository.signInWithEmail(
+                    _uiState.value.email, _uiState.value.password)
             result.fold(
                 onSuccess = {
                     saveCredentials()
