@@ -3,6 +3,7 @@ package com.guicarneirodev.goniometro
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavController
@@ -45,24 +46,25 @@ class HomeScreenTest {
     }
 
     @Test
-    fun whenScreenStarts_allElementsAreDisplayed() {
+    fun verifyVisualElements() {
         composeTestRule.setContent {
             HomeScreen(navController = navController)
         }
 
-        composeTestRule
-            .onNodeWithTag("navigation_buttons")
-            .assertIsDisplayed()
+        val logoNode = composeTestRule
+            .onNodeWithContentDescription("Avaly Logo")
 
-        composeTestRule
+        val loginButton = composeTestRule
             .onNodeWithTag("login_button")
-            .assertIsDisplayed()
-            .assertIsEnabled()
 
-        composeTestRule
+        val registerButton = composeTestRule
             .onNodeWithTag("register_button")
-            .assertIsDisplayed()
-            .assertIsEnabled()
+
+        composeTestRule.assertVisualElementsInOrder(
+            logoNode,
+            loginButton,
+            registerButton
+        )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

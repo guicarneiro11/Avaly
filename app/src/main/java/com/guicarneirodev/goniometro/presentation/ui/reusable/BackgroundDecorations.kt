@@ -44,7 +44,8 @@ fun BackgroundDecorations() {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        AccentBlue.copy(alpha = 0.1f), Color.Transparent
+                        AccentBlue.copy(alpha = 0.1f
+                        ), Color.Transparent
                     )
                 )
             )

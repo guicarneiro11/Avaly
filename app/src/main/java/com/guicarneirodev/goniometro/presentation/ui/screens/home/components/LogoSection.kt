@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.guicarneirodev.goniometro.R
@@ -45,6 +46,7 @@ fun LogoSection() {
         modifier = Modifier
             .size(120.dp)
             .padding(8.dp)
+            .testTag("logo_outer_container")
     ) {
         Box(
             modifier = Modifier

@@ -16,10 +16,13 @@
       <SelectionState runConfigName="HomeTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="LoginScreenTest">
+      <SelectionState runConfigName="HomeScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="whenResetPasswordFlow_ShowsLoadingStates()">
+      <SelectionState runConfigName="LogoSectionTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="verifyVisualElements()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
