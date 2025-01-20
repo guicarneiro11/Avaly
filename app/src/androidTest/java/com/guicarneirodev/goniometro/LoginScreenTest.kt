@@ -7,6 +7,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.guicarneirodev.goniometro.presentation.ui.screens.login.LoginScreen
 import com.guicarneirodev.goniometro.presentation.viewmodel.fake.FakeLoginViewModel
@@ -41,12 +42,10 @@ class LoginScreenTest {
 
     @Test
     fun whenScreenStarts_showsAllElements() {
-        // Arrange & Act
         composeTestRule.setContent {
             LoginScreen(navController = navController)
         }
 
-        // Assert
         composeTestRule
             .onNodeWithTag("email_field")
             .assertIsDisplayed()
@@ -70,10 +69,8 @@ class LoginScreenTest {
 
     @Test
     fun whenLoginSucceeds_navigatesToSelection() = runTest {
-        // Arrange
         val testViewModel = FakeLoginViewModel()
 
-        // Act
         composeTestRule.setContent {
             LoginScreen(
                 navController = navController,
@@ -81,16 +78,12 @@ class LoginScreenTest {
             )
         }
 
-        // Trigger login success
         testViewModel.simulateSuccessfulLogin()
 
-        // Advance time to allow coroutines to complete
         testScheduler.advanceUntilIdle()
 
-        // Ensure UI is updated
         composeTestRule.waitForIdle()
 
-        // Small additional delay
         delay(500)
 
         with(testViewModel.uiState.value) {
@@ -102,20 +95,16 @@ class LoginScreenTest {
 
     @Test
     fun whenForgotPasswordClicked_showsResetPasswordFields() {
-        // Arrange
         composeTestRule.setContent {
             LoginScreen(navController = navController)
         }
 
-        // Act
         composeTestRule
             .onNodeWithTag("forgot_password_button")
             .performClick()
 
-        // Wait for UI update
         composeTestRule.waitForIdle()
 
-        // Assert
         composeTestRule
             .onNodeWithTag("reset_email_field")
             .assertExists()
@@ -124,6 +113,32 @@ class LoginScreenTest {
         composeTestRule
             .onNodeWithTag("send_code_button")
             .assertExists()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun whenResetPasswordFlow_ShowsLoadingStates() {
+        val testViewModel = FakeLoginViewModel()
+
+        composeTestRule.setContent {
+            LoginScreen(
+                navController = rememberNavController(),
+                viewModel = testViewModel
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag("forgot_password_button")
+            .performClick()
+
+        testViewModel.simulateSendingCode()
+        composeTestRule
+            .onNodeWithTag("loading_indicator")
+            .assertIsDisplayed()
+
+        testViewModel.simulateCodeSent()
+        composeTestRule
+            .onNodeWithTag("reset_code_field")
             .assertIsDisplayed()
     }
 }

@@ -23,6 +23,18 @@ class FakeLoginViewModel : LoginScreenViewModel(FakeLoginRepository(), FakePrefe
         }
     }
 
+    fun simulateSendingCode() {
+        _uiState.value = _uiState.value.copy(isLoading = true)
+    }
+
+    fun simulateCodeSent() {
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            resetCodeSent = true,
+            resetEmailSent = true
+        )
+    }
+
     // Expose uiState for debugging
     override val uiState: StateFlow<LoginUiState>
         get() = _uiState.asStateFlow()

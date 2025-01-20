@@ -1,5 +1,6 @@
 package com.guicarneirodev.goniometro
 
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.guicarneirodev.goniometro.domain.repository.LoginPreferencesRepository
 import com.guicarneirodev.goniometro.domain.repository.LoginRepository
 import com.guicarneirodev.goniometro.presentation.viewmodel.LoginScreenViewModel
@@ -19,6 +20,7 @@ import org.junit.Test
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import io.mockk.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.advanceTimeBy
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -49,13 +51,12 @@ class LoginViewModelTest {
     fun setup() {
         loginRepository = mockk<LoginRepository>()
         preferencesRepository = mockk<LoginPreferencesRepository>(relaxed = true)
+        viewModel = LoginScreenViewModel(loginRepository, preferencesRepository)
 
         every { preferencesRepository.getEmail() } returns ""
         every { preferencesRepository.getPassword() } returns ""
         every { preferencesRepository.getRememberEmail() } returns false
         every { preferencesRepository.getRememberPassword() } returns false
-
-        viewModel = LoginScreenViewModel(loginRepository, preferencesRepository)
     }
 
     @Test
@@ -149,5 +150,81 @@ class LoginViewModelTest {
         coVerify { loginRepository.verifySecurityCode("test@test.com", "123456") }
         coVerify { loginRepository.resetPassword("test@test.com") }
         assertFalse(viewModel.uiState.value.showResetPassword)
+    }
+
+    @Test
+    fun `when Firebase throws FirebaseAuthInvalidCredentialsException, shows appropriate error`() = runTest {
+        coEvery {
+            loginRepository.signInWithEmail(any(), any())
+        } returns Result.failure(FirebaseAuthInvalidCredentialsException("", ""))
+
+        viewModel.onEmailChange("test@test.com")
+        viewModel.onPasswordChange("wrong-password")
+        viewModel.onLoginClick()
+
+        advanceTimeBy(500)
+
+        assertEquals("Email ou senha incorretos", viewModel.uiState.value.errorMessage)
+    }
+
+    @Test
+    fun `complete password reset flow works correctly`() = runTest {
+        coEvery {
+            loginRepository.sendSecurityCode(any())
+        } returns Result.success(Unit)
+
+        coEvery {
+            loginRepository.verifySecurityCode(any(), any())
+        } returns Result.success(true)
+
+        coEvery {
+            loginRepository.resetPassword(any())
+        } returns Result.success(Unit)
+
+        viewModel.onResetPasswordClick()
+        assertTrue(viewModel.uiState.value.showResetPassword)
+        assertFalse(viewModel.uiState.value.resetCodeSent)
+
+        viewModel.onEmailChange("test@test.com")
+        viewModel.onSendResetCodeClick()
+        advanceTimeBy(500)
+
+        assertTrue(viewModel.uiState.value.resetCodeSent)
+        assertTrue(viewModel.uiState.value.resetEmailSent)
+
+        viewModel.onSecurityCodeChange("123456")
+        viewModel.onVerifyResetCodeClick()
+        advanceTimeBy(500)
+
+        assertFalse(viewModel.uiState.value.showResetPassword)
+        assertEquals("Email de redefinição enviado com sucesso", viewModel.uiState.value.errorMessage)
+    }
+
+    @Test
+    fun `when action is in progress, state is preserved`() = runTest {
+        coEvery {
+            loginRepository.signInWithEmail(any(), any())
+        } coAnswers {
+            delay(1000)
+            Result.success(Unit)
+        }
+
+        val initialEmail = "test@test.com"
+        val initialPassword = "password123"
+
+        viewModel.onEmailChange(initialEmail)
+        viewModel.onPasswordChange(initialPassword)
+        viewModel.onLoginClick()
+
+        viewModel.onEmailChange("test@test.com")
+        viewModel.onPasswordChange("password123")
+
+        advanceTimeBy(500)
+
+        with(viewModel.uiState.value) {
+            assertEquals(initialEmail, email)
+            assertEquals(initialPassword, password)
+            assertTrue(isLoading)
+        }
     }
 }

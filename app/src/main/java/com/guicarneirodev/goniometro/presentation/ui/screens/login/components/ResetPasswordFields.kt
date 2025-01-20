@@ -136,7 +136,7 @@ fun ResetPasswordFields(
                     value = securityCode,
                     onValueChange = onSecurityCodeChange,
                     label = { Text(stringResource(R.string.security_code)) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("reset_code_field"),
                     enabled = !isLoading,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = AccentBlue,

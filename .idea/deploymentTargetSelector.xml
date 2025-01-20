@@ -19,10 +19,7 @@
       <SelectionState runConfigName="LoginScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="whenLoading_showsLoadingIndicator()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="whenLoginSucceeds_navigatesToSelection()">
+      <SelectionState runConfigName="whenResetPasswordFlow_ShowsLoadingStates()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
