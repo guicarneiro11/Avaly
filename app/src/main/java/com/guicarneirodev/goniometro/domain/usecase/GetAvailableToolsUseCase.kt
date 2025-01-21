@@ -5,10 +5,10 @@ import com.guicarneirodev.goniometro.domain.repository.ToolsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class GetAvailableToolsUseCase(
+open class GetAvailableToolsUseCase(
     private val toolsRepository: ToolsRepository
 ) {
-    suspend operator fun invoke(): List<Tool> = withContext(Dispatchers.IO) {
+    open suspend operator fun invoke(): List<Tool> = withContext(Dispatchers.IO) {
         toolsRepository.getAvailableTools()
     }
 }

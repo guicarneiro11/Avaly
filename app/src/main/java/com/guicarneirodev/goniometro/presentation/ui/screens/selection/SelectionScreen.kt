@@ -22,20 +22,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
+import com.guicarneirodev.goniometro.domain.model.Language
+import com.guicarneirodev.goniometro.domain.model.UserType
 import com.guicarneirodev.goniometro.presentation.ui.reusable.BackgroundDecorations
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.PreferencesSection
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.ToolCard
+import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionUiState
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel
+import com.guicarneirodev.goniometro.presentation.viewmodel.fake.FakeSelectionViewModel
 import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
+import kotlinx.coroutines.flow.StateFlow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+interface SelectionViewModelInterface {
+    val uiState: StateFlow<SelectionUiState>
+    fun updateLanguage(language: Language)
+    fun updateUserType(userType: UserType)
+}
+
 @Composable
 fun SelectionScreen(
-    navController: NavController
+    navController: NavController, viewModel: SelectionViewModelInterface = koinViewModel<SelectionViewModel> { parametersOf(navController) }
 ) {
-    val viewModel: SelectionViewModel = koinViewModel { parametersOf(navController) }
     val uiState by viewModel.uiState.collectAsState()
 
     Box(

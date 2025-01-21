@@ -10,6 +10,7 @@ import com.guicarneirodev.goniometro.domain.model.UserType
 import com.guicarneirodev.goniometro.domain.usecase.GetAvailableToolsUseCase
 import com.guicarneirodev.goniometro.domain.usecase.GetUserPreferencesUseCase
 import com.guicarneirodev.goniometro.domain.usecase.SaveUserPreferencesUseCase
+import com.guicarneirodev.goniometro.presentation.ui.screens.selection.SelectionViewModelInterface
 import com.guicarneirodev.goniometro.utils.LocaleHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,9 +31,9 @@ open class SelectionViewModel(
     private val getAvailableToolsUseCase: GetAvailableToolsUseCase,
     private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
     private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase
-) : ViewModel() {
+) : ViewModel(), SelectionViewModelInterface {
     private val _uiState = MutableStateFlow(SelectionUiState())
-    open val uiState: StateFlow<SelectionUiState> = _uiState.asStateFlow()
+    override val uiState: StateFlow<SelectionUiState> = _uiState.asStateFlow()
 
     init {
         loadInitialData()
@@ -62,7 +63,7 @@ open class SelectionViewModel(
         }
     }
 
-    fun updateUserType(userType: UserType) {
+    override fun updateUserType(userType: UserType) {
         viewModelScope.launch {
             val currentPreferences = _uiState.value.userPreferences
             val newPreferences = currentPreferences.copy(userType = userType)
@@ -71,7 +72,7 @@ open class SelectionViewModel(
         }
     }
 
-    fun updateLanguage(language: Language) {
+    override fun updateLanguage(language: Language) {
         viewModelScope.launch {
             if (localeHelper.updateLocale(language)) {
                 val currentPreferences = _uiState.value.userPreferences

@@ -5,8 +5,8 @@ import android.content.Context
 import com.guicarneirodev.goniometro.domain.model.Language
 import java.util.Locale
 
-class LocaleHelper(private val context: Context) {
-    fun updateLocale(language: Language): Boolean {
+open class LocaleHelper(private val context: Context) {
+    open fun updateLocale(language: Language): Boolean {
         val locale = when (language) {
             Language.ENGLISH -> Locale("en")
             Language.PORTUGUESE -> Locale("pt")
