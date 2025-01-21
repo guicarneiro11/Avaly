@@ -25,14 +25,14 @@ data class SelectionUiState(
     val errorMessage: String? = null
 )
 
-class SelectionViewModel(
+open class SelectionViewModel(
     private val localeHelper: LocaleHelper,
     private val getAvailableToolsUseCase: GetAvailableToolsUseCase,
     private val getUserPreferencesUseCase: GetUserPreferencesUseCase,
     private val saveUserPreferencesUseCase: SaveUserPreferencesUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SelectionUiState())
-    val uiState: StateFlow<SelectionUiState> = _uiState.asStateFlow()
+    open val uiState: StateFlow<SelectionUiState> = _uiState.asStateFlow()
 
     init {
         loadInitialData()
