@@ -1,7 +1,9 @@
 package com.guicarneirodev.goniometro
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -14,7 +16,9 @@ import com.guicarneirodev.goniometro.domain.model.Tool
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.SelectionScreen
 import com.guicarneirodev.goniometro.presentation.viewmodel.fake.FakeSelectionViewModel
 import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -66,8 +70,8 @@ class SelectionScreenTest {
     }
 
     @Test
-    fun whenToolCardClicked_navigatesToTool() {
-        var navigatedDestination: String? = null
+    fun whenGoniometerSelected_navigatesToMainScreen() {
+        // Given
         val tools = listOf(
             Tool(
                 id = "goniometer",
@@ -77,34 +81,42 @@ class SelectionScreenTest {
                 icon = R.drawable.goniometro
             )
         )
+
+        var currentDestination: String? = null
         val fakeViewModel = FakeSelectionViewModel(tools)
 
         composeTestRule.setContent {
-            val fakeNavController = rememberNavController().apply {
-                navigatedDestination = null
-                addOnDestinationChangedListener { _, destination, _ ->
-                    navigatedDestination = destination.route
-                }
+            val navController = rememberNavController().apply {
                 graph = createGraph(startDestination = "home") {
                     composable("home") { }
+                    composable("login") { }
+                    composable("selection") { }
                     composable("main") { }
+                }
+
+                addOnDestinationChangedListener { _, destination, _ ->
+                    currentDestination = destination.route
                 }
             }
 
             SelectionScreen(
-                navController = fakeNavController,
+                navController = navController,
                 viewModel = fakeViewModel
             )
         }
 
+        // When
         composeTestRule
             .onNodeWithText(
                 composeTestRule.activity.getString(R.string.goniometer)
             )
+            .assertIsDisplayed()
+            .assertIsEnabled()
             .performClick()
 
+        // Then
         composeTestRule.waitForIdle()
-        assertEquals("main", navigatedDestination)
+        assertEquals("main", currentDestination)
     }
 
     @Test
