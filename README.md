@@ -11,7 +11,7 @@ Aplicativo profissional de goniometria digital para fisioterapeutas, oferecendo 
 ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
 
 <div align="center">
-    <img src="" width="300px" alt="Demonstração de Funcionalidade"/>
+    <img src="https://i.imgur.com/ur9vmbV.png" width="300px" alt="Demonstração de Funcionalidade"/>
 </div>
 
 ## 📋 Sobre o Projeto
