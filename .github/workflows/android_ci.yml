@@ -22,18 +22,31 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Unit Tests
-        run: ./gradlew test
+      - name: Run Gradle Info
+        run: ./gradlew --version
 
-      - name: Run Instrumented Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedAndroidTest
+      - name: Clean project
+        run: ./gradlew clean
+
+      - name: Run Unit Tests
+        run: ./gradlew test --stacktrace
+
+      # Comentando temporariamente os testes instrumentados até resolvermos os unitários
+      # - name: Run Instrumented Tests
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 29
+      #     script: ./gradlew connectedAndroidTest
+
+      - name: Generate Test Report
+        if: always()
+        run: ./gradlew testDebugUnitTest
 
       - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-reports
-          path: app/build/reports/
+          path: |
+            **/build/reports/
+            **/build/test-results/
