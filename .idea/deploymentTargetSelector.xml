@@ -16,9 +16,6 @@
       <SelectionState runConfigName="HomeTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SelectionScreenTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="whenToolCardClicked_navigatesToTool()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
