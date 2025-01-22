@@ -29,7 +29,6 @@ import com.guicarneirodev.goniometro.presentation.ui.screens.selection.component
 import com.guicarneirodev.goniometro.presentation.ui.screens.selection.components.ToolCard
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionUiState
 import com.guicarneirodev.goniometro.presentation.viewmodel.SelectionViewModel
-import com.guicarneirodev.goniometro.presentation.viewmodel.fake.FakeSelectionViewModel
 import com.guicarneirodev.goniometro.ui.theme.PrimaryLight
 import com.guicarneirodev.goniometro.ui.theme.SecondaryDark
 import kotlinx.coroutines.flow.StateFlow
