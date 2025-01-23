@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       
@@ -50,11 +50,14 @@ jobs:
       - name: Run Instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          target: google_apis
+          api-level: 31
           arch: x86_64
-          profile: Nexus 6
-          script: ./gradlew connectedAndroidTest
+          disable-animations: true
+          disk-size: 6000M
+          heap-size: 600M
+          script: |
+            adb logcat "*:E" &
+            ./gradlew connectedAndroidTest --stacktrace
 
       - name: Upload Test Reports
         if: always()
@@ -62,5 +65,5 @@ jobs:
         with:
           name: test-reports
           path: |
-            app/build/reports/tests/
-            app/build/reports/androidTests/
+            app/build/reports/
+            app/build/outputs/androidTest-results/
