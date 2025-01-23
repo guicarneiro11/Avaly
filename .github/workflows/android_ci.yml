@@ -8,12 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: [29]
-        arch: [x86_64]
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -52,12 +47,11 @@ jobs:
       - name: Run instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-level }}
-          arch: ${{ matrix.arch }}
-          target: default
+          api-level: 29
+          arch: x86
+          target: google_apis
           force-avd-creation: true
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: ./gradlew connectedAndroidTest --stacktrace
 
       - name: Upload test results
