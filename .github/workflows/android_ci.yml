@@ -50,14 +50,20 @@ jobs:
       - name: Run Instrumented Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 31
+          api-level: 29
           arch: x86_64
+          profile: Pixel 2
+          avd-name: test
+          cores: 2
+          ram-size: 2048M
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          disk-size: 6000M
-          heap-size: 600M
           script: |
-            adb logcat "*:E" &
-            ./gradlew connectedAndroidTest --stacktrace
+            adb wait-for-device
+            adb shell settings put global window_animation_scale 0.0
+            adb shell settings put global transition_animation_scale 0.0
+            adb shell settings put global animator_duration_scale 0.0
+            ./gradlew connectedCheck
 
       - name: Upload Test Reports
         if: always()
