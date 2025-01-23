@@ -8,7 +8,11 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        api-level: [29]
+
     steps:
       - uses: actions/checkout@v3
 
@@ -19,13 +23,11 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # Adicionar este passo
-      - name: Create dummy google-services.json
+      - name: Create google-services.json
         run: |
           echo '{
             "project_info": {
               "project_number": "123456789",
-              "firebase_url": "https://dummy.firebaseio.com",
               "project_id": "dummy",
               "storage_bucket": "dummy.appspot.com"
             },
@@ -36,23 +38,47 @@ jobs:
                   "package_name": "com.guicarneirodev.goniometro"
                 }
               },
-              "api_key": [{
-                "current_key": "dummy_api_key"
-              }]
+              "api_key": [{"current_key": "dummy_api_key"}]
             }]
           }' > app/google-services.json
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
 
-      - name: Run Unit Tests
-        run: ./gradlew test --stacktrace
+      - name: Run unit tests
+        run: ./gradlew test
 
-      - name: Upload Test Reports
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: Create AVD and generate snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run instrumented tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedAndroidTest --stacktrace
+
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: test-reports
-          path: |
-            app/build/reports/tests/
-            app/build/reports/androidTests/
+          name: test-results
+          path: app/build/outputs/androidTest-results
