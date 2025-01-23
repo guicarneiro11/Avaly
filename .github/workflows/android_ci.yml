@@ -19,6 +19,29 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      # Adicionar este passo
+      - name: Create dummy google-services.json
+        run: |
+          echo '{
+            "project_info": {
+              "project_number": "123456789",
+              "firebase_url": "https://dummy.firebaseio.com",
+              "project_id": "dummy",
+              "storage_bucket": "dummy.appspot.com"
+            },
+            "client": [{
+              "client_info": {
+                "mobilesdk_app_id": "1:123456789:android:abcdef",
+                "android_client_info": {
+                  "package_name": "com.guicarneirodev.goniometro"
+                }
+              },
+              "api_key": [{
+                "current_key": "dummy_api_key"
+              }]
+            }]
+          }' > app/google-services.json
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
