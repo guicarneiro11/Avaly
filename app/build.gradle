@@ -42,6 +42,13 @@ android {
         }
     }
 
+    configurations.all {
+        resolutionStrategy {
+            force "io.mockk:mockk-android:1.13.8"
+            exclude group: "io.mockk", module: "mockk-agent-android"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
