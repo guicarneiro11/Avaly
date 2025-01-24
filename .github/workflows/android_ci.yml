@@ -44,6 +44,14 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test
 
+      - name: Start ADB server
+        run: adb start-server
+
+      - name: Wait for emulator to start
+        run: |
+          adb wait-for-device
+          adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+
       - name: Run instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
