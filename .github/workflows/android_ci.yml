@@ -44,18 +44,20 @@ jobs:
         run: ./gradlew test
 
       - name: Run instrumented tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@v2.28.0
         with:
           api-level: 29
-          arch: x86
+          arch: x86_64
           target: google_apis
           force-avd-creation: true
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-snapshot -no-window -gpu auto -noaudio -no-boot-anim -memory 2048
           script: |
-            adb start-server
             adb wait-for-device
-            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+            adb shell 'while [[ "$(getprop sys.boot_completed)" != "1" ]]; do sleep 1; done;'
+            sleep 30
+            adb shell input keyevent 82
             ./gradlew connectedAndroidTest --stacktrace
+            
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
