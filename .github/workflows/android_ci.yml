@@ -19,9 +19,6 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Update command-line tools
-        run: sdkmanager --update
-
       - name: Create google-services.json
         run: |
           echo '{
@@ -47,7 +44,7 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test
 
-      - name: Start Emulator
+      - name: Run instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
@@ -59,7 +56,6 @@ jobs:
             adb start-server
             adb wait-for-device
             adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-            sleep 60 # Add an extra delay to ensure the emulator is fully booted
             ./gradlew connectedAndroidTest --stacktrace
 
       - name: Upload test results
