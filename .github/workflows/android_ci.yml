@@ -19,6 +19,9 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Update command-line tools
+        run: sdkmanager --update
+
       - name: Create google-services.json
         run: |
           echo '{
@@ -37,27 +40,28 @@ jobs:
               "api_key": [{"current_key": "dummy_api_key"}]
             }]
           }' > app/google-services.json
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run unit tests
         run: ./gradlew test
 
-      - name: Run instrumented tests
-        uses: reactivecircus/android-emulator-runner@v2.28.0
+      - name: Start Emulator
+        uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          arch: x86_64
+          arch: x86
           target: google_apis
           force-avd-creation: true
-          emulator-options: -no-snapshot -no-window -gpu auto -noaudio -no-boot-anim -memory 2048
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
+            adb start-server
             adb wait-for-device
-            adb shell 'while [[ "$(getprop sys.boot_completed)" != "1" ]]; do sleep 1; done;'
-            sleep 30
-            adb shell input keyevent 82
+            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+            sleep 60 # Add an extra delay to ensure the emulator is fully booted
             ./gradlew connectedAndroidTest --stacktrace
-            
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
