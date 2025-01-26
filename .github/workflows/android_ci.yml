@@ -19,11 +19,13 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Create google-services.json
+      # Adicionar este passo
+      - name: Create dummy google-services.json
         run: |
           echo '{
             "project_info": {
               "project_number": "123456789",
+              "firebase_url": "https://dummy.firebaseio.com",
               "project_id": "dummy",
               "storage_bucket": "dummy.appspot.com"
             },
@@ -34,33 +36,22 @@ jobs:
                   "package_name": "com.guicarneirodev.goniometro"
                 }
               },
-              "api_key": [{"current_key": "dummy_api_key"}]
+              "api_key": [{
+                "current_key": "dummy_api_key"
+              }]
             }]
           }' > app/google-services.json
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run unit tests
-        run: ./gradlew test
+      - name: Run Unit Tests
+        run: ./gradlew test --stacktrace
 
-      - name: Run instrumented tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          arch: x86
-          target: google_apis
-          force-avd-creation: true
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
-          script: |
-            adb start-server
-            adb wait-for-device
-            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-            ./gradlew connectedAndroidTest --stacktrace
-
-      - name: Upload test results
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: test-results
-          path: app/build/outputs/androidTest-results
+          name: test-reports
+          path: |
+            app/build/reports/tests/
+            app/build/reports/androidTests/
