@@ -37,6 +37,7 @@ jobs:
               "api_key": [{"current_key": "dummy_api_key"}]
             }]
           }' > app/google-services.json
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -56,6 +57,7 @@ jobs:
             adb wait-for-device
             adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
             ./gradlew connectedAndroidTest --stacktrace
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
