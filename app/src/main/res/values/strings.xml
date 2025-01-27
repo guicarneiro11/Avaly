@@ -104,6 +104,8 @@
     <string name="edit">Editar</string>
     <string name="delete">Deletar</string>
     <string name="pdf_sent_successfully">Relatório enviado com sucesso!</string>
+    <string name="confirm_delete_title">Confirmar exclusão</string>
+    <string name="confirm_delete_message">Tem certeza que deseja excluir este paciente? Esta ação não pode ser desfeita.</string>
 
     // Strings in Portuguese ResultsScreen
     <string name="results">Resultados</string>

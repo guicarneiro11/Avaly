@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.reusable.SearchField
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.AddPatientDialog
+import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.DeleteConfirmationDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.EditPatientDialog
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.PatientCard
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.components.SendPdfDialog
@@ -64,6 +65,8 @@ fun PatientsScreen(
     var currentlyEditingPatient by remember { mutableStateOf<Patient?>(null) }
     var showEmailDialog by remember { mutableStateOf(false) }
     var currentPatientId by remember { mutableStateOf("") }
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+    var patientToDelete by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
@@ -133,7 +136,10 @@ fun PatientsScreen(
                             currentlyEditingPatient = it
                             showEditDialog = true
                         },
-                        onDelete = viewModel::deletePatient,
+                        onDelete = { patientId ->
+                            patientToDelete = patientId
+                            showDeleteConfirmation = true
+                        },
                         onSendPdf = {
                             currentPatientId = it
                             showEmailDialog = true
@@ -153,6 +159,9 @@ fun PatientsScreen(
                         message = (uiState as UiState.Success).message,
                         duration = SnackbarDuration.Short
                     )
+                    if ((uiState as UiState.Success).message.contains("excluído")) {
+                        patientToDelete = null
+                    }
                 }
                 is UiState.Error -> {
                     snackbarHostState.showSnackbar(
@@ -192,6 +201,20 @@ fun PatientsScreen(
                 viewModel.sendPdfToEmail(userId, currentPatientId, email)
             },
             uiState = uiState
+        )
+    }
+
+    if (showDeleteConfirmation) {
+        DeleteConfirmationDialog(
+            onDismiss = {
+                showDeleteConfirmation = false
+                patientToDelete = null
+            },
+            onConfirm = {
+                patientToDelete?.let { viewModel.deletePatient(it) }
+                showDeleteConfirmation = false
+                patientToDelete = null
+            }
         )
     }
 }
