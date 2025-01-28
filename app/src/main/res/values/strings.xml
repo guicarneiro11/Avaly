@@ -104,8 +104,8 @@
     <string name="edit">Editar</string>
     <string name="delete">Deletar</string>
     <string name="pdf_sent_successfully">Relatório enviado com sucesso!</string>
-    <string name="confirm_delete_title">Confirmar exclusão</string>
-    <string name="confirm_delete_message">Tem certeza que deseja excluir este paciente? Esta ação não pode ser desfeita.</string>
+    <string name="confirm_delete_patient_title">Excluir paciente</string>
+    <string name="confirm_delete_patient_message">Tem certeza que deseja excluir este paciente e todos os dados associados? Esta ação é irreversível.</string>
 
     // Strings in Portuguese ResultsScreen
     <string name="results">Resultados</string>
@@ -113,6 +113,8 @@
     <string name="add_goniometry">Adicionar Goniometria</string>
     <string name="articulation_name">Nome da articulação</string>
     <string name="value_found">Valor encontrado</string>
+    <string name="confirm_delete_angle_title">Confirmar exclusão da medição</string>
+    <string name="confirm_delete_angle_message">Tem certeza que deseja excluir esta medição angular? Esta ação não pode ser desfeita.</string>
 
     // Strings in Portuguese SearchField
     <string name="search_hint">Buscar</string>

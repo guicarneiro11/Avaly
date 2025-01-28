@@ -206,6 +206,8 @@ fun PatientsScreen(
 
     if (showDeleteConfirmation) {
         DeleteConfirmationDialog(
+            title = stringResource(R.string.confirm_delete_patient_title),
+            message = stringResource(R.string.confirm_delete_patient_message),
             onDismiss = {
                 showDeleteConfirmation = false
                 patientToDelete = null

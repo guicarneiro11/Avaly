@@ -70,11 +70,12 @@ class PatientsScreenViewModel(
 
     fun deletePatient(patientId: String) {
         viewModelScope.launch {
+            _uiState.value = UiState.Loading
             try {
                 repository.deletePatient(patientId)
                 _uiState.value = UiState.Success("Paciente excluído com sucesso")
             } catch (e: Exception) {
-                _uiState.value = UiState.Error("Erro ao excluir paciente: ${e.message}")
+                _uiState.value = UiState.Error("Erro na exclusão: ${e.message}")
             }
         }
     }

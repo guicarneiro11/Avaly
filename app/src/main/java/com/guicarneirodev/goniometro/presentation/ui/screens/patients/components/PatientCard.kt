@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.guicarneirodev.goniometro.R
 import com.guicarneirodev.goniometro.presentation.ui.screens.patients.Patient
 import com.guicarneirodev.goniometro.ui.theme.AccentBlue
@@ -99,33 +100,29 @@ fun PatientCard(
 
 @Composable
 fun DeleteConfirmationDialog(
+    title: String,
+    message: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = {
-            Text(text = stringResource(R.string.confirm_delete_title))
-        },
-        text = {
-            Text(text = stringResource(R.string.confirm_delete_message))
-        },
+        title = { Text(text = title) },
+        text = { Text(text = message) },
         confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirm()
-                    onDismiss()
-                }
-            ) {
-                Text(text = stringResource(R.string.confirmar), color = AccentBlue)
+            TextButton(onClick = {
+                onConfirm()
+                onDismiss()
+            }) {
+                Text(text = stringResource(R.string.confirmar))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.cancel), color = SecondaryDark)
+                Text(text = stringResource(R.string.cancel))
             }
         },
-        containerColor = PrimaryLight
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     )
 }
 

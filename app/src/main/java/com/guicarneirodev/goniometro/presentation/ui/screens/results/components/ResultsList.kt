@@ -35,7 +35,9 @@ fun ResultsList(
             AngleCard(
                 angle = angle,
                 onEdit = { onEditAngle(angle) },
-                onDelete = { onDeleteAngle(angle.id) }
+                onDelete = {
+                    onDeleteAngle(angle.id)
+                }
             )
         }
     }
