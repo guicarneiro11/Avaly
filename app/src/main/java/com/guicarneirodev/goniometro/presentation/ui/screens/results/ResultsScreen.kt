@@ -127,7 +127,6 @@ fun ResultsScreen(navController: NavController, userId: String, patientId: Strin
             )
         }
     }
-
     if (showDeleteAngleConfirmation) {
         DeleteConfirmationDialog(
             title = stringResource(R.string.confirm_delete_angle_title),
