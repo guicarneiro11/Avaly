@@ -1,6 +1,5 @@
 # 📱 Avaly
-
-Aplicativo profissional de goniometria digital para fisioterapeutas, oferecendo medições precisas e gerenciamento completo de pacientes.
+Professional digital goniometry app for physiotherapists, offering precise measurements and complete patient management.
 
 [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.guicarneirodev.goniometro)
 [![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
@@ -11,42 +10,40 @@ Aplicativo profissional de goniometria digital para fisioterapeutas, oferecendo 
 ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
 
 <div align="center">
-    <img src="https://i.imgur.com/ur9vmbV.png" width="300px" alt="Demonstração de Funcionalidade"/>
+    <img src="https://i.imgur.com/ur9vmbV.png" width="300px" alt="Feature Demonstration"/>
 </div>
 
-## 📋 Sobre o Projeto
+## 📋 About the Project
+Avaly revolutionizes how physiotherapists perform goniometric assessments, replacing physical instruments with a precise and efficient digital solution. Developed with a focus on user experience and clinical precision.
 
-O Avaly revoluciona a forma como fisioterapeutas realizam avaliações goniométricas, substituindo instrumentos físicos por uma solução digital precisa e eficiente. Desenvolvido com foco na experiência do usuário e precisão clínica.
+## ⭐ Highlights
+- 📊 Used in clinics and offices
+- 🔄 Frequent updates
+- 📱 Modern and intuitive interface
 
-## ⭐ Destaques
+## 🚀 Main Features
 
-- 📊 Usado em clínicas e consultórios
-- 🔄 Atualizações frequentes
-- 📱 Interface moderna e intuitiva
+### 📐 Digital Goniometry
+- Precise measurements from gallery photos or camera
+- Adaptable quadrants for different joints
+- Intuitive interface for professionals
 
-## 🚀 Funcionalidades Principais
+### 👥 Patient Management
+- Complete patient registration
+- Organization by individual records
+- Detailed assessment history
 
-### 📐 Goniometria Digital
-- Medições precisas em fotos da galeria ou câmera
-- Quadrantes adaptáveis para diferentes articulações
-- Interface intuitiva para profissionais
+### 📊 Reports and Analysis
+- Automatic PDF report generation
+- Integrated email sending
+- Progress tracking
 
-### 👥 Gestão de Pacientes
-- Cadastro completo de pacientes
-- Organização por fichas individuais
-- Histórico detalhado de avaliações
+### 💾 Backup and Security
+- Cloud synchronization
+- Automatic data backup
+- Protection of sensitive information
 
-### 📊 Relatórios e Análises
-- Geração automática de relatórios PDF
-- Envio por email integrado
-- Acompanhamento de evolução
-
-### 💾 Backup e Segurança
-- Sincronização com nuvem
-- Backup automático de dados
-- Proteção de informações sensíveis
-
-## 🛠️ Tecnologias
+## 🛠️ Technologies
 
 ### Frontend
 - Kotlin
@@ -55,7 +52,7 @@ O Avaly revoluciona a forma como fisioterapeutas realizam avaliações goniomét
 - MVVM Architecture
 - SOLID Principles
 
-### Backend e Cloud
+### Backend and Cloud
 - Firebase Suite
   - Authentication
   - Firestore
@@ -66,41 +63,37 @@ O Avaly revoluciona a forma como fisioterapeutas realizam avaliações goniomét
 - Google Cloud Platform
   - Cloud Run
 
-### Desenvolvimento
+### Development
 - Koin (Dependency Injection)
 - Coroutines & Flow
 - ViewModel
 - StateFlow
 - SharedPreferences
 
-### Testes
-- JUnit (Unitários)
-- Espresso (UI/Integração)
+### Testing
+- JUnit (Unit Tests)
+- Espresso (UI/Integration)
 - Mockito (Mocks)
 
 ## 📈 Roadmap
+- [x] Launch on Play Store
+- [x] Firebase Integration
+- [x] PDF Report System
+- [x] Cloud Backup
+- [ ] New Measurement Tools
+- [x] Interface in Other Languages
 
-- [x] Lançamento na Play Store
-- [x] Integração com Firebase
-- [x] Sistema de relatórios PDF
-- [x] Backup em nuvem
-- [ ] Novas ferramentas de medição
-- [x] Interface em outros idiomas
+## 🔧 Installation
+1. Download directly from [Google Play Store](https://play.google.com/store/apps/details?id=com.guicarneirodev.goniometro)
+2. Login or register
+3. Start using immediately
 
-## 🔧 Instalação
+## 💡 Feedback and Support
+- ⭐ Rate on Play Store
+- 📧 Send suggestions via email
+- 🐛 Report bugs through issues
 
-1. Download direto da [Google Play Store](https://play.google.com/store/apps/details?id=com.guicarneirodev.goniometro)
-2. Realize login ou cadastro
-3. Comece a usar imediatamente
-
-## 💡 Feedback e Suporte
-
-- ⭐ Avalie na Play Store
-- 📧 Envie sugestões via email
-- 🐛 Reporte bugs através das issues
-
-## 👨‍💻 Desenvolvedor
-
+## 👨‍💻 Developer
 **Guilherme Carneiro**
 - [LinkedIn](https://www.linkedin.com/in/guicarneiro1)
 - [GitHub](https://github.com/guicarneiro11)
@@ -108,8 +101,6 @@ O Avaly revoluciona a forma como fisioterapeutas realizam avaliações goniomét
 
 <div align="center">
 
-### ⭐ Gostou do projeto? Deixe uma estrela!
-
+### ⭐ Like the project? Leave a star!
 [![GitHub stars](https://img.shields.io/github/stars/guicarneiro11/anglepro?style=social)](https://github.com/guicarneiro11/anglepro/stargazers)
-
 </div>
