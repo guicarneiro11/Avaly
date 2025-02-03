@@ -21,7 +21,9 @@ import kotlinx.coroutines.launch
 data class SelectionUiState(
     val tools: List<Tool> = emptyList(),
     val userProfile: UserProfile? = null,
-    val userPreferences: UserPreferences = UserPreferences(),
+    val userPreferences: UserPreferences = UserPreferences(
+        userId = ""
+    ),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )

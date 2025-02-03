@@ -1,26 +1,28 @@
 package com.guicarneirodev.goniometro.data.repository
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStoreFile
+import com.guicarneirodev.goniometro.data.local.dao.UserPreferencesDao
+import com.guicarneirodev.goniometro.data.local.mapper.UserPreferencesMapper
 import com.guicarneirodev.goniometro.domain.model.Language
 import com.guicarneirodev.goniometro.domain.model.Theme
 import com.guicarneirodev.goniometro.domain.model.UserPreferences
 import com.guicarneirodev.goniometro.domain.model.UserType
+import com.guicarneirodev.goniometro.domain.repository.LoginPreferencesRepository
 import com.guicarneirodev.goniometro.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class UserPreferencesRepositoryImpl(
-    context: Context
+    private val preferencesDao: UserPreferencesDao,
+    private val dataStore: DataStore<Preferences>,
+    private val loginPreferences: LoginPreferencesRepository,
+    private val mapper: UserPreferencesMapper
 ) : UserPreferencesRepository {
-    private val dataStore: DataStore<Preferences> =
-        PreferenceDataStoreFactory.create(produceFile = { context.preferencesDataStoreFile("user_preferences") })
+    private fun getCurrentUserId(): String = loginPreferences.getEmail()
 
     companion object {
         private val LANGUAGE = stringPreferencesKey("language")
@@ -29,23 +31,13 @@ class UserPreferencesRepositoryImpl(
     }
 
     override suspend fun getUserPreferences(): UserPreferences {
-        return dataStore.data.map { preferences ->
-            UserPreferences(
-                language = try {
-                    Language.valueOf(preferences[LANGUAGE] ?: Language.PORTUGUESE.name)
-                } catch (e: Exception) {
-                    Language.PORTUGUESE
-                }, userType = try {
-                    UserType.valueOf(preferences[USER_TYPE] ?: UserType.STUDENT.name)
-                } catch (e: Exception) {
-                    UserType.STUDENT
-                }, theme = try {
-                    Theme.valueOf(preferences[THEME] ?: Theme.SYSTEM.name)
-                } catch (e: Exception) {
-                    Theme.SYSTEM
-                }
-            )
-        }.first()
+        val preferences = dataStore.data.first()
+        return UserPreferences(
+            userId = getCurrentUserId(),
+            language = Language.valueOf(preferences[LANGUAGE] ?: Language.PORTUGUESE.name),
+            userType = UserType.valueOf(preferences[USER_TYPE] ?: UserType.STUDENT.name),
+            theme = Theme.valueOf(preferences[THEME] ?: Theme.SYSTEM.name)
+        )
     }
 
     override suspend fun saveUserPreferences(preferences: UserPreferences) {
@@ -54,37 +46,32 @@ class UserPreferencesRepositoryImpl(
             prefs[USER_TYPE] = preferences.userType.name
             prefs[THEME] = preferences.theme.name
         }
+        preferencesDao.insert(mapper.toEntity(preferences))
     }
 
     override suspend fun updateLanguage(language: Language) {
         dataStore.edit { preferences ->
             preferences[LANGUAGE] = language.name
         }
+        val currentPrefs = getUserPreferences()
+        saveUserPreferences(currentPrefs.copy(language = language))
     }
 
     override suspend fun updateUserType(userType: UserType) {
         dataStore.edit { preferences ->
             preferences[USER_TYPE] = userType.name
         }
+        val currentPrefs = getUserPreferences()
+        saveUserPreferences(currentPrefs.copy(userType = userType))
     }
 
-    override fun getUserPreferencesFlow(): Flow<UserPreferences> {
-        return dataStore.data.map { preferences ->
+    override fun getUserPreferencesFlow(): Flow<UserPreferences> =
+        dataStore.data.map { preferences ->
             UserPreferences(
-                language = try {
-                    Language.valueOf(preferences[LANGUAGE] ?: Language.PORTUGUESE.name)
-                } catch (e: Exception) {
-                    Language.PORTUGUESE
-                }, userType = try {
-                    UserType.valueOf(preferences[USER_TYPE] ?: UserType.STUDENT.name)
-                } catch (e: Exception) {
-                    UserType.STUDENT
-                }, theme = try {
-                    Theme.valueOf(preferences[THEME] ?: Theme.SYSTEM.name)
-                } catch (e: Exception) {
-                    Theme.SYSTEM
-                }
+                userId = getCurrentUserId(),
+                language = Language.valueOf(preferences[LANGUAGE] ?: Language.PORTUGUESE.name),
+                userType = UserType.valueOf(preferences[USER_TYPE] ?: UserType.STUDENT.name),
+                theme = Theme.valueOf(preferences[THEME] ?: Theme.SYSTEM.name)
             )
         }
-    }
 }

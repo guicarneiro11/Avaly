@@ -6,11 +6,13 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.google.devtools.ksp' version '2.1.0-1.0.29'
 }
 
 def compose_ui_version = '1.7.6'
 def camerax_version = '1.4.1'
 def koin_version = '4.0.0'
+def room_version = "2.6.1"
 
 android {
     bundle {
@@ -221,4 +223,9 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences-rxjava2:1.1.1")
     implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.1")
     implementation("androidx.datastore:datastore-preferences-core:1.1.1")
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 }

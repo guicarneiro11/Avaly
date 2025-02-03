@@ -1,9 +1,20 @@
 package com.guicarneirodev.goniometro
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.room.Room
+import com.guicarneirodev.goniometro.data.local.database.AppDatabase
+import com.guicarneirodev.goniometro.data.local.mapper.UserMapper
+import com.guicarneirodev.goniometro.data.local.mapper.UserPreferencesMapper
 import com.guicarneirodev.goniometro.data.repository.ResultsRepositoryImpl
 import com.guicarneirodev.goniometro.data.repository.ToolsRepositoryImpl
 import com.guicarneirodev.goniometro.data.repository.UserPreferencesRepositoryImpl
+import com.guicarneirodev.goniometro.domain.repository.LoginPreferencesRepository
+import com.guicarneirodev.goniometro.domain.repository.SharedPreferencesRepository
 import com.guicarneirodev.goniometro.domain.repository.ToolsRepository
 import com.guicarneirodev.goniometro.domain.repository.UserPreferencesRepository
 import com.guicarneirodev.goniometro.domain.usecase.GetAvailableToolsUseCase
@@ -27,11 +38,30 @@ class MyApplication : Application() {
             modules(
                 listOf(
                     appModule,
-                    selectionModule
+                    selectionModule,
+                    databaseModule,
+                    mapperModule
                 )
             )
         }
     }
+}
+
+val mapperModule = module {
+    single { UserMapper() }
+    single { UserPreferencesMapper() }
+}
+
+val databaseModule = module {
+    single {
+        Room.databaseBuilder(
+            get(),
+            AppDatabase::class.java,
+            "avaly-database"
+        ).build()
+    }
+    single { get<AppDatabase>().userDao() }
+    single { get<AppDatabase>().preferencesDao() }
 }
 
 val appModule = module {
@@ -48,13 +78,25 @@ val appModule = module {
 
 val selectionModule = module {
     single { LocaleHelper(get()) }
+    single<LoginPreferencesRepository> {
+        SharedPreferencesRepository(
+            get<Context>().getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
+        )
+    }
     single<ToolsRepository> { ToolsRepositoryImpl() }
-    single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get()) }
+    single<UserPreferencesRepository> {
+        UserPreferencesRepositoryImpl(get(), get(), get(), get())
+    }
+    single<DataStore<Preferences>> {
+        PreferenceDataStoreFactory.create(
+            produceFile = { get<Context>().preferencesDataStoreFile("user_preferences") }
+        )
+    }
 
     factory { GetAvailableToolsUseCase(get()) }
     factory { GetUserPreferencesUseCase(get()) }
     factory { SaveUserPreferencesUseCase(get()) }
-    factory { LogoutUseCase(get()) }
+    factory { LogoutUseCase(get(), get()) }
 
     viewModel { SelectionViewModel(get(), get(), get(), get()) }
 }

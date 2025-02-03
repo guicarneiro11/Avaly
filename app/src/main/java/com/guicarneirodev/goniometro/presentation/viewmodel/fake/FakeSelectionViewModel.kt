@@ -17,7 +17,7 @@ class FakeSelectionViewModel(
     private val _uiState = MutableStateFlow(
         SelectionUiState(
             tools = initialTools,
-            userPreferences = UserPreferences(),
+            userPreferences = UserPreferences(userId = "test@email.com"),
             isLoading = false
         )
     )
