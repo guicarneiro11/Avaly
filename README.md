@@ -99,6 +99,10 @@ Avaly revolutionizes how physiotherapists perform goniometric assessments, repla
 - [GitHub](https://github.com/guicarneiro11)
 - Email: contato@avaly.com.br
 
+## 📜 License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
+
 <div align="center">
 
 ### ⭐ Like the project? Leave a star!
